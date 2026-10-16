@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALTNEX LABS | Bio Challenge</title>
+<style>
+:root {
+  --bg: #07110e;
+  --panel: #101e19;
+  --green: #55ffad;
+  --text: #edfff5;
+  --muted: #9bb5a7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at top, #153a2b 0%, transparent 55%),
+    var(--bg);
+}
+header {
+  padding: 24px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #244638;
+}
+.logo {
+  color: var(--green);
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+.status { color: var(--muted); font-size: 12px; }
+main {
+  max-width: 760px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+.eyebrow {
+  color: var(--green);
+  letter-spacing: 3px;
+  font-size: 12px;
+  font-weight: 700;
+}
+h1 { font-size: clamp(34px, 7vw, 58px); margin: 12px 0; }
+h1 span { color: var(--green); }
+.intro { color: var(--muted); line-height: 1.7; }
+.card {
+  margin-top: 28px;
+  padding: 28px;
+  background: rgba(16,30,25,.94);
+  border: 1px solid #315b45;
+  border-radius: 20px;
+  box-shadow: 0 0 35px #55ffad0c;
+}
+.topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.track {
+  height: 5px;
+  background: #263b31;
+  border-radius: 10px;
+  margin: 18px 0 25px;
+  overflow: hidden;
+}
+#progress {
+  height: 100%;
+  width: 0%;
+  background: var(--green);
+  transition: width .3s;
+}
+#question { font-size: 23px; line-height: 1.4; }
+.answers { display: grid; gap: 12px; margin-top: 22px; }
+.answer {
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  border: 1px solid #315342;
+  border-radius: 12px;
+  background: #14251d;
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  transition: .2s;
+}
+.answer:hover:not(:disabled) {
+  border-color: var(--green);
+  transform: translateY(-1px);
+}
+.answer:disabled { cursor: default; opacity: .9; }
+.answer.correct { border-color: var(--green); background: #17452e; }
+.answer.wrong { border-color: #ff7777; background: #482323; }
+#feedback { min-height: 28px; margin-top: 18px; line-height: 1.5; }
+button.primary {
+  border: 0;
+  background: var(--green);
+  color: #07110e;
+  padding: 13px 22px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+button.primary:focus-visible, .answer:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+.hidden { display: none; }
+footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">ALTNEX LABS</div>
+  <div class="status">● SYSTEM ONLINE</div>
+</header>
+
+<main>
+  <div class="eyebrow">BIOLOGY // TRAINING MODULE 01</div>
+  <h1>BIO <span>CHALLENGE</span></h1>
+  <p class="intro">
+    Проверь свои знания. Выбирай правильные ответы,
+    набирай очки и прокачивай свой научный интеллект.
+  </p>
+
+  <section class="card" id="game">
+    <div class="topline">
+      <span id="counter">ВОПРОС 1 / 5</span>
+      <span>⚡ СЧЁТ: <b id="score">0</b></span>
+    </div>
+    <div class="track"><div id="progress"></div></div>
+    <h2 id="question">Загрузка вопроса...</h2>
+    <div class="answers" id="answers"></div>
+    <div id="feedback" aria-live="polite"></div>
+    <button class="primary hidden" id="next">Следующий вопрос →</button>
+  </section>
+
+  <section class="card hidden" id="result" aria-live="polite">
+    <div class="eyebrow">MISSION COMPLETE</div>
+    <h2 id="resultTitle">Миссия завершена!</h2>
+    <p id="resultText"></p>
+    <button class="primary" id="restart">↻ Пройти ещё раз</button>
+  </section>
+</main>
+
+<footer>ALTNEX LABS © 2026 · KNOWLEDGE IS POWER</footer>
+
+<script>
+const questions = [
+  {
+    q: "Какая органелла клетки производит большую часть АТФ?",
+    a: ["Рибосома", "Митохондрия", "Лизосома", "Ядро"],
+    correct: 1,
+    info: "Митохондрии участвуют в клеточном дыхании и синтезе АТФ."
+  },
+  {
+    q: "Какой пигмент поглощает свет при фотосинтезе?",
+    a: ["Гемоглобин", "Меланин", "Хлорофилл", "Кератин"],
+    correct: 2,
+    info: "Хлорофилл поглощает световую энергию, необходимую для фотосинтеза."
+  },
+  {
+    q: "Какая молекула хранит наследственную информацию?",
+    a: ["ДНК", "Глюкоза", "АТФ", "Вода"],
+    correct: 0,
+    info: "ДНК содержит генетические инструкции организма."
+  },
+  {
+    q: "Как называется деление клетки, при котором образуются две генетически сходные дочерние клетки?",
+    a: ["Мейоз", "Оплодотворение", "Митоз", "Транспирация"],
+    correct: 2,
+    info: "При митозе обычно образуются две дочерние клетки с таким же набором хромосом, как у материнской клетки."
+  },
+  {
+    q: "Какой орган человека перекачивает кровь?",
+    a: ["Печень", "Лёгкие", "Почки", "Сердце"],
+    correct: 3,
+    info: "Сердце работает как мышечный насос кровеносной системы."
+  }
+];
+
+let index = 0;
+let score = 0;
+let answered = false;
+
+const $ = id => document.getElementById(id);
+
+function renderQuestion() {
+  answered = false;
+  const item = questions[index];
+
+  $("counter").textContent = `ВОПРОС ${index + 1} / ${questions.length}`;
+  $("score").textContent = score;
+  $("progress").style.width = `${index / questions.length * 100}%`;
+  $("question").textContent = item.q;
+  $("feedback").textContent = "";
+  $("next").classList.add("hidden");
+  $("answers").innerHTML = "";
+
+  item.a.forEach((answer, i) => {
+    const btn = document.createElement("button");
+    btn.className = "answer";
+    btn.textContent = `${String.fromCharCode(65 + i)}. ${answer}`;
+    btn.addEventListener("click", () => chooseAnswer(i));
+    $("answers").appendChild(btn);
+  });
+}
+
+function chooseAnswer(choice) {
+  if (answered) return;
+  answered = true;
+
+  const item = questions[index];
+  const buttons = [...$("answers").children];
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === item.correct) btn.classList.add("correct");
+    if (i === choice && choice !== item.correct) {
+      btn.classList.add("wrong");
+    }
+  });
+
+  if (choice === item.correct) {
+    score++;
+    $("feedback").textContent = "✓ Верно! " + item.info;
+  } else {
+    $("feedback").textContent =
+      "✕ Пока неверно. " + item.info;
+  }
+
+  $("score").textContent = score;
+  $("progress").style.width =
+    `${(index + 1) / questions.length * 100}%`;
+
+  $("next").textContent =
+    index === questions.length - 1
+      ? "Посмотреть результат →"
+      : "Следующий вопрос →";
+
+  $("next").classList.remove("hidden");
+}
+
+function showResult() {
+  $("game").classList.add("hidden");
+  $("result").classList.remove("hidden");
+
+  $("resultTitle").textContent =
+    score === questions.length ? "Идеальный результат!" :
+    score >= 3 ? "Отличная работа!" : "Продолжай исследовать!";
+
+  $("resultText").textContent =
+    `Твой результат: ${score} из ${questions.length}. ` +
+    `${Math.round(score / questions.length * 100)}% правильных ответов.`;
+}
+
+$("next").addEventListener("click", () => {
+  if (index < questions.length - 1) {
+    index++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+});
+
+$("restart").addEventListener("click", () => {
+  index = 0;
+  score = 0;
+  $("result").classList.add("hidden");
+  $("game").classList.remove("hidden");
+  renderQuestion();
+});
+
+renderQuestion();
+</script>
+</body>
+</html>
