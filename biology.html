@@ -243,5 +243,25 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
  document.getElementById('generatedContent').innerHTML='<div class="objective"><strong>'+(kz?'Сабақ мақсаты':'Цель урока')+'</strong><br>'+escapeHtml(kz?'Тақырыптың негізгі ұғымдарын түсіндіріп, оларды мысалдар арқылы қолдану.':'Объяснить основные понятия темы и применить их на примерах.')+'</div>'+chosen.map(n=>'<article class="output-card"><h3>'+escapeHtml(n)+'</h3><p>'+escapeHtml(map[n]||task)+'</p></article>').join('')+'<article class="output-card"><h3>'+(kz?'Негізгі ұғымдар':'Ключевые понятия')+'</h3><p>'+escapeHtml(terms)+'</p></article><article class="output-card" style="grid-column:1/-1"><h3>'+(kz?'Мұғалімге ескерту':'Проверка перед уроком')+'</h3><p>'+(kz?'Бұл — бастапқы жоба. Бағдарлама және оқулық бойынша тексеріңіз.':'Это черновик. Сверьте содержание с программой и учебником.')+'</p></article>';
 });
 </script>
+<style id="exportPrintStyles">@media print{body *{visibility:hidden!important}#generatedPreview,#generatedPreview *{visibility:visible!important}#generatedPreview{display:block!important;position:absolute;left:0;top:0;width:100%;margin:0;padding:18px;border:0}#generatedPreview .generated-actions{display:none!important}}</style>
+<script>
+(()=>{
+ const actions=document.querySelector('.generated-actions'),area=document.getElementById('generatedContent');
+ if(!actions||!area)return;
+ const word=document.createElement('button');word.type='button';word.className='secondary';word.id='exportWordBtn';word.textContent='↓ Скачать Word';
+ const pdf=document.createElement('button');pdf.type='button';pdf.className='secondary';pdf.id='exportPdfBtn';pdf.textContent='↓ Печать / PDF';
+ actions.insertBefore(pdf,actions.firstChild);actions.insertBefore(word,pdf);
+ const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ word.addEventListener('click',()=>{
+  if(!area.innerHTML.trim()){alert('Сначала подготовьте материалы урока.');return;}
+  const title=document.getElementById('generatedTitle').textContent.trim()||'Материалы урока';
+  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font-family:Arial,sans-serif;line-height:1.5;margin:24px;color:#17251d}h1{font-size:22pt}h3{font-size:14pt}p{white-space:pre-wrap}article,.objective{margin:12px 0;padding:12px;border:1px solid #cbd8ce;break-inside:avoid}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'</body></html>';
+  const blob=new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=title.replace(/[\\/:*?"<>|]+/g,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ });
+ pdf.addEventListener('click',()=>{if(!area.innerHTML.trim()){alert('Сначала подготовьте материалы урока.');return;}window.print();});
+})();
+</script>
+
 </body>
 </html>
