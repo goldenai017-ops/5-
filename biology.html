@@ -442,5 +442,24 @@ function renderMaterials(raw){
 })();
 </script>
 
+
+<script id="ALTNEX-WELCOME-HOTFIX">
+(function () {
+  function attachWelcomeButton() {
+    var overlay = document.getElementById('altnexWelcome');
+    var button = document.getElementById('altnexEnterBtn');
+    if (!overlay || !button || button.dataset.altnexFixed === '1') return;
+    button.dataset.altnexFixed = '1';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      overlay.classList.add('leaving');
+      overlay.style.pointerEvents = 'none';
+      window.setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 800);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachWelcomeButton);
+  else attachWelcomeButton();
+})();
+</script>
 </body>
 </html>
