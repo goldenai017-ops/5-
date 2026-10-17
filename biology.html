@@ -325,5 +325,40 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
 })();
 </script>
 
+
+<script>
+// Подключение реального ИИ через серверный API. На GitHub Pages останется демо-режим.
+(()=>{
+  const form=document.getElementById('lessonForm');
+  if(!form)return;
+  form.addEventListener('submit',async()=>{
+    const topic=document.getElementById('topic').value.trim();
+    const grade=document.getElementById('grade').value;
+    const language=document.getElementById('language').value;
+    const duration=document.getElementById('duration').value;
+    const lessonType=document.getElementById('lessonType').value;
+    const outputs=[...document.querySelectorAll('input[name="output"]:checked')].map(x=>x.value);
+    const notice=document.getElementById('formNotice');
+    if(!topic||!outputs.length)return;
+    notice.style.display='block';
+    notice.innerHTML='<strong>Проверяю подключение ИИ…</strong><br><span style="font-size:11px">Если сервер доступен, демонстрационный черновик будет заменён материалами ИИ.</span>';
+    try{
+      const response=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic,grade,language,duration,lessonType,outputs})});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||'Сервер не смог подготовить материалы.');
+      const fields={'План урока':data.plan,'Презентация':data.slides,'Задания':data.tasks,'Интерактивная игра':data.game,'Тест с ответами':data.quiz};
+      const content=outputs.map(name=>'<article class="output-card"><h3>'+escapeHtml(name)+'</h3><p>'+escapeHtml(fields[name]||'Материал не был возвращён моделью.')+'</p></article>').join('');
+      document.getElementById('generatedTitle').textContent=topic;
+      document.getElementById('generatedMeta').textContent=grade+' · '+language+' · '+duration+' · ИИ-черновик';
+      document.getElementById('generatedContent').innerHTML='<div class="objective"><strong>'+(language==='Қазақша'?'Сабақ мақсаты':'Цель урока')+'</strong><br>'+escapeHtml(data.objective||'Уточните цель перед использованием.')+'</div>'+content+(data.teacherNote?'<article class="output-card" style="grid-column:1/-1"><h3>'+(language==='Қазақша'?'Мұғалімге ескерту':'Примечание учителю')+'</h3><p>'+escapeHtml(data.teacherNote)+'</p></article>':'');
+      document.getElementById('generatedPreview').style.display='block';
+      notice.innerHTML='<strong>ИИ подготовил черновик.</strong><br><span style="font-size:11px">Проверьте факты, формулировки и соответствие действующей учебной программе перед использованием.</span>';
+    }catch(error){
+      notice.innerHTML='<strong>Пока показан демонстрационный материал.</strong><br><span style="font-size:11px">'+escapeHtml(error.message||'Не удалось связаться с ИИ-сервером.')+' На GitHub Pages API не запускается: разверните проект на Vercel и добавьте OPENAI_API_KEY в Environment Variables. Ключ нельзя вставлять в HTML.</span>';
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
