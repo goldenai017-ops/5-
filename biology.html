@@ -91,5 +91,40 @@ function filterTopics(){const grade=document.getElementById('libGrade').value;co
 document.getElementById('libGrade').addEventListener('change',filterTopics);document.getElementById('libSearch').addEventListener('input',filterTopics);
 document.getElementById('helpBtn').addEventListener('click',()=>alert('Это интерактивный прототип ALTNEX BioLab. Можно переключать разделы, фильтровать темы библиотеки и заполнить форму создания урока. Данные не отправляются и не сохраняются.'));
 </script>
+<script>
+// Карточка учебного паспорта: черновые цели и контроль источников.
+(()=>{
+  const list=document.getElementById('topicList');
+  const empty=document.getElementById('noTopics');
+  if(!list||!empty)return;
+  const panel=document.createElement('section');
+  panel.className='generated';
+  panel.id='topicPassport';
+  panel.setAttribute('aria-live','polite');
+  panel.innerHTML='<div class="generated-head"><div><h2 id="passportTitle">Паспорт темы</h2><p id="passportMeta">Черновик для дальнейшей сверки</p></div><span class="demo-label">ТРЕБУЕТ ПРОВЕРКИ</span></div><div class="output-grid"><article class="output-card"><h3>Предварительные цели обучения</h3><p id="passportObjectives"></p></article><article class="output-card"><h3>Ключевые понятия</h3><p id="passportTerms"></p></article><article class="output-card"><h3>Проверка источников</h3><p>1. Сверить формулировки с действующей учебной программой РК для выбранного класса.\n2. Указать название учебника, авторов, год издания и страницы.\n3. Проверить соответствие теме и языку обучения.\n4. Зафиксировать ссылку или библиографические данные.</p></article><div class="objective"><strong>Важно</strong><br>Цели ниже сформулированы как рабочий черновик, а не как официальные цели обучения. Не используйте их как подтверждённые требования программы до сверки с официальным документом.</div></div>';
+  empty.insertAdjacentElement('afterend',panel);
+  function addDetailsButtons(){
+    list.querySelectorAll('.topic').forEach(card=>{
+      const footer=card.querySelector('.lesson-foot');
+      if(!footer||footer.querySelector('[data-topic-details]'))return;
+      const btn=document.createElement('button');
+      btn.type='button';btn.dataset.topicDetails='true';btn.textContent='Цели и источники';
+      footer.insertBefore(btn,footer.querySelector('[data-topic-create]'));
+    });
+  }
+  function showPassport(card){
+    const title=card.querySelector('h3')?.textContent.trim()||'Тема биологии';
+    const grade=card.dataset.grade||'Класс не указан';
+    const description=card.querySelector('p')?.textContent.trim()||'Основные понятия темы';
+    document.getElementById('passportTitle').textContent=title;
+    document.getElementById('passportMeta').textContent=grade+' · Предварительный учебный паспорт';
+    document.getElementById('passportObjectives').textContent='• Объяснить основные понятия темы «'+title+'».\n• Описать ключевые процессы или структуры и их функции.\n• Применить знания для объяснения биологического примера.\n• Проверить понимание с помощью вопроса или задания.\n\nОснова карточки: '+description;
+    document.getElementById('passportTerms').textContent=title.replace(/\s*\/\s*/g,'; ')+'; основные процессы и связи; примеры из живой природы.\n\nТермины уточнить по учебнику и программе.';
+    panel.style.display='block';panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  addDetailsButtons();
+  list.addEventListener('click',event=>{const btn=event.target.closest('[data-topic-details]');if(btn){const card=btn.closest('.topic');if(card)showPassport(card);}});
+})();
+</script>
 </body>
 </html>
