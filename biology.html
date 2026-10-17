@@ -13,8 +13,49 @@
 .generated{display:none;margin-top:20px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:22px}.generated-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:18px}.generated-head h2{margin:0 0 5px;font-size:20px}.generated-head p{margin:0;color:var(--muted);font-size:12px}.demo-label{font-size:10px;font-weight:800;letter-spacing:.7px;padding:6px 9px;border-radius:20px;background:var(--soft);color:var(--green-2);white-space:nowrap}.output-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.output-card{border:1px solid var(--line);border-radius:13px;padding:15px;background:var(--page)}.output-card h3{font-size:13px;margin:0 0 9px}.output-card p{font-size:12px;color:var(--muted);margin:0;white-space:pre-line}.objective{grid-column:1/-1;border-left:3px solid var(--green-2);padding:9px 12px;background:var(--soft);border-radius:0 9px 9px 0;margin-bottom:0;font-size:12px}.generated-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:16px}.secondary{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 13px;border-radius:10px;font-weight:700}
 @media(max-width:700px){.output-grid{grid-template-columns:1fr}.generated{padding:16px}.generated-head{display:block}.demo-label{display:inline-block;margin-top:10px}.generated-actions{justify-content:stretch}.generated-actions button{flex:1}}
 .material-body{font-size:13px;line-height:1.55;overflow-wrap:anywhere}.material-body p{margin:0 0 10px;white-space:pre-wrap}.lesson-table-wrap{width:100%;overflow-x:auto;margin:12px 0}.lesson-table{width:100%;border-collapse:collapse;min-width:620px;background:var(--surface);font-size:12px}.lesson-table th,.lesson-table td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top;white-space:pre-wrap}.lesson-table th{background:var(--soft);font-weight:800}.lesson-table tbody tr:nth-child(even){background:var(--page)}.material-output{min-width:0}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ALTNEX BioLab welcome screen — editorial typography */
+#altnexWelcome{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;padding:clamp(22px,4vw,48px);background:#07110f;color:#e8fff8;font-family:'Manrope',sans-serif;isolation:isolate;transition:opacity .65s ease,visibility .65s ease}
+#altnexWelcome:before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 73% 48%,#0b514a 0%,#092b29 23%,#07110f 62%)}
+#altnexWelcome:after{content:"";position:absolute;inset:12px;border:1px solid #79ffe51c;pointer-events:none}
+.altnex-w-grid{position:absolute;inset:0;z-index:-1;opacity:.2;background-image:linear-gradient(#58dbc510 1px,transparent 1px),linear-gradient(90deg,#58dbc510 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(90deg,transparent,#000 60%)}
+.altnex-w-top,.altnex-w-bottom{display:flex;justify-content:space-between;gap:16px;color:#83aaa2;font:400 9px/1.4 'DM Mono',monospace;letter-spacing:1.7px}
+.altnex-w-top b,.altnex-w-bottom b{color:#5cf4d5}.altnex-w-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5cf4d5;box-shadow:0 0 12px #5cf4d5;margin-right:8px}
+.altnex-w-content{width:min(1180px,100%);margin:auto;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:clamp(10px,4vw,60px);padding:30px 0}
+.altnex-w-left{position:relative;z-index:2}.altnex-w-kicker{font:400 10px/1.5 'DM Mono',monospace;letter-spacing:2.4px;color:#9bffe7}.altnex-w-kicker span{border:1px solid #8af5d977;padding:6px 8px;margin-right:12px}
+.altnex-w-title{font:600 clamp(58px,7.1vw,96px)/.91 'Cormorant Garamond',Georgia,serif;letter-spacing:-2.3px;margin:28px 0 24px;text-wrap:balance}
+.altnex-w-title em{display:inline-block;font:italic 500 1.05em/1 'Cormorant Garamond',Georgia,serif;letter-spacing:-1.8px;color:#a0ffe7;text-shadow:0 0 42px #42ebc535}
+.altnex-w-copy{font:400 clamp(14px,1.5vw,17px)/1.85 'Manrope',sans-serif;color:#9abbb4;margin:0 0 34px;max-width:470px}
+.altnex-w-enter{display:flex;align-items:center;justify-content:space-between;gap:30px;width:min(330px,100%);padding:17px 19px;border:1px solid #70f8db;border-radius:3px;background:#5cf4d5;color:#06201c;font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.7px;box-shadow:5px 5px 0 #2a8d79;transition:transform .2s,box-shadow .2s,background .2s}
+.altnex-w-enter:hover{transform:translate(-2px,-2px);background:#a2ffe9;box-shadow:8px 8px 0 #2a8d79}.altnex-w-enter b{font:600 18px/1 'Manrope',sans-serif}
+.altnex-w-sign{margin-top:50px;color:#5e8980;font:400 9px/1.5 'DM Mono',monospace;letter-spacing:2.3px}.altnex-w-sign span{color:#5cf4d5;padding:0 7px}
+.altnex-w-visual{position:relative;aspect-ratio:1;display:grid;place-items:center;min-width:0}.altnex-w-ring{position:absolute;border:1px solid #72f8df45;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}.altnex-w-ring.a{width:83%;aspect-ratio:1;border-right-color:#73f9df;border-bottom-color:transparent;animation:altnexOrbit 24s linear infinite}.altnex-w-ring.b{width:68%;aspect-ratio:1;border-style:dashed;opacity:.65;animation:altnexOrbit 34s linear infinite reverse}.altnex-w-ring.c{width:52%;aspect-ratio:1;border-color:#65ffe044;box-shadow:0 0 40px #4affd50c,inset 0 0 40px #4affd50c}
+.altnex-w-core{position:relative;width:43%;aspect-ratio:1;display:grid;place-items:center;border:1px solid #77ffe064;border-radius:50%;background:radial-gradient(circle,#1b7366a0 0%,#0a2827a8 58%,#071b1a88 100%);box-shadow:0 0 55px #41f7d41e,inset 0 0 28px #5df8d515}
+.altnex-w-core svg{width:65%;height:75%;overflow:visible;filter:drop-shadow(0 0 9px #6fffe0)}.altnex-w-core svg path{fill:none;stroke:#83ffe3;stroke-width:2.2}.altnex-w-core svg .rungs{stroke:#50d9c2;stroke-width:1.5;opacity:.7}
+.altnex-w-label{position:absolute;font:400 9px/1.4 'DM Mono',monospace;letter-spacing:1.5px;color:#8cfbe4}.altnex-w-label span{display:block;color:#5d9388;font-size:8px;margin-top:6px}.altnex-w-label.top{top:13%;right:0;text-align:right}.altnex-w-label.bottom{bottom:12%;left:1%}.altnex-w-label b{color:#62f4d5;margin-left:9px}
+#altnexWelcome.leaving{opacity:0;visibility:hidden;pointer-events:none}@keyframes altnexOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@media(max-width:700px){#altnexWelcome{padding:24px}.altnex-w-top,.altnex-w-bottom{font-size:8px;letter-spacing:.8px}.altnex-w-top span:nth-child(2),.altnex-w-bottom span:nth-child(2){display:none}.altnex-w-content{grid-template-columns:1fr;gap:0;padding:14px 0}.altnex-w-title{font-size:clamp(49px,12.5vw,70px);letter-spacing:-1.5px;line-height:.94;margin:22px 0 17px}.altnex-w-copy{font-size:14px;margin-bottom:24px}.altnex-w-sign{margin-top:25px}.altnex-w-visual{position:absolute;right:-27%;top:24%;width:75%;opacity:.35;z-index:-1}.altnex-w-bottom span:last-child{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){#altnexWelcome *{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
+<div id="altnexWelcome" role="dialog" aria-modal="true" aria-labelledby="altnexWelcomeTitle">
+<div class="altnex-w-grid" aria-hidden="true"></div>
+<div class="altnex-w-top"><span><i class="altnex-w-dot"></i>SYSTEM ONLINE</span><span>ALTNEX OS · BIOLOGY DIVISION</span><span>SECURE SESSION <b>01</b></span></div>
+<div class="altnex-w-content"><div class="altnex-w-left">
+<div class="altnex-w-kicker"><span>01</span> PERSONAL LABORATORY</div>
+<h1 class="altnex-w-title" id="altnexWelcomeTitle">Добро пожаловать,<br><em>Алтынай.</em></h1>
+<p class="altnex-w-copy">Твоя лаборатория. Твои идеи.<br>Новый уровень преподавания биологии.</p>
+<button class="altnex-w-enter" id="altnexEnterBtn" type="button"><span>ЗАПУСТИТЬ ЛАБОРАТОРИЮ</span><b>↗</b></button>
+<div class="altnex-w-sign">ALTNEX <span>/</span> THINK BEYOND THE CLASSROOM</div>
+</div><div class="altnex-w-visual" aria-hidden="true">
+<div class="altnex-w-ring a"></div><div class="altnex-w-ring b"></div><div class="altnex-w-ring c"></div>
+<div class="altnex-w-core"><svg viewBox="0 0 180 240" role="presentation"><path d="M58 12 C155 45 25 77 122 111 S45 178 119 226"/><path d="M122 12 C25 45 155 77 58 111 S135 178 61 226"/><g class="rungs"><path d="M65 24 L115 24 M47 46 L133 46 M47 68 L133 68 M65 90 L115 90 M65 112 L115 112 M47 134 L133 134 M47 156 L133 156 M65 178 L115 178 M65 200 L115 200 M75 218 L105 218"/></g></svg></div>
+<div class="altnex-w-label top">BIO / 01 <span>MOLECULAR SYSTEM</span></div><div class="altnex-w-label bottom"><span>DNA SEQUENCE</span><b>ACTIVE</b></div>
+</div></div>
+<div class="altnex-w-bottom"><span>PERSONAL AI ENVIRONMENT <b>●</b></span><span>LEARN. CREATE. DISCOVER.</span><span>ALMATY, KZ <b>—</b> <span id="altnexWelcomeYear">2026</span></span></div>
+</div>
 <div class="app">
 <aside class="sidebar">
   <div class="brand"><div class="brandmark">✳</div><div><strong>ALTNEX</strong><small>BIOLAB · EDU</small></div></div>
@@ -317,7 +358,11 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
  word.addEventListener('click',()=>{
   if(!area.innerHTML.trim()){alert('Сначала подготовьте материалы урока.');return;}
   const title=document.getElementById('generatedTitle').textContent.trim()||'Материалы урока';
-  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font-family:Arial,sans-serif;line-height:1.5;margin:24px;color:#17251d}h1{font-size:22pt}h3{font-size:14pt}p{white-space:pre-wrap}article,.objective{margin:12px 0;padding:12px;border:1px solid #cbd8ce;break-inside:avoid}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font-family:Arial,sans-serif;line-height:1.5;margin:24px;color:#17251d}h1{font-size:22pt}h3{font-size:14pt}p{white-space:pre-wrap}article,.objective{margin:12px 0;padding:12px;border:1px solid #cbd8ce;break-inside:avoid}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'<script>
+(()=>{const overlay=document.getElementById('altnexWelcome');const enter=document.getElementById('altnexEnterBtn');if(!overlay||!enter)return;const year=document.getElementById('altnexWelcomeYear');if(year)year.textContent=new Date().getFullYear();const close=()=>{overlay.classList.add('leaving');window.setTimeout(()=>overlay.remove(),650)};enter.addEventListener('click',close);document.addEventListener('keydown',event=>{if(event.key==='Escape'&&document.body.contains(overlay))close()})})();
+</script>
+
+</body></html>';
   const blob=new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=title.replace(/[\\/:*?"<>|]+/g,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  });
