@@ -126,5 +126,53 @@ document.getElementById('helpBtn').addEventListener('click',()=>alert('Это и
   list.addEventListener('click',event=>{const btn=event.target.closest('[data-topic-details]');if(btn){const card=btn.closest('.topic');if(card)showPassport(card);}});
 })();
 </script>
+<script>
+// Первый содержательный учебный модуль: «Иммунитет», 8 класс.
+(()=>{
+  const list=document.getElementById('topicList');
+  const passport=document.getElementById('topicPassport');
+  if(!list||!passport)return;
+  const module=document.createElement('section');
+  module.className='generated immunity-module';
+  module.id='immunityLessonModule';
+  module.innerHTML=`
+    <div class="generated-head"><div><h2>Первый модуль · Иммунитет человека</h2><p>8 класс · 45 минут · Материалы для проверки и редактирования</p></div><span class="demo-label">УЧЕБНЫЙ ЧЕРНОВИК</span></div>
+    <div class="output-grid">
+      <article class="output-card"><h3>Цель урока · Қазақша</h3><p>Оқушылар иммунитеттің туа біткен және жүре пайда болған түрлерін түсіндіреді; лейкоциттердің қорғаныш қызметін сипаттайды; гуморальдық және жасушалық иммунитетті салыстырады; вакцинацияның аурулардың алдын алудағы рөлін бағалайды.</p></article>
+      <article class="output-card"><h3>Цель урока · Русский</h3><p>Учащиеся объясняют врождённый и приобретённый иммунитет, описывают защитные функции лейкоцитов, сравнивают гуморальный и клеточный иммунитет и оценивают роль вакцинации в профилактике заболеваний.</p></article>
+      <article class="output-card"><h3>Ход урока · Сабақ барысы</h3><p>0–5 мин · Вопрос-разминка: почему люди могут повторно встречаться с одним возбудителем?
+5–12 мин · Объяснение: врождённая и приобретённая защита.
+12–22 мин · Работа со схемой: лейкоциты, В- и Т-лимфоциты, антитела.
+22–32 мин · Парная работа: сравнить гуморальный и клеточный иммунитет.
+32–40 мин · Обсуждение роли вакцинации и профилактики.
+40–45 мин · Мини-тест и рефлексия.</p></article>
+      <article class="output-card"><h3>Ключевые понятия</h3><p>Иммунитет; врождённый иммунитет; приобретённый иммунитет; лейкоцит; лимфоцит; антитело; антиген; гуморальный иммунитет; клеточный иммунитет; вакцинация.</p></article>
+      <article class="output-card"><h3>Задания для учеников</h3><p>1. Сопоставьте: В-лимфоциты — антитела; Т-лимфоциты — клеточный иммунный ответ (упрощённая модель).
+2. Заполните таблицу: врождённый / приобретённый иммунитет.
+3. Объясните, почему вакцинация помогает подготовить иммунную систему к встрече с возбудителем.
+4. Назовите два способа профилактики инфекционных заболеваний помимо вакцинации.</p></article>
+      <article class="output-card"><h3>Мини-тест · ответы</h3><p>1. Что относится к врождённой защите? — Кожный барьер и некоторые быстрые неспецифические реакции.
+2. Что вырабатывают В-лимфоциты после активации? — Антитела (через плазматические клетки).
+3. С чем связан клеточный иммунный ответ? — В частности, с работой Т-лимфоцитов.
+4. Какова цель вакцинации? — Сформировать специфическую иммунную защиту без необходимости переносить соответствующую инфекцию.
+5. Назовите ограничение вакцинной защиты. — Эффективность зависит от вакцины и инфекции; могут требоваться дополнительные дозы.</p></article>
+      <article class="output-card"><h3>Формативное оценивание</h3><p>Ученик может: 1) различить врождённую и приобретённую защиту; 2) объяснить роль антител и лимфоцитов на базовом уровне; 3) привести обоснованный аргумент о значении вакцинации. Критерии следует адаптировать к школьной программе и уровню класса.</p></article>
+      <article class="output-card"><h3>Дереккөздер · Источники для сверки</h3><p><a href="https://old.adilet.zan.kz/kaz/docs/V2200027396" target="_blank" rel="noopener noreferrer">«Әділет»: типовая учебная программа (казахская версия)</a>
+<a href="https://old.adilet.zan.kz/rus/docs/V13008424_6" target="_blank" rel="noopener noreferrer">«Әділет»: типовая учебная программа (русская версия)</a>
+<a href="https://www.gov.kz/situations/190/568" target="_blank" rel="noopener noreferrer">Gov.kz: информация о вакцинации</a></p></article>
+      <div class="objective"><strong>Важная проверка перед публикацией</strong><br>Коды и формулировки целей обучения могут различаться между редакциями программ. Сверьте их с действующей программой вашей школы и используемым учебником; этот модуль пока не является утверждённым официальным материалом.</div>
+    </div>`;
+  passport.insertAdjacentElement('afterend',module);
+  list.addEventListener('click',event=>{
+    const button=event.target.closest('[data-topic-details]');
+    if(!button)return;
+    const card=button.closest('.topic');
+    const title=card?.querySelector('h3')?.textContent.toLowerCase()||'';
+    const isImmunity=title.includes('иммунитет')||title.includes('иммун');
+    module.style.display=isImmunity?'block':'none';
+    if(isImmunity)module.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+})();
+</script>
 </body>
 </html>
