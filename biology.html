@@ -12,7 +12,7 @@
 @media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{min-height:0;padding:13px 14px;gap:13px}.brand{padding:0 3px}.navlabel,.side-bottom{display:none}.nav{display:flex;overflow-x:auto;gap:4px;padding-bottom:2px}.nav button{white-space:nowrap;padding:9px 10px;font-size:12px}.nav button span:first-child{width:auto}.topbar{height:58px;padding:0 18px}.content{padding:22px 17px}.welcome{display:block}.date-pill{display:inline-block;margin-top:14px}.hero{padding:23px;grid-template-columns:1fr}.hero-art{display:none}.hero h2{font-size:24px}.stats{gap:8px}.stat{padding:12px;display:block}.stat-icon{margin-bottom:9px}.stat strong{font-size:19px}.stat small{font-size:10px}.cards{grid-template-columns:1fr}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.formgrid{grid-template-columns:1fr}.status{display:none}}
 .generated{display:none;margin-top:20px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:22px}.generated-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:18px}.generated-head h2{margin:0 0 5px;font-size:20px}.generated-head p{margin:0;color:var(--muted);font-size:12px}.demo-label{font-size:10px;font-weight:800;letter-spacing:.7px;padding:6px 9px;border-radius:20px;background:var(--soft);color:var(--green-2);white-space:nowrap}.output-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.output-card{border:1px solid var(--line);border-radius:13px;padding:15px;background:var(--page)}.output-card h3{font-size:13px;margin:0 0 9px}.output-card p{font-size:12px;color:var(--muted);margin:0;white-space:pre-line}.objective{grid-column:1/-1;border-left:3px solid var(--green-2);padding:9px 12px;background:var(--soft);border-radius:0 9px 9px 0;margin-bottom:0;font-size:12px}.generated-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:16px}.secondary{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 13px;border-radius:10px;font-weight:700}
 @media(max-width:700px){.output-grid{grid-template-columns:1fr}.generated{padding:16px}.generated-head{display:block}.demo-label{display:inline-block;margin-top:10px}.generated-actions{justify-content:stretch}.generated-actions button{flex:1}}
-</style>
+.material-body{font-size:13px;line-height:1.55;overflow-wrap:anywhere}.material-body p{margin:0 0 10px;white-space:pre-wrap}.lesson-table-wrap{width:100%;overflow-x:auto;margin:12px 0}.lesson-table{width:100%;border-collapse:collapse;min-width:620px;background:var(--surface);font-size:12px}.lesson-table th,.lesson-table td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top;white-space:pre-wrap}.lesson-table th{background:var(--soft);font-weight:800}.lesson-table tbody tr:nth-child(even){background:var(--page)}.material-output{min-width:0}</style>
 </head>
 <body>
 <div class="app">
@@ -327,6 +327,31 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
 
 
 <script>
+// Преобразует Markdown-таблицы ответа Gemini в настоящие HTML-таблицы.
+function renderMaterials(raw){
+  const source=String(raw||'').replace(/\r/g,'').trim();
+  if(!source)return '<p>Модель не вернула текст.</p>';
+  const escape=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  const format=s=>escape(s).replace(/&lt;br\s*\/??&gt;/gi,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>');
+  const lines=source.split('\n');
+  const output=[];
+  let i=0;
+  const isTableLine=line=>line.includes('|')&&line.split('|').length>=3;
+  const cells=line=>line.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(cell=>cell.trim());
+  const isSeparator=line=>/^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
+  while(i<lines.length){
+    if(!isTableLine(lines[i])){const text=lines[i].trim();if(text)output.push('<p>'+format(text)+'</p>');i++;continue;}
+    const rows=[];
+    while(i<lines.length&&isTableLine(lines[i])){if(!isSeparator(lines[i]))rows.push(cells(lines[i]));i++;}
+    if(!rows.length)continue;
+    const width=Math.max(...rows.map(row=>row.length));
+    const normalized=rows.map(row=>Array.from({length:width},(_,index)=>row[index]||''));
+    const header=normalized.shift();
+    output.push('<div class="lesson-table-wrap"><table class="lesson-table"><thead><tr>'+header.map(cell=>'<th>'+format(cell)+'</th>').join('')+'</tr></thead><tbody>'+normalized.map(row=>'<tr>'+row.map(cell=>'<td>'+format(cell)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>');
+  }
+  return output.join('')||'<p>'+format(source)+'</p>';
+}
+
 // Подключение Gemini через Cloudflare Worker.
 (()=>{
   const form=document.getElementById('lessonForm');
@@ -356,7 +381,7 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
       document.getElementById('generatedMeta').textContent=grade+' · '+language+' · '+duration+' · Gemini AI';
       document.getElementById('generatedContent').innerHTML=
         '<div class="objective"><strong>'+(language==='Қазақша'?'Сабақ тақырыбы':'Тема урока')+'</strong><br>'+escapeHtml(topic)+'</div>'+
-        '<article class="output-card" style="grid-column:1/-1"><h3>Gemini AI · '+escapeHtml(outputs.join(', '))+'</h3><p>'+escapeHtml(data.materials||'Модель не вернула текст.')+'</p></article>'+
+        '<article class="output-card material-output" style="grid-column:1/-1"><h3>Gemini AI · '+escapeHtml(outputs.join(', '))+'</h3><div class="material-body">'+renderMaterials(data.materials||'Модель не вернула текст.')+'</div></article>'+
         '<article class="output-card" style="grid-column:1/-1"><h3>'+(language==='Қазақша'?'Мұғалімге ескерту':'Проверка перед уроком')+'</h3><p>'+(language==='Қазақша'?'Материалды қолданыстағы оқу бағдарламасы мен оқулық бойынша тексеріңіз.':'Перед использованием сверьте материал с действующей учебной программой и учебником.')+'</p></article>';
       document.getElementById('generatedPreview').style.display='block';
       const badge=document.querySelector('#generatedPreview .demo-label');
