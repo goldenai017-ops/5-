@@ -327,7 +327,7 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
 
 
 <script>
-// Подключение реального ИИ через серверный API. На GitHub Pages останется демо-режим.
+// Подключение Gemini через Cloudflare Worker.
 (()=>{
   const form=document.getElementById('lessonForm');
   if(!form)return;
@@ -339,22 +339,34 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
     const lessonType=document.getElementById('lessonType').value;
     const outputs=[...document.querySelectorAll('input[name="output"]:checked')].map(x=>x.value);
     const notice=document.getElementById('formNotice');
+    const submitButton=form.querySelector('button[type="submit"]');
     if(!topic||!outputs.length)return;
     notice.style.display='block';
-    notice.innerHTML='<strong>Проверяю подключение ИИ…</strong><br><span style="font-size:11px">Если сервер доступен, демонстрационный черновик будет заменён материалами ИИ.</span>';
+    notice.textContent='Gemini дайындап жатыр… / Gemini готовит материалы…';
+    if(submitButton)submitButton.disabled=true;
     try{
-      const response=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic,grade,language,duration,lessonType,outputs})});
+      const response=await fetch('https://altnex-biolab-api.goldenai017.workers.dev/',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({topic,grade,language,duration,lessonType,outputs})
+      });
       const data=await response.json();
-      if(!response.ok)throw new Error(data.error||'Сервер не смог подготовить материалы.');
-      const fields={'План урока':data.plan,'Презентация':data.slides,'Задания':data.tasks,'Интерактивная игра':data.game,'Тест с ответами':data.quiz};
-      const content=outputs.map(name=>'<article class="output-card"><h3>'+escapeHtml(name)+'</h3><p>'+escapeHtml(fields[name]||'Материал не был возвращён моделью.')+'</p></article>').join('');
+      if(!response.ok||!data.ok)throw new Error(data.error||'Gemini не смог подготовить материалы.');
       document.getElementById('generatedTitle').textContent=topic;
-      document.getElementById('generatedMeta').textContent=grade+' · '+language+' · '+duration+' · ИИ-черновик';
-      document.getElementById('generatedContent').innerHTML='<div class="objective"><strong>'+(language==='Қазақша'?'Сабақ мақсаты':'Цель урока')+'</strong><br>'+escapeHtml(data.objective||'Уточните цель перед использованием.')+'</div>'+content+(data.teacherNote?'<article class="output-card" style="grid-column:1/-1"><h3>'+(language==='Қазақша'?'Мұғалімге ескерту':'Примечание учителю')+'</h3><p>'+escapeHtml(data.teacherNote)+'</p></article>':'');
+      document.getElementById('generatedMeta').textContent=grade+' · '+language+' · '+duration+' · Gemini AI';
+      document.getElementById('generatedContent').innerHTML=
+        '<div class="objective"><strong>'+(language==='Қазақша'?'Сабақ тақырыбы':'Тема урока')+'</strong><br>'+escapeHtml(topic)+'</div>'+
+        '<article class="output-card" style="grid-column:1/-1"><h3>Gemini AI · '+escapeHtml(outputs.join(', '))+'</h3><p>'+escapeHtml(data.materials||'Модель не вернула текст.')+'</p></article>'+
+        '<article class="output-card" style="grid-column:1/-1"><h3>'+(language==='Қазақша'?'Мұғалімге ескерту':'Проверка перед уроком')+'</h3><p>'+(language==='Қазақша'?'Материалды қолданыстағы оқу бағдарламасы мен оқулық бойынша тексеріңіз.':'Перед использованием сверьте материал с действующей учебной программой и учебником.')+'</p></article>';
       document.getElementById('generatedPreview').style.display='block';
-      notice.innerHTML='<strong>ИИ подготовил черновик.</strong><br><span style="font-size:11px">Проверьте факты, формулировки и соответствие действующей учебной программе перед использованием.</span>';
+      const badge=document.querySelector('#generatedPreview .demo-label');
+      if(badge)badge.textContent='GEMINI AI';
+      notice.innerHTML='<strong>'+(language==='Қазақша'?'Gemini материалдарды дайындады.':'Gemini подготовил материалы.')+'</strong><br><span style="font-size:11px">'+(language==='Қазақша'?'Қолданар алдында тексеріңіз.':'Проверьте факты и формулировки перед использованием.')+'</span>';
+      document.getElementById('generatedPreview').scrollIntoView({behavior:'smooth',block:'start'});
     }catch(error){
-      notice.innerHTML='<strong>Пока показан демонстрационный материал.</strong><br><span style="font-size:11px">'+escapeHtml(error.message||'Не удалось связаться с ИИ-сервером.')+' На GitHub Pages API не запускается: разверните проект на Vercel и добавьте OPENAI_API_KEY в Environment Variables. Ключ нельзя вставлять в HTML.</span>';
+      notice.innerHTML='<strong>Не удалось получить ответ Gemini.</strong><br><span style="font-size:11px">'+escapeHtml(error.message||'Проверь подключение и настройки API.')+'</span>';
+    }finally{
+      if(submitButton)submitButton.disabled=false;
     }
   });
 })();
