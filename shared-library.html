@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Общая библиотека BioLab</title>
+<style>
+:root{--green:#176b4d;--green2:#23845f;--ink:#18352a;--muted:#64776d;--line:#dce7df;--soft:#f3f8f4;--surface:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f7faf7;color:var(--ink);font:16px/1.5 Manrope,Arial,sans-serif}
+header{background:linear-gradient(135deg,#123f30,#207554);color:white;padding:30px max(20px,calc((100% - 1100px)/2))}
+header a{color:white;text-decoration:none;opacity:.9}header h1{font-size:clamp(27px,4vw,40px);margin:20px 0 6px}header p{margin:0;opacity:.88}
+main{max-width:1100px;margin:24px auto;padding:0 18px 50px}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;margin:18px 0;box-shadow:0 8px 24px #143e2b08}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}.field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:180px}label{font-weight:700;font-size:13px}input,select{width:100%;padding:11px 12px;border:1px solid #cbd9cf;border-radius:10px;background:white;color:var(--ink);font:inherit}
+button,.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:var(--green);color:white;font:700 14px inherit;padding:11px 15px;cursor:pointer;text-decoration:none}button:hover,.btn:hover{background:var(--green2)}button:disabled{opacity:.55;cursor:wait}.secondary{background:var(--soft);color:var(--green);border:1px solid var(--line)}
+.status{color:var(--muted);font-size:13px;margin-top:12px;white-space:pre-wrap}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}.book{border:1px solid var(--line);border-radius:14px;padding:15px;min-width:0}.book h3{font-size:16px;margin:0 0 8px;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin-bottom:12px}.book-actions{display:flex;gap:8px;flex-wrap:wrap}.empty{padding:24px;text-align:center;color:var(--muted);background:var(--soft);border-radius:12px}.hidden{display:none!important}.warning{font-size:13px;color:#6a5630;background:#fff8e7;border:1px solid #f0dfb5;padding:12px;border-radius:10px}
+@media(max-width:600px){.panel{padding:15px}header{padding:24px 18px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="biology.html">← Вернуться в BioLab</a>
+  <h1>📚 Общая библиотека BioLab</h1>
+  <p>Учебники для 5–11 классов. Открывай и скачивай материалы по ссылке.</p>
+</header>
+<main>
+  <section class="panel">
+    <div class="row">
+      <div class="field"><label for="filterGrade">Класс</label><select id="filterGrade"><option value="all">Все классы</option><option value="5">5 класс</option><option value="6">6 класс</option><option value="7">7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div>
+      <button type="button" id="refreshBtn" class="secondary">↻ Обновить список</button>
+    </div>
+    <p id="status" class="status" role="status">Подключаемся к общей библиотеке…</p>
+    <div id="bookList" class="grid" style="margin-top:16px"></div>
+  </section>
+  <section class="panel">
+    <h2 style="margin-top:0">Добавить учебник</h2>
+    <p style="color:var(--muted)">Загрузка доступна только администратору. Для подтверждения потребуется секретный токен, который хранится в настройках Cloudflare и не сохраняется на этой странице.</p>
+    <div class="warning">Загружай только материалы, которыми разрешено делиться. Все файлы в этой библиотеке доступны любому человеку, у которого есть ссылка.</div>
+    <form id="uploadForm" style="margin-top:16px">
+      <div class="row">
+        <div class="field"><label for="uploadGrade">Класс</label><select id="uploadGrade" required><option value="">Выбери класс…</option><option value="5">5 класс</option><option value="6">6 класс</option><option value="7">7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div>
+        <div class="field"><label for="uploadFile">Файл (PDF или TXT, до 45 МБ)</label><input id="uploadFile" type="file" accept=".pdf,.txt,application/pdf,text/plain" required></div>
+      </div>
+      <button id="uploadBtn" type="submit" style="margin-top:14px">↑ Загрузить в общую библиотеку</button>
+      <p id="uploadStatus" class="status" role="status"></p>
+    </form>
+  </section>
+</main>
+<script>
+(() => {
+  // Deploy shared-library-worker.js as a separate Worker with this name/account URL.
+  const API = 'https://biolab-shared-library.goldenai017.workers.dev';
+  const list = document.getElementById('bookList');
+  const status = document.getElementById('status');
+  const filter = document.getElementById('filterGrade');
+  const uploadForm = document.getElementById('uploadForm');
+  const uploadStatus = document.getElementById('uploadStatus');
+  let books = [];
+
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const sizeLabel = bytes => bytes < 1024*1024 ? Math.max(1,Math.round(bytes/1024))+' КБ' : (bytes/1024/1024).toFixed(1)+' МБ';
+
+  async function loadBooks() {
+    status.textContent = 'Загружаю список…';
+    list.innerHTML = '';
+    try {
+      const response = await fetch(API + '/books', {cache:'no-store'});
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || 'Ошибка ответа сервера.');
+      books = data.books || [];
+      renderBooks();
+      status.textContent = books.length ? 'В общей библиотеке: ' + books.length + ' файл(ов).' : 'Пока нет опубликованных учебников. Администратор может добавить первый файл ниже.';
+      if (data.truncated) status.textContent += ' Показана первая часть списка.';
+    } catch (error) {
+      status.textContent = 'Общая библиотека пока не подключена. Сначала нужно развернуть Worker и настроить R2 в Cloudflare. После настройки обнови страницу. (' + (error.message || 'ошибка соединения') + ')';
+      list.innerHTML = '<div class="empty">Ожидает настройки облачного хранилища.</div>';
+    }
+  }
+
+  function renderBooks() {
+    const grade = filter.value;
+    const filtered = books.filter(book => grade === 'all' || String(book.grade) === grade);
+    if (!filtered.length) {
+      list.innerHTML = '<div class="empty">Для выбранного фильтра учебников пока нет.</div>';
+      return;
+    }
+    list.innerHTML = filtered.map(book => {
+      const url = API + '/books/' + encodeURIComponent(book.key);
+      return '<article class="book"><h3>📘 ' + esc(book.name) + '</h3><div class="meta">' + esc(book.grade) + ' класс · ' + sizeLabel(Number(book.size)||0) + (book.uploadedAt ? ' · ' + esc(new Date(book.uploadedAt).toLocaleDateString('ru-RU')) : '') + '</div><div class="book-actions"><a class="btn" href="' + url + '" target="_blank" rel="noopener">Открыть</a><a class="btn secondary" href="' + url + '" download="' + esc(book.name) + '">Скачать</a></div></article>';
+    }).join('');
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadBooks);
+  filter.addEventListener('change', renderBooks);
+
+  uploadForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const file = document.getElementById('uploadFile').files[0];
+    const grade = document.getElementById('uploadGrade').value;
+    if (!file || !grade) return;
+    if (file.size > 45*1024*1024) { uploadStatus.textContent = 'Файл больше 45 МБ.'; return; }
+    if (!/\.(pdf|txt)$/i.test(file.name)) { uploadStatus.textContent = 'Можно загружать только PDF или TXT.'; return; }
+    const token = prompt('Введи секретный токен администратора Cloudflare. Он не сохраняется на сайте:');
+    if (!token) { uploadStatus.textContent = 'Загрузка отменена.'; return; }
+    const button = document.getElementById('uploadBtn');
+    button.disabled = true;
+    uploadStatus.textContent = 'Загружаю файл…';
+    try {
+      const form = new FormData();
+      form.append('file', file, file.name);
+      form.append('grade', grade);
+      const response = await fetch(API + '/books', {method:'POST',headers:{'X-Admin-Token':token},body:form});
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || 'Не удалось загрузить файл.');
+      uploadStatus.textContent = 'Готово! Учебник добавлен в общую библиотеку.';
+      uploadForm.reset();
+      await loadBooks();
+    } catch (error) {
+      uploadStatus.textContent = 'Ошибка загрузки: ' + (error.message || 'проверь настройки Worker и токен.');
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  loadBooks();
+})();
+</script>
+</body>
+</html>
