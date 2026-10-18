@@ -9,6 +9,7 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 const MODEL = "gemini-3.8-flash";
+const FALLBACK_MODELS = ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-flash"];
 const MAX_TOPIC_LENGTH = 180;
 
 function corsHeaders(origin) {
@@ -38,20 +39,15 @@ function cleanText(value, maxLength = 500) {
 }
 
 async function requestGemini(apiKey, prompt) {
-  // Retry temporary server errors, then try backup models if the main model is overloaded.
-  const models = [MODEL, "gemini-3.5-flash", "gemini-3.1-flash-lite"];
+  // Try the primary stable model and fall back if this model is unavailable for the key/project.
+  const models = [MODEL, ...FALLBACK_MODELS];
   let lastResult = null;
   let lastResponse = null;
+  let lastModel = null;
 
-  for (let modelIndex = 0; modelIndex < models.length; modelIndex++) {
-    const model = models[modelIndex];
-    const attempts = modelIndex === 0 ? 2 : 1;
-
-    for (let attempt = 0; attempt < attempts; attempt++) {
-      if (attempt > 0) {
-        await new Promise(resolve => setTimeout(resolve, 900));
-      }
-
+  for (const model of models) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (attempt > 0) await new Promise(resolve => setTimeout(resolve, 900));
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
         {
@@ -70,20 +66,24 @@ async function requestGemini(apiKey, prompt) {
           }),
         }
       );
-
       const result = await response.json().catch(() => ({}));
       lastResponse = response;
       lastResult = result;
-
+      lastModel = model;
       if (response.ok) return { response, result, model };
+
       const status = response.status;
-      const retryable = status === 503 || status === 500 || status === 502 || status === 504;
-      if (!retryable) return { response, result, model };
-      if (status !== 503) break;
+      const message = String(result?.error?.message || "").toLowerCase();
+      const modelUnavailable = (status === 404 || status === 400) &&
+        /model|not found|not supported|unsupported|not available|does not exist/.test(message);
+      const retryable = status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+      if (modelUnavailable) break; // try the next model
+      if (retryable && attempt === 0) continue;
+      if (retryable) break; // move to the next model
+      return { response, result, model };
     }
   }
-
-  return { response: lastResponse, result: lastResult, model: null };
+  return { response: lastResponse, result: lastResult, model: lastModel };
 }
 
 export default {
@@ -276,8 +276,8 @@ ${sourceMaterial}
         apiResponse = gemini.response;
         const result = gemini.result || {};
         if (!apiResponse?.ok) {
-          const message = result?.error?.message || "Проверьте API-ключ Gemini и доступность модели.";
-          return json({ ok: false, error: `Ошибка Gemini API: ${message}` }, 502, origin);
+          const message = result?.error?.message || "Gemini API не вернул подробности ошибки.";
+          return json({ ok: false, error: `Ошибка Gemini API (HTTP ${apiResponse?.status || "неизвестно"}, модель ${gemini.model || "не определена"}): ${message} Проверьте Secret GEMINI_API_KEY, доступ к API и лимиты проекта Google AI Studio.` }, 502, origin);
         }
         materials = (result?.candidates?.[0]?.content?.parts || [])
           .map(part => part.text || "")
