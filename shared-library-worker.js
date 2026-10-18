@@ -82,7 +82,7 @@ export default {
         const headers = new Headers(corsHeaders(origin));
         object.writeHttpMetadata(headers);
         headers.set("Content-Type", object.httpMetadata?.contentType || "application/octet-stream");
-        headers.set("Content-Disposition", 'inline; filename*=UTF-8\'\'' + encodeURIComponent(object.customMetadata?.name || "textbook"));
+        headers.set("Content-Disposition", "inline; filename*=UTF-8''" + encodeURIComponent(object.customMetadata?.name || "textbook"));
         headers.set("Cache-Control", "public, max-age=300");
         return new Response(object.body, { headers });
       }
