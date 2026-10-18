@@ -240,8 +240,8 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
   </style>
 </section>
 <section class="page-panel" id="page-presentations">
-  <div class="welcome"><div><div class="eyebrow">Материалы урока</div><h1>Создать презентацию</h1><p>Откройте конструктор презентаций, не выходя из лаборатории.</p></div></div>
-  <div style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)"><iframe title="Конструктор презентаций" src="slides.html" style="display:block;width:100%;height:82vh;min-height:720px;border:0;background:#f4f7f4"></iframe></div>
+  <div class="welcome"><div><div class="eyebrow">Материалы урока</div><h1>Создать презентацию</h1><p>Подготовь слайды прямо в лаборатории BioLab. Навигация лаборатории остаётся на месте.</p></div></div>
+  <div class="presentation-embed" style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)"><iframe id="bioLabSlidesFrame" title="Конструктор презентаций BioLab" src="slides.html?embed=1" scrolling="no" style="display:block;width:100%;height:900px;border:0;background:transparent;overflow:hidden" loading="lazy"></iframe></div>
 </section>
 
 <section class="page-panel" id="page-lessons"><div class="welcome"><div><div class="eyebrow">Ваши материалы</div><h1>Мои уроки</h1><p>Здесь будут храниться созданные вами планы, презентации и задания.</p></div><button class="primary" data-go="create">＋ Новый урок</button></div><div class="cards"><article class="lesson"><div class="lesson-top"><div class="subject-icon">🛡️</div><span class="tag">Черновик</span></div><h3>Иммунитет человека</h3><p>8 класс · Қазақша · 45 минут</p><div class="lesson-foot"><span>Демонстрационный материал</span><button data-go="create">Открыть</button></div></article></div></section>
@@ -496,6 +496,23 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
   if(!area.innerHTML.trim()){alert('Сначала подготовьте материалы урока.');return;}
   const title=document.getElementById('generatedTitle').textContent.trim()||'Материалы урока';
   const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:auto;margin:18mm}body{font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;margin:0;color:#17251d}h1,h2,h3,h4{font-family:"Times New Roman",Times,serif;font-size:12pt;font-weight:bold;margin:12pt 0 6pt}p,td,th,div,article{font-family:"Times New Roman",Times,serif;font-size:12pt}p{white-space:pre-wrap;margin:0 0 8pt}table{width:100%;border-collapse:collapse;margin:10pt 0 14pt;table-layout:auto;break-inside:auto}thead{display:table-header-group}tr{break-inside:avoid}th,td{border:1px solid #8ca395;padding:6pt 7pt;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e6f0e9;font-weight:bold;text-align:center}tbody tr:nth-child(even){background:#f7faf8}.lesson-table-wrap{width:100%;overflow:visible;margin:10pt 0 14pt}.lesson-table{width:100%;min-width:0}.lesson-table th,.lesson-table td{border:1px solid #8ca395;padding:6pt 7pt}article,.objective{margin:10pt 0;padding:9pt;border:1px solid #cbd8ce;break-inside:avoid}strong{font-weight:bold}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'
+
+<script>
+(function(){
+  const frame=document.getElementById('bioLabSlidesFrame');
+  if(!frame)return;
+  window.addEventListener('message',function(event){
+    if(event.origin!==window.location.origin||event.source!==frame.contentWindow)return;
+    const data=event.data;
+    if(data&&data.type==='biolab-slides-height'&&Number.isFinite(data.height)){
+      frame.style.height=Math.max(700,Math.min(12000,Math.ceil(data.height)))+'px';
+    }
+  });
+  frame.addEventListener('load',function(){
+    try{frame.contentWindow.postMessage({type:'biolab-slides-request-height'},window.location.origin);}catch(e){}
+  });
+})();
+</script>
 </body></html>';
   const blob=new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=title.replace(/[\\/:*?"<>|]+/g,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
