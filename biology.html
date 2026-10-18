@@ -77,6 +77,26 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
 .altnex-w-core svg .rungs{stroke:#62a98b!important;opacity:.9!important}
 
 
+/* Refined intro/outro motion: soft reveal, staggered text, smooth handoff to the lab */
+#altnexWelcome{opacity:1;visibility:visible;transition:opacity .7s cubic-bezier(.22,.61,.36,1),visibility .7s!important;animation:altnexScreenIn .65s cubic-bezier(.22,.61,.36,1) both}
+#altnexWelcome.leaving{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:opacity .7s cubic-bezier(.4,0,.2,1),visibility .7s!important}
+#altnexWelcome .altnex-w-visual{animation:altnexLogoIn .95s cubic-bezier(.16,1,.3,1) .12s both}
+#altnexWelcome .altnex-w-ring.a{animation:altnexOrbit 24s linear infinite,altnexRingIn .9s ease-out .15s both}
+#altnexWelcome .altnex-w-ring.b{animation:altnexOrbit 34s linear infinite reverse,altnexRingIn .9s ease-out .28s both}
+#altnexWelcome .altnex-w-ring.c{animation:altnexRingIn .9s ease-out .38s both}
+#altnexWelcome .altnex-w-core{animation:altnexCoreIn .85s cubic-bezier(.16,1,.3,1) .3s both}
+#altnexWelcome .altnex-w-kicker{animation:altnexTextIn .65s ease-out .35s both}
+#altnexWelcome .altnex-w-title{animation:altnexTextIn .8s cubic-bezier(.16,1,.3,1) .48s both}
+#altnexWelcome .altnex-w-copy{animation:altnexTextIn .7s ease-out .68s both}
+#altnexWelcome .altnex-w-sign{animation:altnexTextIn .65s ease-out .82s both}
+#altnexWelcome .altnex-w-top{animation:altnexTextIn .6s ease-out .2s both}
+#altnexWelcome .altnex-w-bottom{animation:altnexTextIn .6s ease-out .9s both}
+@keyframes altnexScreenIn{from{opacity:0}to{opacity:1}}
+@keyframes altnexLogoIn{from{opacity:0;transform:translateY(16px) scale(.84)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes altnexRingIn{from{opacity:0}to{opacity:1}}
+@keyframes altnexCoreIn{0%{opacity:0;transform:scale(.72)}70%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+@keyframes altnexTextIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){#altnexWelcome,#altnexWelcome *{animation:none!important;transition:none!important}}
 /* Rounded, friendly welcome branding and a clearly visible green circular logo */
 #altnexWelcome{font-family:'Manrope',sans-serif!important}
 .altnex-w-title,.altnex-w-title em{font-family:'Space Grotesk','Manrope',sans-serif!important;font-weight:700!important;letter-spacing:-1.5px!important}
@@ -557,9 +577,9 @@ function renderMaterials(raw){
     var overlay = document.getElementById('altnexWelcome');
     if (overlay) {
       overlay.classList.add('leaving');
-      window.setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 250);
+      window.setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 700);
     }
-  }, 2000);
+  }, 3400);
 })();
 </script>
 \n<script id="altnex-class-textbooks">
