@@ -1,5 +1,5 @@
 // ALTNEX BioLab — Cloudflare Worker backend
-// Required secret: GEMINI_API_KEY
+// Required secrets: GEMINI_API_KEY (games) and ANTHROPIC_API_KEY (KSP)
 // Worker name should be: altnex-biolab-api
 // Frontend endpoint is configured for:
 // https://altnex-biolab-api.goldenai017.workers.dev/
@@ -53,13 +53,6 @@ export default {
       return json({ ok: false, error: "Запрос с этого сайта не разрешён." }, 403, origin);
     }
 
-    if (!env.GEMINI_API_KEY) {
-      return json({
-        ok: false,
-        error: "На сервере ещё не настроен GEMINI_API_KEY. Добавьте API-ключ в Cloudflare Worker → Settings → Variables and Secrets.",
-      }, 503, origin);
-    }
-
     let input;
     try {
       input = await request.json();
@@ -67,6 +60,7 @@ export default {
       return json({ ok: false, error: "Не удалось прочитать параметры запроса." }, 400, origin);
     }
 
+    const mode = cleanText(input.mode, 20).toLowerCase() === "claude" ? "claude" : "gemini";
     const topic = cleanText(input.topic, MAX_TOPIC_LENGTH);
     const grade = cleanText(input.grade, 30);
     const language = cleanText(input.language, 30);
@@ -87,10 +81,44 @@ export default {
     if (!topic) return json({ ok: false, error: "Укажите тему урока." }, 400, origin);
     if (!outputs.length) return json({ ok: false, error: "Выберите хотя бы один материал." }, 400, origin);
 
+    if (mode === "claude" && !env.ANTHROPIC_API_KEY) {
+      return json({
+        ok: false,
+        error: "Claude пока не подключён: добавьте ANTHROPIC_API_KEY как Secret в Cloudflare Worker → Settings → Variables and Secrets.",
+      }, 503, origin);
+    }
+    if (mode === "gemini" && !env.GEMINI_API_KEY) {
+      return json({
+        ok: false,
+        error: "На сервере не настроен GEMINI_API_KEY. Добавьте его как Secret в Cloudflare Worker → Settings → Variables and Secrets.",
+      }, 503, origin);
+    }
+
     const isKazakh = language.toLowerCase().includes("қазақ");
     const responseLanguage = isKazakh ? "казахском языке" : "русском языке";
 
-    const prompt = `Ты — методический помощник учителя биологии в Казахстане. Подготовь качественные материалы для школьного урока.
+    const prompt = mode === "claude" ? `Ты — опытный методист и разработчик краткосрочных планов урока (КСП) для школ Казахстана.
+Подготовь содержательный, практичный и аккуратно структурированный КСП.
+
+ТЕМА: ${topic}
+КЛАСС: ${grade || "не указан"}
+ПРЕДМЕТ: Биология
+ЯЗЫК: ${responseLanguage}
+ДЛИТЕЛЬНОСТЬ: ${duration || "45 минут"}
+ТИП УРОКА: ${lessonType || "изучение новой темы"}
+ЗАПРОШЕННЫЕ МАТЕРИАЛЫ: ${outputs.join(", ")}
+
+ОБЯЗАТЕЛЬНО:
+- Сформулируй тему, предварительную цель урока и ожидаемые результаты обучения.
+- Не выдумывай официальные коды и дословные формулировки целей обучения РК. Если учитель не предоставил цель программы, явно пометь её как рабочий вариант для проверки.
+- Основная часть КСП должна быть таблицей со столбцами: этап/время, действия учителя, действия учащихся, оценивание/дескрипторы, ресурсы.
+- Сумма времени этапов должна равняться ${duration || "45 минут"}.
+- Добавь дифференциацию, поддержку учащихся с разными потребностями, формативное оценивание, рефлексию и домашнее задание.
+- Для каждого задания дай понятную инструкцию и конкретные дескрипторы.
+- Пиши на ${responseLanguage}; учитывай возраст класса и биологическую точность.
+- Не используй пустые общие фразы, дублирование и вымышленные источники.
+- Верни готовый КСП с заголовками и таблицей, пригодный для редактирования и переноса в документ.`
+      : `Ты — методический помощник учителя биологии в Казахстане. Подготовь качественные материалы для школьного урока.
 
 ТЕМА: ${topic}
 КЛАСС: ${grade || "не указан"}
@@ -101,55 +129,79 @@ export default {
 
 Требования:
 - Пиши на ${responseLanguage}, грамотно и естественно.
-- Учитывай возраст школьников и указанную длительность.
-- Сначала дай чёткую цель урока и ожидаемые результаты.
-- План урока должен иметь этапы, время, действия учителя и учащихся, оценивание и ресурсы.
-- Для презентации дай структуру слайдов и содержательные тезисы, а не только названия.
-- Для заданий сформулируй конкретные задания разного уровня сложности.
-- Для игры опиши правила, ход и примеры карточек/вопросов.
-- Для теста создай 5–8 вопросов с вариантами ответа и отдельным ключом.
-- Не выдумывай официальные коды целей обучения, ссылки на учебники или цитаты из программы РК. Если точные официальные формулировки не предоставлены, пометь цели как предварительные и предложи сверить с действующей программой.
-- Проверяй биологическую точность. Если в теме есть спорные или меняющиеся сведения, формулируй осторожно.
-- Используй заголовки и списки. Не добавляй вступление о том, что ты ИИ.
-- Верни только готовый текст материалов, пригодный для отображения на странице.
-- Объём — достаточно подробный для реальной подготовки урока, но без повторов и воды.`;
+- Для режима игры создавай игровую механику: правила, раунды, задания/вопросы, варианты ответов, правильные ответы и обратную связь для игрока.
+- Учитывай возраст школьников и биологическую точность.
+- Не выдумывай официальные коды целей обучения, ссылки на учебники или цитаты из программы РК.
+- Используй понятные заголовки и списки без вступления о том, что ты ИИ.
+- Верни готовый текст материалов без повторов и воды.`;
 
     try {
-      const apiResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-        {
+      let apiResponse;
+      let materials = "";
+
+      if (mode === "claude") {
+        apiResponse = await fetch("https://api.anthropic.com/v1/messages", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-goog-api-key": env.GEMINI_API_KEY,
+            "x-api-key": env.ANTHROPIC_API_KEY,
+            "anthropic-version": "2023-06-01",
           },
           body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.55,
-              topP: 0.9,
-              maxOutputTokens: 8192,
-            },
+            model: "claude-sonnet-5-5",
+            max_tokens: 8192,
+            temperature: 0.4,
+            system: "Ты — опытный методист школ Казахстана. Соблюдай структуру КСП, проверяй точность предметного содержания и не выдумывай официальные цели обучения.",
+            messages: [{ role: "user", content: prompt }],
           }),
+        });
+        const result = await apiResponse.json().catch(() => ({}));
+        if (!apiResponse.ok) {
+          const message = result?.error?.message || "Проверьте API-ключ Claude и доступ к модели.";
+          return json({ ok: false, error: `Ошибка Claude API: ${message}` }, 502, origin);
         }
-      );
-
-      const result = await apiResponse.json().catch(() => ({}));
-      if (!apiResponse.ok) {
-        const message = result?.error?.message || "Проверьте API-ключ Gemini и доступность модели.";
-        return json({ ok: false, error: `Ошибка Gemini API: ${message}` }, 502, origin);
+        materials = (result?.content || [])
+          .filter(block => block.type === "text")
+          .map(block => block.text || "")
+          .join("\n")
+          .trim();
+        if (!materials) {
+          return json({ ok: false, error: "Claude вернул пустой ответ. Попробуйте изменить тему." }, 502, origin);
+        }
+      } else {
+        apiResponse = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": env.GEMINI_API_KEY,
+            },
+            body: JSON.stringify({
+              contents: [{ role: "user", parts: [{ text: prompt }] }],
+              generationConfig: {
+                temperature: 0.55,
+                topP: 0.9,
+                maxOutputTokens: 8192,
+              },
+            }),
+          }
+        );
+        const result = await apiResponse.json().catch(() => ({}));
+        if (!apiResponse.ok) {
+          const message = result?.error?.message || "Проверьте API-ключ Gemini и доступность модели.";
+          return json({ ok: false, error: `Ошибка Gemini API: ${message}` }, 502, origin);
+        }
+        materials = (result?.candidates?.[0]?.content?.parts || [])
+          .map(part => part.text || "")
+          .join("\n")
+          .trim();
+        if (!materials) {
+          return json({ ok: false, error: "Gemini вернул пустой ответ. Попробуйте изменить тему или повторить запрос." }, 502, origin);
+        }
       }
 
-      const materials = (result?.candidates?.[0]?.content?.parts || [])
-        .map(part => part.text || "")
-        .join("\n")
-        .trim();
-
-      if (!materials) {
-        return json({ ok: false, error: "Gemini вернул пустой ответ. Попробуйте изменить тему или повторить запрос." }, 502, origin);
-      }
-
-      return json({ ok: true, materials }, 200, origin);
+      return json({ ok: true, materials, provider: mode === "claude" ? "Claude" : "Gemini" }, 200, origin);
     } catch (error) {
       return json({
         ok: false,
