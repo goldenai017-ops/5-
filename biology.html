@@ -358,11 +358,7 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
  word.addEventListener('click',()=>{
   if(!area.innerHTML.trim()){alert('Сначала подготовьте материалы урока.');return;}
   const title=document.getElementById('generatedTitle').textContent.trim()||'Материалы урока';
-  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font-family:Arial,sans-serif;line-height:1.5;margin:24px;color:#17251d}h1{font-size:22pt}h3{font-size:14pt}p{white-space:pre-wrap}article,.objective{margin:12px 0;padding:12px;border:1px solid #cbd8ce;break-inside:avoid}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'<script>
-(()=>{const overlay=document.getElementById('altnexWelcome');const enter=document.getElementById('altnexEnterBtn');if(!overlay||!enter)return;const year=document.getElementById('altnexWelcomeYear');if(year)year.textContent=new Date().getFullYear();const close=()=>{overlay.classList.add('leaving');window.setTimeout(()=>overlay.remove(),650)};enter.addEventListener('click',close);document.addEventListener('keydown',event=>{if(event.key==='Escape'&&document.body.contains(overlay))close()})})();
-</script>
-
-</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>body{font-family:Arial,sans-serif;line-height:1.5;margin:24px;color:#17251d}h1{font-size:22pt}h3{font-size:14pt}p{white-space:pre-wrap}article,.objective{margin:12px 0;padding:12px;border:1px solid #cbd8ce;break-inside:avoid}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'</body></html>';
   const blob=new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=title.replace(/[\\/:*?"<>|]+/g,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  });
