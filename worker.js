@@ -8,7 +8,7 @@ const ALLOWED_ORIGINS = new Set([
   "https://goldenai017-ops.github.io",
 ]);
 
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-3.8-flash";
 const MAX_TOPIC_LENGTH = 180;
 
 function corsHeaders(origin) {
