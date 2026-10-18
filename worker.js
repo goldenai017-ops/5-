@@ -117,6 +117,7 @@ export default {
 
     const requestedMode = cleanText(input.mode, 20).toLowerCase();
     const isSlides = requestedMode === "slides";
+    const isPresenton = requestedMode === "presenton";
     const mode = requestedMode === "claude" ? "claude" : "gemini";
     const topic = cleanText(input.topic, MAX_TOPIC_LENGTH);
     const grade = cleanText(input.grade, 30);
@@ -150,7 +151,46 @@ export default {
       : [];
 
     if (!topic) return json({ ok: false, error: "Укажите тему урока." }, 400, origin);
-    if (!outputs.length) return json({ ok: false, error: "Выберите хотя бы один материал." }, 400, origin);
+    if (!isPresenton && !outputs.length) return json({ ok: false, error: "Выберите хотя бы один материал." }, 400, origin);
+
+    if (isPresenton) {
+      if (!env.PRESENTON_API_KEY) return json({ ok: false, error: "Presenton не подключён: добавьте PRESENTON_API_KEY как Secret в Cloudflare Worker → Settings → Variables and Secrets." }, 503, origin);
+      const isKzPresentation = language.toLowerCase().includes("қазақ");
+      const textbookName = cleanText(input.textbook, 220);
+      const paragraphName = cleanText(input.paragraph, 300);
+      const content = [
+        "Создай учебную презентацию по биологии для школьников Республики Казахстан.",
+        "Тема: " + topic,
+        "Класс: " + (grade || "не указан"),
+        "Язык презентации: " + (isKzPresentation ? "казахский" : "русский"),
+        textbookName ? "Выбранный учебник: " + textbookName : "",
+        paragraphName ? "Выбранный параграф: " + paragraphName : "",
+        "Планируй презентацию на один школьный урок. Объясняй понятия точно и доступно для указанного класса."
+      ].filter(Boolean).join("\n");
+      try {
+        const presentonResponse = await fetch("https://api.presenton.ai/api/v1/ppt/presentation/generate", {
+          method: "POST",
+          headers: { "Authorization": "Bearer " + env.PRESENTON_API_KEY, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content,
+            n_slides: Math.min(15, Math.max(5, Number.parseInt(input.slideCount, 10) || 8)),
+            language: isKzPresentation ? "Kazakh" : "Russian",
+            instructions: "Создай научно корректную школьную презентацию по биологии. Один слайд — одна главная мысль, короткие тезисы, подходящие иллюстрации и понятная последовательность. Не выдумывай официальные коды целей обучения РК, статистику или источники. Добавь титульный слайд и итоговый слайд. Презентация должна быть пригодна для показа ученикам.",
+            tone: "default", verbosity: "standard", template: "general", export_as: "pptx",
+            include_title_slide: true, web_search: false, image_type: "stock"
+          })
+        });
+        const result = await presentonResponse.json().catch(() => ({}));
+        if (!presentonResponse.ok) {
+          const message = result?.detail || result?.error?.message || result?.message || "Presenton API не вернул подробности ошибки.";
+          return json({ ok: false, error: "Ошибка Presenton API (HTTP " + presentonResponse.status + "): " + String(message).slice(0, 700) }, 502, origin);
+        }
+        const resolveUrl = value => { if (!value || typeof value !== "string") return ""; try { return new URL(value, "https://api.presenton.ai").toString(); } catch { return ""; } };
+        return json({ ok: true, provider: "Presenton", presentation_id: result.presentation_id || "", path: resolveUrl(result.path), edit_path: resolveUrl(result.edit_path) }, 200, origin);
+      } catch (error) {
+        return json({ ok: false, error: "Presenton серверіне қосылу мүмкін болмады. API мекенжайы мен PRESENTON_API_KEY мәнін тексеріңіз." }, 502, origin);
+      }
+    }
     if (isSlides && !sourceMaterial) return json({ ok: false, error: "Сначала загрузите учебник или другой исходный материал в формате PDF или TXT." }, 400, origin);
 
     if (mode === "claude" && !env.ANTHROPIC_API_KEY) {
@@ -201,6 +241,7 @@ ${isKsp ? `ОСОБЫЕ ТРЕБОВАНИЯ К КСП:
 - Для заданий указывай инструкцию, ожидаемый ответ и критерий/дескриптор.
 - Для теста составь вопросы разных уровней, варианты ответов при необходимости и отдельный ключ ответов.
 - Для игры укажи цель, правила, подготовку, ход/раунды, вопросы или задания, правильные ответы и понятную обратную связь.
+- Создай только материал(ы), перечисленные в ЗАПРОШЕННЫЕ МАТЕРИАЛЫ. Каждый запрос обрабатывается отдельно; не добавляй разделы для невыбранных материалов.
 - Для интерактивной игры предложи пошаговую механику, которую можно реализовать на сайте; не утверждай, что текст сам по себе уже является работающей интерактивной игрой.
 - Не выдумывай официальные коды целей обучения, ссылки на учебники, цитаты или нормативные акты.
 - Используй понятные заголовки, конкретные задания и минимум вводных фраз.`}

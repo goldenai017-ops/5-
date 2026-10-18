@@ -39,6 +39,14 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
 #generatedPreview .generated-actions button:hover{transform:translateY(-1px);box-shadow:0 6px 14px #102d1b12}
 #generatedPreview #copyLessonBtn{margin-left:auto}
 @media(max-width:700px){#generatedPreview.generated{padding:16px;border-radius:18px}#generatedPreview .generated-head{align-items:flex-start}#generatedPreview .output-card{padding:16px}#generatedPreview .generated-actions button{flex:1 1 calc(50% - 10px)}#generatedPreview #copyLessonBtn{margin-left:0}}
+
+/* Separate AI result cards */
+.material-output{min-width:0;grid-column:span 1;background:var(--surface)}
+.material-output h3{font-size:14px;line-height:1.4;margin-bottom:12px}
+.material-status{font-size:13px;color:var(--muted);padding:10px 0}
+.material-error{font-size:13px;color:#9d352b;white-space:pre-wrap;overflow-wrap:anywhere}
+.material-body{min-width:0;overflow-wrap:anywhere}
+.material-body a{display:inline-block;margin:5px 12px 5px 0;color:var(--green-2);font-weight:700}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -184,7 +192,7 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
       <div class="quick-grid"><button class="quick" data-go="library"><div class="qicon">📖</div><strong>Найти тему</strong><small>Библиотека 5–11 классов</small></button><button class="quick" data-go="create"><div class="qicon">✨</div><strong>Собрать урок</strong><small>План, задания, тест</small></button><button class="quick" data-go="games"><div class="qicon">🎮</div><strong>Создать игру</strong><small>Закрепить знания</small></button><button class="quick" data-go="assessment"><div class="qicon">📊</div><strong>Проверить знания</strong><small>Тесты и результаты</small></button></div>
     </section>
     <section class="page-panel" id="page-create">
-      <div class="welcome"><div><div class="eyebrow">Конструктор уроков</div><h1>Создать урок</h1><p>Настройте параметры — и выберите, какие материалы подготовить. Сейчас это демонстрационный интерфейс.</p></div></div>
+      <div class="welcome"><div><div class="eyebrow">Конструктор уроков</div><h1>Создать урок</h1><p>Настрой параметры и отметь галочками нужные материалы. Каждый результат появится в отдельной карточке.</p></div></div>
       <div class="formbox"><h2>Параметры урока</h2><p>Начните с учебной темы и требований к занятию.</p>
         <form id="lessonForm">
           <div class="formgrid">
@@ -204,11 +212,11 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
               <select id="lessonParagraph" disabled><option value="">Сначала выбери учебник</option></select>
               <p id="lessonParagraphHint" class="subtle" style="margin:8px 0 0">В списке будут только названия найденных параграфов.</p>
             <button type="button" id="createPresentationFromParagraph" class="primary" disabled style="width:100%;margin-top:12px">🎞 Презентацияны осы параграф бойынша жасау</button>
-            <p class="subtle" style="margin:7px 0 0">Параграфты таңдаған соң батырманы бас — конструктор таңдалған тақырыппен ашылады.</p>
+            <p class="subtle" style="margin:7px 0 0">Параграфты таңда да, осы батырманы бас — белгіленген материалдар таңдалған тақырыппен жасалады.</p>
             </div>
             <div class="field" style="margin-top:16px">
               <label for="topic">Тема урока</label>
-              <input id="topic" value="Иммунитет человека" required placeholder="Тема автоматически появится после выбора параграфа">
+              <input id="topic" value="Иммунитет человека" placeholder="Тема автоматически появится после выбора параграфа">
             </div>
             <button type="button" class="secondary" id="lessonTextbookLibraryBtn" style="margin-top:12px">📚 Открыть «Мои учебники»</button>
           </div>
@@ -216,8 +224,8 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
             <label for="topicFallback">Тема урока</label>
             <input id="topicFallback" value="Иммунитет человека" placeholder="Например, фотосинтез">
           </div>
-          <div style="margin-top:22px"><div class="field"><label>Что подготовить?</label><div class="checks"><label class="check"><input type="checkbox" name="output" value="План урока" checked> План урока</label><label class="check"><input type="checkbox" name="output" value="Презентация" checked> Презентация</label><label class="check"><input type="checkbox" name="output" value="Задания" checked> Задания</label><label class="check"><input type="checkbox" name="output" value="Игра"> Интерактивная игра</label><label class="check"><input type="checkbox" name="output" value="Тест с ответами" checked> Тест с ответами</label></div></div></div>
-          <div class="form-actions"><span class="subtle">Материалы можно будет проверить и отредактировать перед использованием.</span><button class="primary" type="submit">Подготовить материалы →</button></div>
+          <div style="margin-top:22px"><div class="field"><label>Что подготовить?</label><div class="checks"><label class="check"><input type="checkbox" name="output" value="План урока" checked> КСП · Gemini</label><label class="check"><input type="checkbox" name="output" value="Презентация" checked> Презентация · Presenton</label><label class="check"><input type="checkbox" name="output" value="Задания" checked> Задания · Gemini</label><label class="check"><input type="checkbox" name="output" value="Игра"> Интерактивная игра · Gemini</label><label class="check"><input type="checkbox" name="output" value="Тест с ответами" checked> Тест с ответами · Gemini</label></div></div></div>
+          <div class="form-actions"><span class="subtle">Будут созданы только отмеченные материалы. Каждый — в отдельной карточке.</span><button class="primary" type="submit">Подготовить материалы →</button></div>
         </form>
         <div class="notice" id="formNotice" role="status"></div>
         <section class="generated" id="generatedPreview" aria-live="polite"><div class="generated-head"><div><h2 id="generatedTitle">Материалы урока</h2><p id="generatedMeta"></p></div><span class="demo-label">ПРИМЕР МАКЕТА</span></div><div id="generatedContent" class="output-grid"></div><div class="generated-actions"><button type="button" class="secondary" id="editLessonBtn">← Изменить параметры</button><button type="button" class="secondary" id="exportWordBtn">↓ Скачать Word</button><button type="button" class="secondary" id="exportPdfBtn">↓ Печать / PDF</button><button type="button" class="primary" id="copyLessonBtn">Скопировать план</button></div></section>
@@ -279,69 +287,6 @@ function go(page){document.querySelectorAll('.page-panel').forEach(el=>el.classL
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 document.querySelectorAll('[data-topic-create]').forEach(b=>b.addEventListener('click',()=>{go('create');document.getElementById('topic').value=b.dataset.topicCreate;}));
-document.getElementById('lessonForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const outputs=[...document.querySelectorAll('input[name="output"]:checked')].map(x=>x.value);
-  const topic=document.getElementById('topic').value.trim();
-  const grade=document.getElementById('grade').value;
-  const language=document.getElementById('language').value;
-  const duration=document.getElementById('duration').value;
-  const lessonType=document.getElementById('lessonType').value;
-  const notice=document.getElementById('formNotice');
-  if(!outputs.length){notice.style.display='block';notice.textContent='Выберите хотя бы один тип материала.';return;}
-  if(!topic){notice.style.display='block';notice.textContent='Введите тему урока.';return;}
-  const isKz=language==='Қазақша';
-  const immunity=/иммунитет/i.test(topic);
-  const t=isKz?{
-    goal:immunity?'Иммунитеттің ағзаны жұқпалардан қорғаудағы рөлін түсіндіру; иммунитет түрлерін салыстыру және вакцинацияның маңызын негіздеу.':'«'+topic+'» тақырыбының негізгі ұғымдарын түсіндіру, биологиялық үдерістер мен құрылымдардың байланысын анықтау және білімді тапсырмаларда қолдану.',
-    criteria:'Негізгі ұғымдарды дұрыс түсіндіреді; кемінде екі ұғымның байланысын көрсетеді; мысалға сүйеніп қорытынды жасайды.',
-    stages:['0–5 мин — қызығушылықты ояту: тақырыпқа байланысты проблемалық сұрақ.','5–12 мин — алдыңғы білімді еске түсіру және негізгі терминдерді ашу.','12–25 мин — жаңа материалды түсіндіру, сызба/модельді талдау.','25–35 мин — жұптық немесе топтық тапсырма, жауаптарды дәлелдеу.','35–41 мин — қалыптастырушы бағалау: қысқа тест және кері байланыс.','41–45 мин — қорытынды, рефлексия және үй тапсырмасы.'],
-    slides:['1-слайд. Сабақ тақырыбы және проблемалық сұрақ.','2-слайд. Сабақ мақсаты мен бағалау критерийлері.','3-слайд. Негізгі ұғымдар және олардың анықтамалары.','4-слайд. Үдерістің кезеңдері немесе құрылымның сызбасы.','5-слайд. Өмірден алынған мысал және талдау сұрағы.','6-слайд. Қорытынды: үш негізгі ой және өзін-өзі тексеру.'],
-    tasks:['1. Негізгі ұғымдарға өз сөзіңізбен анықтама беріңіз.','2. Екі ұғымды немесе үдерісті салыстырып, кемінде бір ұқсастық пен айырмашылық жазыңыз.','3. Биологиялық жағдайды талдап, жауабыңызды дәлелдеңіз.','Қолдау: терминдер банкін және дайын сызбаны ұсыныңыз. Күрделі деңгей: жаңа жағдайға білімді қолданып, қорытынды жасатыңыз.'],
-    quiz:['1. Тақырыптың негізгі ұғымын анықтаңыз.','2. Қай тұжырым биологиялық үдерісті дұрыс сипаттайды?','3. Берілген құрылым мен оның қызметін сәйкестендіріңіз.','4. Білімді күнделікті өмірдегі жағдайға қолданыңыз.','5. Өз жауабыңызды бір ғылыми дәлелмен негіздеңіз.','Жауап кілті: нақты жауаптарды сабақта пайдаланатын оқулық пен материалға сүйеніп толтырыңыз; жалпы үлгі нақты тақырыпқа автоматты түрде расталған кілт болып саналмайды.'],
-    game:'«Дұрыс па, бұрыс па?»: тақырып бойынша 5 тұжырым дайындаңыз. Оқушылар жауапты таңдап, бір сөйлеммен дәлелдейді. Әр дұрыс дәлелге 1 ұпай.',
-    teacher:'Мұғалім: ұғымдарды түсіндіреді, сұрақ қояды, кері байланыс береді. Оқушы: сызбаны талдайды, дәлел келтіреді, тапсырманы орындайды.',
-    homework:'Тақырып бойынша 5 негізгі терминді қайталау және бір өмірлік мысал дайындау.'
-  }:{
-    goal:immunity?'Объяснить роль иммунитета в защите от инфекций; сравнить виды иммунитета и обосновать значение вакцинации.':'Объяснить ключевые понятия темы «'+topic+'», установить связи между биологическими процессами и структурами и применить знания при выполнении заданий.',
-    criteria:'Ученик корректно объясняет основные понятия, показывает связь минимум между двумя понятиями и обосновывает вывод биологическим примером.',
-    stages:['0–5 мин — мотивация: проблемный вопрос по теме.','5–12 мин — актуализация предыдущих знаний и разбор ключевых терминов.','12–25 мин — объяснение нового материала, анализ схемы или модели.','25–35 мин — парное/групповое задание с аргументацией ответов.','35–41 мин — формативная проверка: мини-тест и обратная связь.','41–45 мин — подведение итогов, рефлексия и домашнее задание.'],
-    slides:['Слайд 1. Тема урока и проблемный вопрос.','Слайд 2. Цель урока и критерии успеха.','Слайд 3. Ключевые понятия и определения.','Слайд 4. Схема процесса или строения.','Слайд 5. Пример из жизни и вопрос для анализа.','Слайд 6. Итог: три главные идеи и самопроверка.'],
-    tasks:['1. Дайте определения ключевым понятиям своими словами.','2. Сравните два понятия или процесса: укажите сходство и различие.','3. Разберите биологическую ситуацию и обоснуйте ответ.','Поддержка: предложите банк терминов и готовую схему. Усложнение: попросите применить знания к новой ситуации и сделать вывод.'],
-    quiz:['1. Какое определение точнее раскрывает ключевое понятие темы?','2. Какое утверждение правильно описывает биологический процесс?','3. Соотнесите структуру и её функцию.','4. Примените знания к ситуации из повседневной жизни.','5. Обоснуйте свой ответ одним научным аргументом.','Ключ ответов: уточните конкретные ответы по используемому учебнику и материалам. Этот универсальный шаблон не является автоматически проверенным ключом по выбранной теме.'],
-    game:'«Верно или неверно?»: подготовьте 5 утверждений по теме. Ученики выбирают ответ и объясняют его одним предложением. За правильный ответ с объяснением — 1 балл.',
-    teacher:'Учитель: объясняет понятия, задаёт вопросы и даёт обратную связь. Ученики: анализируют схему, аргументируют выводы и выполняют задания.',
-    homework:'Повторить 5 ключевых терминов темы и подготовить один пример из жизни.'
-  };
-  if(immunity){
-    if(isKz){
-      t.stages=['0–5 мин — сұрақ: ағза ауру қоздырғыштарынан қалай қорғанады?','5–12 мин — туа біткен және жүре пайда болған иммунитет.','12–22 мин — лейкоциттер, В- және Т-лимфоциттер, антиденелер.','22–32 мин — гуморальдық және жасушалық иммунитетті салыстыру.','32–40 мин — вакцинацияның алдын алудағы рөлі және тапсырма.','40–45 мин — шағын тест, рефлексия.'];
-      t.slides=['1. Иммунитет дегеніміз не?','2. Туа біткен және жүре пайда болған иммунитет.','3. Фагоциттер, В- және Т-лимфоциттер.','4. Антиденелер: гуморальдық және жасушалық жауап.','5. Вакцинация және иммундық жад.','6. Қорытынды сұрақтар.'];
-      t.tasks=['1. Туа біткен және жүре пайда болған иммунитетті салыстырыңыз.','2. Сәйкестендіріңіз: фагоцит — бөгде бөлшектерді жұту; В-лимфоцит — антидене өндіруге қатысу; Т-лимфоцит — жасушалық иммундық жауапқа қатысу.','3. Вакцинацияның иммундық жад қалыптастыруға қалай көмектесетінін түсіндіріңіз.','Қолдау: терминдер банкін пайдаланыңыз. Күрделі деңгей: иммундық жауаптың кезеңдерін сызба түрінде көрсетіңіз.'];
-      t.quiz=['1. Антиденелерді өндіруге қай жасушалар қатысады? — В-лимфоциттер.','2. Фагоциттердің қызметі қандай? — Бөгде бөлшектерді жұтып, жою.','3. Жасушалық иммунитетте маңызды рөл атқаратын жасушалар? — Т-лимфоциттер.','4. Вакцинацияның мақсаты қандай? — Арнайы иммундық жауап пен иммундық жадтың қалыптасуына көмектесу.','5. Гуморальдық иммунитет немен байланысты? — Дене сұйықтықтарындағы антиденелермен.'];
-    } else {
-      t.stages=['0–5 мин — вопрос: как организм защищается от возбудителей?','5–12 мин — врождённый и приобретённый иммунитет.','12–22 мин — лейкоциты, В- и Т-лимфоциты, антитела.','22–32 мин — сравнение гуморального и клеточного иммунитета.','32–40 мин — вакцинация, иммунная память и практическое задание.','40–45 мин — мини-тест и рефлексия.'];
-      t.slides=['Слайд 1. Что такое иммунитет?','Слайд 2. Врождённый и приобретённый иммунитет.','Слайд 3. Фагоциты, В- и Т-лимфоциты.','Слайд 4. Антитела: гуморальный и клеточный ответ.','Слайд 5. Вакцинация и иммунная память.','Слайд 6. Итоговые вопросы.'];
-      t.tasks=['1. Сравните врождённый и приобретённый иммунитет.','2. Соотнесите: фагоцит — поглощение чужеродных частиц; В-лимфоцит — участие в выработке антител; Т-лимфоцит — участие в клеточном иммунном ответе.','3. Объясните, как вакцинация помогает формировать иммунную память.','Поддержка: используйте банк терминов. Усложнение: изобразите этапы иммунного ответа в виде схемы.'];
-      t.quiz=['1. Какие клетки участвуют в выработке антител? — В-лимфоциты.','2. Какова функция фагоцитов? — Поглощать и уничтожать чужеродные частицы.','3. Какие клетки важны для клеточного иммунитета? — Т-лимфоциты.','4. Какова цель вакцинации? — Помочь сформировать специфический иммунный ответ и иммунную память.','5. С чем связан гуморальный иммунитет? — С антителами в жидкостях организма.'];
-    }
-  }
-  const contentMap={
-    'План урока':'ЦЕЛЬ УРОКА\n'+t.goal+'\n\nКРИТЕРИИ УСПЕХА\n'+t.criteria+'\n\nХОД УРОКА\n'+t.stages.join('\n')+'\n\nДЕЙСТВИЯ\n'+t.teacher+'\n\nДОМАШНЕЕ ЗАДАНИЕ\n'+t.homework,
-    'Презентация':t.slides.join('\n'),
-    'Задания':t.tasks.join('\n'),
-    'Интерактивная игра':t.game,
-    'Тест с ответами':t.quiz.join('\n')
-  };
-  notice.style.display='block';
-  notice.innerHTML='<strong>Черновик материалов подготовлен.</strong><br>Тема: '+escapeHtml(topic)+' · '+escapeHtml(grade)+' · '+escapeHtml(language)+'<br><span style="font-size:11px">Это демонстрационный генератор, не подключённый к ИИ. Проверьте формулировки по учебнику и программе.</span>';
-  document.getElementById('generatedTitle').textContent=topic;
-  document.getElementById('generatedMeta').textContent=grade+' · '+language+' · '+duration+' · '+lessonType;
-  const content=outputs.map(name=>'<article class="output-card"><h3>'+escapeHtml(name)+'</h3><p>'+escapeHtml(contentMap[name]||'Материал по выбранной теме.')+'</p></article>').join('');
-  document.getElementById('generatedContent').innerHTML='<div class="objective"><strong>'+(isKz?'Сабақ мақсаты':'Цель урока')+'</strong><br>'+escapeHtml(t.goal)+'</div>'+content+'<article class="output-card" style="grid-column:1/-1"><h3>'+(isKz?'Мұғалімге ескерту':'Проверка перед уроком')+'</h3><p>'+(isKz?'Бұл — өңдеуге арналған демонстрациялық жоба. Оқу мақсаттары мен терминдерді қолданыстағы бағдарлама және оқулық бойынша тексеріңіз.':'Это демонстрационный черновик. Сверьте учебные цели, термины и ответы с действующей программой и выбранным учебником.')+'</p></article>';
-  document.getElementById('generatedPreview').style.display='block';
-  document.getElementById('generatedPreview').scrollIntoView({behavior:'smooth',block:'start'});
-});
 document.getElementById('editLessonBtn').addEventListener('click',()=>{document.getElementById('generatedPreview').style.display='none';document.getElementById('lessonForm').scrollIntoView({behavior:'smooth',block:'start'});});
 document.getElementById('copyLessonBtn').addEventListener('click',()=>{const title=document.getElementById('generatedTitle').textContent;const meta=document.getElementById('generatedMeta').textContent;const body=[...document.querySelectorAll('#generatedContent .output-card')].map(card=>card.querySelector('h3').textContent+'\n'+card.querySelector('p').textContent).join('\n\n');const textValue=title+'\n'+meta+'\n\n'+body;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(textValue).then(()=>alert('Пример материалов скопирован.')).catch(()=>alert(textValue));}else{alert(textValue);}});
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -436,74 +381,9 @@ document.getElementById('helpBtn').addEventListener('click',()=>alert('Это и
 })();
 </script>
 
-<script>
-// Связь темы «Иммунитет» с конструктором урока: содержательный двуязычный черновик.
-document.getElementById('lessonForm').addEventListener('submit',()=>{
-  const topic=document.getElementById('topic').value.trim().toLowerCase();
-  if(!topic.includes('иммунитет'))return;
-  const isKz=document.getElementById('language').value==='Қазақша';
-  const grade=document.getElementById('grade').value;
-  const duration=document.getElementById('duration').value;
-  const outputs=[...document.querySelectorAll('input[name="output"]:checked')].map(x=>x.value);
-  const data=isKz?{
-    title:'Адамның иммунитеті',
-    objective:'Иммунитеттің ағзаны жұқпалардан қорғаудағы рөлін түсіндіру; лейкоциттерді сипаттау; гуморальдық және жасушалық иммунитетті салыстыру; вакцинацияның маңызын бағалау.',
-    plan:'0–5 мин — бастапқы сұрақ: ағза ауру қоздырғыштарынан қалай қорғанады?\n5–12 мин — туа біткен және жүре пайда болған иммунитет.\n12–22 мин — лейкоциттер, В- және Т-лимфоциттер, антиденелер.\n22–32 мин — гуморальдық және жасушалық иммунитетті салыстыру.\n32–40 мин — вакцинацияның аурудың алдын алудағы рөлі.\n40–45 мин — шағын тест және рефлексия.',
-    slides:'1. Иммунитет дегеніміз не?\n2. Қорғаныстың негізгі түрлері.\n3. Лейкоциттер және лимфоциттер.\n4. Гуморальдық және жасушалық иммунитет.\n5. Вакцинация және қорытынды.',
-    tasks:'1. Туа біткен және жүре пайда болған иммунитетті салыстырыңыз.\n2. В-лимфоциттер, Т-лимфоциттер және фагоциттердің қызметтерін сәйкестендіріңіз.\n3. Вакцинацияның жұқпалы аурулардың алдын алудағы маңызын түсіндіріңіз.',
-    quiz:'1. Антиденелерді өндіруге қай жасушалар қатысады? — В-лимфоциттер.\n2. Жасушалық иммунитетте маңызды рөл атқаратын жасушалар? — Т-лимфоциттер.\n3. Фагоциттердің негізгі қызметі? — Бөгде бөлшектерді жұтып, жою.\n4. Вакцинацияның мақсаты? — Арнайы иммундық жауапты қалыптастыруға көмектесу.\n5. Гуморальдық иммунитет немен байланысты? — Дене сұйықтықтарындағы антиденелермен.',
-    game:'«Дұрыс па, бұрыс па?»: иммунитет туралы 5 тұжырым беріңіз. Оқушылар жауабын түсіндірсін.',
-    note:'Бұл — өңдеуге арналған демонстрациялық жоба. Оқу мақсаттары мен терминдерді қолданыстағы бағдарлама және оқулық бойынша тексеріңіз.'
-  }:{
-    title:'Иммунитет человека',
-    objective:'Объяснить роль иммунитета в защите от инфекций; описать функции лейкоцитов; сравнить гуморальный и клеточный иммунитет; оценить значение вакцинации.',
-    plan:'0–5 мин — стартовый вопрос: как организм защищается от возбудителей?\n5–12 мин — врождённый и приобретённый иммунитет.\n12–22 мин — лейкоциты, В- и Т-лимфоциты, антитела.\n22–32 мин — сравнение гуморального и клеточного иммунитета.\n32–40 мин — роль вакцинации в профилактике заболеваний.\n40–45 мин — мини-тест и рефлексия.',
-    slides:'1. Что такое иммунитет?\n2. Основные виды защиты.\n3. Лейкоциты и лимфоциты.\n4. Гуморальный и клеточный иммунитет.\n5. Вакцинация и выводы.',
-    tasks:'1. Сравните врождённый и приобретённый иммунитет.\n2. Соотнесите функции В-лимфоцитов, Т-лимфоцитов и фагоцитов.\n3. Объясните значение вакцинации в профилактике инфекционных заболеваний.',
-    quiz:'1. Какие клетки участвуют в выработке антител? — В-лимфоциты.\n2. Какие клетки важны для клеточного иммунитета? — Т-лимфоциты.\n3. Основная функция фагоцитов? — Поглощать и уничтожать чужеродные частицы.\n4. Цель вакцинации? — Помочь сформировать специфический иммунный ответ.\n5. С чем связан гуморальный иммунитет? — С антителами в жидкостях организма.',
-    game:'«Верно или неверно?»: предложите 5 утверждений об иммунитете и попросите учеников объяснить ответы.',
-    note:'Это демонстрационный черновик. Сверьте учебные цели и формулировки с действующей программой и учебником.'
-  };
-  const map={'План урока':data.plan,'Презентация':data.slides,'Задания':data.tasks,'Интерактивная игра':data.game,'Тест с ответами':data.quiz};
-  document.getElementById('generatedTitle').textContent=data.title;
-  document.getElementById('generatedMeta').textContent=grade+' · '+document.getElementById('language').value+' · '+duration+' · Черновик BioLab';
-  const cards=outputs.map(name=>'<article class="output-card"><h3>'+escapeHtml(name)+'</h3><p>'+escapeHtml(map[name]||'Материал по выбранной теме.')+'</p></article>').join('');
-  document.getElementById('generatedContent').innerHTML='<div class="objective"><strong>'+(isKz?'Сабақ мақсаты':'Цель урока')+'</strong><br>'+escapeHtml(data.objective)+'</div>'+cards+'<article class="output-card" style="grid-column:1/-1"><h3>'+(isKz?'Мұғалімге ескерту':'Проверка перед уроком')+'</h3><p>'+escapeHtml(data.note)+'</p></article>';
-});
-</script>
 
-<script>
-document.getElementById('lessonForm').addEventListener('submit',()=>{
- const topic=document.getElementById('topic').value.trim(), t=topic.toLowerCase();
- if(t.includes('иммунитет')) return;
- const kz=document.getElementById('language').value==='Қазақша';
- const grade=document.getElementById('grade').value, duration=document.getElementById('duration').value;
- const chosen=[...document.querySelectorAll('input[name="output"]:checked')].map(x=>x.value);
- const db=[
-  [['клетк','жасуш','cell'],'Строение клетки и функции органоидов','Жасушаның құрылысы және органоидтердің қызметі','Клетка, мембрана, цитоплазма, ядро','Жасуша, мембрана, цитоплазма, ядро','Подпишите части клетки и сопоставьте органоиды с функциями.','Жасуша бөліктерін белгілеп, органоидтерді қызметтерімен сәйкестендіріңіз.','Какую функцию выполняет ядро? — Хранит ДНК и участвует в управлении клеткой.','Ядроның қызметі қандай? — ДНҚ-ны сақтап, жасуша қызметін реттеуге қатысады.'],
-  [['экосистем','экожүй','эколог'],'Связи организмов и среды','Ағзалар мен ортаның байланысы','Экосистема, цепь питания, продуцент','Экожүйе, қоректік тізбек, продуцент','Составьте пищевую цепь и определите роль организмов.','Қоректік тізбек құрып, ағзалардың рөлін анықтаңыз.','Кто обычно является продуцентом? — Зелёные растения.','Продуцент дегеніміз не? — Әдетте жасыл өсімдіктер.'],
-  [['пищевар','ас қорыту','digestion'],'Пищеварительная система','Ас қорыту жүйесі','Пищеварение, фермент, желудок, кишечник','Ас қорыту, фермент, асқазан, ішек','Расположите органы по пути пищи и укажите их функции.','Ас қорыту мүшелерін ретімен орналастырып, қызметін атаңыз.','Где всасывается большая часть питательных веществ? — В тонком кишечнике.','Қоректік заттардың көбі қайда сіңеді? — Аш ішекте.'],
-  [['дыхани','тыныс алу','respiration'],'Дыхательная система и газообмен','Тыныс алу жүйесі және газ алмасу','Лёгкие, альвеолы, кислород','Өкпе, альвеола, оттегі','Подпишите органы дыхания и объясните газообмен.','Тыныс алу мүшелерін белгілеп, газ алмасуды түсіндіріңіз.','Где происходит газообмен в лёгких? — В альвеолах.','Өкпеде газ алмасу қайда жүреді? — Альвеолаларда.'],
-  [['кровь','қанайнал','қан және'],'Состав крови и кровообращение','Қан құрамы және қанайналым','Плазма, эритроцит, лейкоцит','Плазма, эритроцит, лейкоцит','Сопоставьте компоненты крови с функциями.','Қан құрамбөліктерін қызметтерімен сәйкестендіріңіз.','Какие клетки переносят кислород? — Эритроциты.','Оттегін қандай жасушалар тасымалдайды? — Эритроциттер.'],
-  [['нервн','жүйке жүйесі','nervous'],'Нервная система и рефлексы','Жүйке жүйесі және рефлекстер','Нейрон, мозг, спинной мозг, рефлекс','Нейрон, ми, жұлын, рефлекс','Подпишите части нейрона и объясните рефлекс.','Нейрон бөліктерін белгілеп, рефлексті түсіндіріңіз.','Как называется основная клетка нервной системы? — Нейрон.','Жүйке жүйесінің негізгі жасушасы? — Нейрон.'],
-  [['днк','днқ','ген','dna'],'Наследственная информация и гены','Тұқымқуалаушылық ақпарат және гендер','ДНК, ген, хромосома','ДНҚ, ген, хромосома','Объясните связь «ДНК — ген — признак».','«ДНҚ — ген — белгі» байланысын түсіндіріңіз.','Что такое ген? — Участок ДНК, связанный с наследственной информацией.','Ген дегеніміз не? — Тұқымқуалаушылық ақпаратпен байланысты ДНҚ бөлігі.'],
-  [['эволюц'],'Эволюция, отбор и адаптации','Эволюция, сұрыпталу және бейімделу','Эволюция, изменчивость, отбор','Эволюция, өзгергіштік, сұрыпталу','Объясните, как наследуемые признаки влияют на выживание.','Тұқым қуалайтын белгілердің тірі қалуға әсерін түсіндіріңіз.','Что лежит в основе естественного отбора? — Различия в выживании и размножении.','Табиғи сұрыпталудың негізі? — Тірі қалу мен көбею айырмашылықтары.'],
-  [['гомеостаз'],'Поддержание постоянства внутренней среды','Ішкі ортаның тұрақтылығын сақтау','Гомеостаз, регуляция, внутренняя среда','Гомеостаз, реттелу, ішкі орта','Обсудите реакцию организма на перегрев или нехватку воды.','Ағзаның қызып кетуге немесе су тапшылығына жауабын талдаңыз.','Что означает гомеостаз? — Относительное постоянство внутренней среды.','Гомеостаз дегеніміз не? — Ішкі ортаның салыстырмалы тұрақтылығы.'],
-  [['биотехнолог'],'Биотехнология и её применение','Биотехнология және оны қолдану','Биотехнология, микроорганизм, ферментация','Биотехнология, микроағза, ферментация','Приведите пример биотехнологии и оцените её пользу.','Биотехнологияға мысал келтіріп, пайдасын бағалаңыз.','Пример биотехнологии — производство йогурта с помощью микроорганизмов.','Биотехнология мысалы — микроағзалармен йогурт өндіру.']
- ];
- const d=db.find(x=>x[0].some(k=>t.includes(k)));
- const title=d?(kz?d[2]:d[1]):topic, terms=d?(kz?d[4]:d[3]):topic;
- const task=d?(kz?d[6]:d[5]):(kz?'Негізгі ұғымдарды анықтап, мысал келтіріңіз.':'Определите ключевые понятия и приведите пример.');
- const answer=d?(kz?d[8]:d[7]):(kz?'Негізгі ұғымды өз сөзіңізбен түсіндіріңіз.':'Объясните ключевое понятие своими словами.');
- const plan=kz?'0–5 мин — бастапқы сұрақ.\n5–12 мин — негізгі ұғымдар.\n12–25 мин — сызбамен жұмыс.\n25–35 мин — жұптық тапсырма.\n35–42 мин — тексеру.\n42–45 мин — рефлексия.':'0–5 мин — вводный вопрос.\n5–12 мин — ключевые понятия.\n12–25 мин — работа со схемой.\n25–35 мин — парное задание.\n35–42 мин — проверка.\n42–45 мин — рефлексия.';
- const slides=kz?'1. Тақырып пен мақсат.\n2. Негізгі ұғымдар.\n3. Сызба немесе үдеріс.\n4. Практикалық тапсырма.\n5. Қорытынды.':'1. Тема и цель.\n2. Ключевые понятия.\n3. Схема или процесс.\n4. Практическое задание.\n5. Вывод.';
- const game=kz?'«Ұғымды тап»: анықтаманы оқып, ұғымды тауып, жауабыңызды түсіндіріңіз.':'Игра «Угадай понятие»: прочитайте определение, назовите понятие и объясните ответ.';
- const map={'План урока':plan,'Презентация':slides,'Задания':task,'Игра':game,'Интерактивная игра':game,'Тест с ответами':'1. '+(kz?'Негізгі ұғымды атаңыз.':'Назовите ключевое понятие.')+'\n2. '+(kz?'Мысал келтіріңіз.':'Приведите пример.')+'\n3. '+answer};
- document.getElementById('generatedTitle').textContent=title;
- document.getElementById('generatedMeta').textContent=grade+' · '+document.getElementById('language').value+' · '+duration+' · '+(kz?'BioLab жобасы':'черновик BioLab');
- document.getElementById('generatedContent').innerHTML='<div class="objective"><strong>'+(kz?'Сабақ мақсаты':'Цель урока')+'</strong><br>'+escapeHtml(kz?'Тақырыптың негізгі ұғымдарын түсіндіріп, оларды мысалдар арқылы қолдану.':'Объяснить основные понятия темы и применить их на примерах.')+'</div>'+chosen.map(n=>'<article class="output-card"><h3>'+escapeHtml(n)+'</h3><p>'+escapeHtml(map[n]||task)+'</p></article>').join('')+'<article class="output-card"><h3>'+(kz?'Негізгі ұғымдар':'Ключевые понятия')+'</h3><p>'+escapeHtml(terms)+'</p></article><article class="output-card" style="grid-column:1/-1"><h3>'+(kz?'Мұғалімге ескерту':'Проверка перед уроком')+'</h3><p>'+(kz?'Бұл — бастапқы жоба. Бағдарлама және оқулық бойынша тексеріңіз.':'Это черновик. Сверьте содержание с программой и учебником.')+'</p></article>';
-});
-</script>
+
+
 <style id="exportPrintStyles">@media print{body *{visibility:hidden!important}#generatedPreview,#generatedPreview *{visibility:visible!important}#generatedPreview{display:block!important;position:absolute;left:0;top:0;width:100%;margin:0;padding:18px;border:0}#generatedPreview .generated-actions{display:none!important}}</style>
 <script>
 (()=>{
@@ -542,6 +422,25 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
 })();
 </script>
 
+<script id="altnex-paragraph-presenton-flow">
+(()=>{
+ const button=document.getElementById('createPresentationFromParagraph'),form=document.getElementById('lessonForm');
+ const source=document.getElementById('source'),book=document.getElementById('lessonTextbook'),paragraph=document.getElementById('lessonParagraph');
+ const presentationBox=document.querySelector('input[name="output"][value="Презентация"]');
+ if(!button||!form||!source||!book||!paragraph||!presentationBox)return;
+ const sync=()=>{button.disabled=!(source.value==='Мой учебник / загруженный файл'&&book.value&&paragraph.value);};
+ [source,book,paragraph,document.getElementById('grade')].forEach(el=>el.addEventListener('change',sync));
+ button.addEventListener('click',()=>{
+   sync();if(button.disabled)return;
+   const topic=document.getElementById('topic');
+   if(topic)topic.value=paragraph.options[paragraph.selectedIndex].text;
+   presentationBox.checked=true;
+   if(typeof form.requestSubmit==='function')form.requestSubmit();
+   else form.querySelector('button[type="submit"]').click();
+ });
+ sync();
+})();
+</script>
 </body></html>';
   const blob=new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=title.replace(/[\\/:*?"<>|]+/g,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -581,49 +480,59 @@ function renderMaterials(raw){
 (()=>{
   const form=document.getElementById('lessonForm');
   if(!form)return;
-  form.addEventListener('submit',async()=>{
+  const apiUrl='https://altnex-biolab-api.goldenai017.workers.dev/';
+  const outputNames={'План урока':'КСП · Gemini','Презентация':'Презентация · Presenton','Задания':'Задания · Gemini','Игра':'Интерактивная игра · Gemini','Интерактивная игра':'Интерактивная игра · Gemini','Тест с ответами':'Тест с ответами · Gemini'};
+  form.addEventListener('submit',async(event)=>{
+    event.preventDefault();
     const topicInput=document.getElementById('source').value==='Мой учебник / загруженный файл'?document.getElementById('topic'):document.getElementById('topicFallback');
-    const topic=topicInput.value.trim();
-    const grade=document.getElementById('grade').value;
-    const language=document.getElementById('language').value;
-    const duration=document.getElementById('duration').value;
-    const lessonType=document.getElementById('lessonType').value;
-    const source=document.getElementById('source').value;
+    const topic=topicInput.value.trim(),grade=document.getElementById('grade').value,language=document.getElementById('language').value;
+    const duration=document.getElementById('duration').value,lessonType=document.getElementById('lessonType').value,source=document.getElementById('source').value;
     const textbookSelect=document.getElementById('lessonTextbook');
     const selectedTextbook=textbookSelect&&textbookSelect.value?textbookSelect.options[textbookSelect.selectedIndex].text:'';
     const paragraphSelect=document.getElementById('lessonParagraph');
     const selectedParagraph=paragraphSelect&&paragraphSelect.value?paragraphSelect.options[paragraphSelect.selectedIndex].text:'';
     const outputs=[...document.querySelectorAll('input[name="output"]:checked')].map(x=>x.value);
-    const notice=document.getElementById('formNotice');
-    const submitButton=form.querySelector('button[type="submit"]');
-    if(!topic||!outputs.length)return;
-    notice.style.display='block';
-    notice.textContent='Gemini дайындап жатыр… / Gemini готовит материалы…';
+    const notice=document.getElementById('formNotice'),submitButton=form.querySelector('button[type="submit"]');
+    if(!topic){notice.style.display='block';notice.textContent='Введите тему урока.';return;}
+    if(!outputs.length){notice.style.display='block';notice.textContent='Отметьте хотя бы один материал.';return;}
+    document.getElementById('generatedTitle').textContent=topic;
+    document.getElementById('generatedMeta').textContent=grade+' · '+language+' · '+duration+' · '+lessonType+(selectedTextbook?' · Учебник: '+selectedTextbook:'')+(selectedParagraph?' · Параграф: '+selectedParagraph:'');
+    const preview=document.getElementById('generatedPreview'),content=document.getElementById('generatedContent');
+    const badge=document.querySelector('#generatedPreview .demo-label');
+    if(badge)badge.textContent='AI · ЖЕКЕ КАРТОЧКАЛАР';
+    preview.style.display='block';
+    content.innerHTML=outputs.map((name,index)=>'<article class="output-card material-output" id="material-card-'+index+'"><h3>'+escapeHtml(outputNames[name]||name)+'</h3><p class="material-status">⏳ '+(name==='Презентация'?'Presenton':'Gemini')+' дайындап жатыр…</p></article>').join('');
+    preview.scrollIntoView({behavior:'smooth',block:'start'});
+    notice.style.display='block';notice.textContent='Дайындалып жатыр: '+outputs.length+' материал. Әрқайсысының нәтижесі өз карточкасында көрсетіледі.';
     if(submitButton)submitButton.disabled=true;
-    try{
-      const response=await fetch('https://altnex-biolab-api.goldenai017.workers.dev/',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({topic,grade,language,duration,lessonType,outputs,source,textbook:selectedTextbook,paragraph:selectedParagraph})
-      });
-      const data=await response.json();
-      if(!response.ok||!data.ok)throw new Error(data.error||'Gemini не смог подготовить материалы.');
-      document.getElementById('generatedTitle').textContent=topic;
-      document.getElementById('generatedMeta').textContent=grade+' · '+language+' · '+duration+' · '+(selectedTextbook?'Учебник: '+selectedTextbook+' · ':'')+(selectedParagraph?'Параграф: '+selectedParagraph+' · ':'')+'Gemini AI';
-      document.getElementById('generatedContent').innerHTML=
-        '<div class="objective"><strong>'+(language==='Қазақша'?'Сабақ тақырыбы':'Тема урока')+'</strong><br>'+escapeHtml(topic)+'</div>'+
-        '<article class="output-card material-output" style="grid-column:1/-1"><h3>Gemini AI · '+escapeHtml(outputs.join(', '))+'</h3><div class="material-body">'+renderMaterials(data.materials||'Модель не вернула текст.')+'</div></article>'+
-        '<article class="output-card" style="grid-column:1/-1"><h3>'+(language==='Қазақша'?'Мұғалімге ескерту':'Проверка перед уроком')+'</h3><p>'+(language==='Қазақша'?'Материалды қолданыстағы оқу бағдарламасы мен оқулық бойынша тексеріңіз.':'Перед использованием сверьте материал с действующей учебной программой и учебником.')+'</p></article>';
-      document.getElementById('generatedPreview').style.display='block';
-      const badge=document.querySelector('#generatedPreview .demo-label');
-      if(badge)badge.textContent='GEMINI AI';
-      notice.innerHTML='<strong>'+(language==='Қазақша'?'Gemini материалдарды дайындады.':'Gemini подготовил материалы.')+'</strong><br><span style="font-size:11px">'+(language==='Қазақша'?'Қолданар алдында тексеріңіз.':'Проверьте факты и формулировки перед использованием.')+'</span>';
-      document.getElementById('generatedPreview').scrollIntoView({behavior:'smooth',block:'start'});
-    }catch(error){
-      notice.innerHTML='<strong>Не удалось получить ответ Gemini.</strong><br><span style="font-size:11px">'+escapeHtml(error.message||'Проверь подключение и настройки API.')+'</span>';
-    }finally{
-      if(submitButton)submitButton.disabled=false;
-    }
+    let completed=0,successful=0;
+    const updateProgress=()=>{notice.textContent='Дайын: '+completed+'/'+outputs.length+' · Сәтті: '+successful+'. Әр материал жеке карточкада.';};
+    const jobs=outputs.map(async(name,index)=>{
+      const card=document.getElementById('material-card-'+index);
+      try{
+        const isPresentation=name==='Презентация';
+        const body=isPresentation
+          ?{mode:'presenton',topic,grade,language,duration,lessonType,outputs:['Презентация'],slideCount:8,textbook:selectedTextbook,paragraph:selectedParagraph,source}
+          :{mode:'gemini',topic,grade,language,duration,lessonType,outputs:[name],source,textbook:selectedTextbook,paragraph:selectedParagraph};
+        const response=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        const data=await response.json().catch(()=>({}));
+        if(!response.ok||!data.ok)throw new Error(data.error||(isPresentation?'Presenton презентация жасай алмады.':'Gemini материал жасай алмады.'));
+        if(isPresentation){
+          const links=[];
+          if(data.path)links.push('<a href="'+escapeHtml(data.path)+'" target="_blank" rel="noopener noreferrer" download>↓ PPTX презентациясын жүктеу</a>');
+          if(data.edit_path)links.push('<a href="'+escapeHtml(data.edit_path)+'" target="_blank" rel="noopener noreferrer">Presenton ішінде ашу және өңдеу ↗</a>');
+          card.innerHTML='<h3>'+escapeHtml(outputNames[name])+'</h3><div class="material-body"><p><strong>Презентация дайын!</strong></p><p>Presenton арқылы жасалды. PowerPoint файлын жүктеуге немесе Presenton редакторында ашуға болады.</p><p>'+links.join('<br>')+'</p></div>';
+        }else{
+          card.innerHTML='<h3>'+escapeHtml(outputNames[name]||name)+'</h3><div class="material-body">'+renderMaterials(data.materials||'Модель мәтін қайтармады.')+'</div>';
+        }
+        successful++;
+      }catch(error){
+        card.innerHTML='<h3>'+escapeHtml(outputNames[name]||name)+'</h3><p class="material-error">⚠ '+escapeHtml(error.message||'Қате орын алды.')+'</p>';
+      }finally{completed++;updateProgress();}
+    });
+    await Promise.all(jobs);
+    notice.innerHTML='<strong>Дайын: '+successful+'/'+outputs.length+' материал.</strong><br><span style="font-size:11px">КСП, ойын, тест және тапсырмалар — Gemini; презентация — Presenton. Материалдарды сабақта қолданар алдында тексеріңіз.</span>';
+    if(submitButton)submitButton.disabled=false;
   });
 })();
 </script>

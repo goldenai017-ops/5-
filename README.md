@@ -43,3 +43,16 @@
 
 ## Технологии
 HTML, CSS, JavaScript, GitHub Pages, Cloudflare Workers и Gemini API.
+
+
+## Подключение Presenton для презентаций
+
+Презентации из формы «Создать урок» создаются через Presenton API. API-ключ не добавляй в HTML и не отправляй в чат — он должен храниться только как Secret в Cloudflare Worker.
+
+1. Создай API key в аккаунте Presenton: https://presenton.ai/ (раздел аккаунта / API keys).
+2. В Cloudflare Dashboard открой Workers & Pages → `altnex-biolab-api` → Settings → Variables and Secrets.
+3. Добавь переменную типа **Secret** с именем `PRESENTON_API_KEY` и вставь свой Presenton API key.
+4. Открой Edit code, замени код Worker содержимым актуального файла `worker.js` из этого репозитория и нажми Deploy.
+5. После этого в BioLab отметь «Презентация · Presenton» и нажми «Подготовить материалы». Файл PPTX и ссылка на редактор появятся в карточке презентации.
+
+КСП, задания, тесты и игры генерируются отдельными запросами через Gemini Worker. Если презентация не создаётся, проверь наличие Secret `PRESENTON_API_KEY` и доступность Presenton API.
