@@ -20,6 +20,25 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
 #page-library,#page-library h1,#page-library h2,#page-library h3,#page-library p,#page-library label,#page-library .section-head,#page-library .textbtn{color:#20352a}
 #page-library .textbook-grade{background:#ffffff!important;color:#20352a!important;border-color:#c8dfd0!important}
 #page-library .textbook-grade *{color:#20352a}
+
+/* Обновлённый аккуратный дизайн блока готовых материалов урока */
+#generatedPreview.generated{margin:26px 0 8px;padding:clamp(18px,3vw,30px);border:1px solid color-mix(in srgb,var(--green-2) 20%,var(--line));border-radius:24px;background:linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--soft) 48%,var(--surface)));box-shadow:0 18px 48px #102d1b12;scroll-margin-top:24px}
+#generatedPreview .generated-head{align-items:center;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:22px}
+#generatedPreview .generated-head h2{font-size:clamp(21px,2.5vw,29px);letter-spacing:-.7px;line-height:1.2}
+#generatedPreview .generated-head p{font-size:13px;line-height:1.6;margin-top:8px}
+#generatedPreview .demo-label{background:var(--mint);color:#174734;border:1px solid #b7d8c3;padding:8px 12px;border-radius:999px;font-size:10px;letter-spacing:1px}
+#generatedPreview .output-grid{gap:14px}
+#generatedPreview .output-card{position:relative;overflow:hidden;padding:19px 20px;border-radius:17px;background:var(--surface);border:1px solid var(--line);box-shadow:0 5px 16px #102d1b08;transition:transform .18s ease,border-color .18s ease}
+#generatedPreview .output-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--green-2) 40%,var(--line))}
+#generatedPreview .output-card h3{font-size:14px;line-height:1.4;margin:0 0 10px;color:var(--green-2)}
+#generatedPreview .output-card p{font-size:13px;line-height:1.75;color:var(--ink);white-space:pre-line}
+#generatedPreview .objective{padding:17px 19px;border:1px solid #c8dfd0;border-left:4px solid var(--green-2);border-radius:15px;background:linear-gradient(120deg,#eaf5ed,#f6faf6);color:#234333;font-size:13px;line-height:1.7}
+#generatedPreview .objective strong{display:block;margin-bottom:5px;font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:#47745a}
+#generatedPreview .generated-actions{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:10px;margin-top:23px;padding-top:18px;border-top:1px solid var(--line)}
+#generatedPreview .generated-actions button{min-height:42px;padding:10px 15px;border-radius:12px;transition:transform .16s ease,box-shadow .16s ease}
+#generatedPreview .generated-actions button:hover{transform:translateY(-1px);box-shadow:0 6px 14px #102d1b12}
+#generatedPreview #copyLessonBtn{margin-left:auto}
+@media(max-width:700px){#generatedPreview.generated{padding:16px;border-radius:18px}#generatedPreview .generated-head{align-items:flex-start}#generatedPreview .output-card{padding:16px}#generatedPreview .generated-actions button{flex:1 1 calc(50% - 10px)}#generatedPreview #copyLessonBtn{margin-left:0}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -495,25 +514,7 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
  word.addEventListener('click',()=>{
   if(!area.innerHTML.trim()){alert('Сначала подготовьте материалы урока.');return;}
   const title=document.getElementById('generatedTitle').textContent.trim()||'Материалы урока';
-  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:auto;margin:18mm}body{font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;margin:0;color:#17251d}h1,h2,h3,h4{font-family:"Times New Roman",Times,serif;font-size:12pt;font-weight:bold;margin:12pt 0 6pt}p,td,th,div,article{font-family:"Times New Roman",Times,serif;font-size:12pt}p{white-space:pre-wrap;margin:0 0 8pt}table{width:100%;border-collapse:collapse;margin:10pt 0 14pt;table-layout:auto;break-inside:auto}thead{display:table-header-group}tr{break-inside:avoid}th,td{border:1px solid #8ca395;padding:6pt 7pt;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e6f0e9;font-weight:bold;text-align:center}tbody tr:nth-child(even){background:#f7faf8}.lesson-table-wrap{width:100%;overflow:visible;margin:10pt 0 14pt}.lesson-table{width:100%;min-width:0}.lesson-table th,.lesson-table td{border:1px solid #8ca395;padding:6pt 7pt}article,.objective{margin:10pt 0;padding:9pt;border:1px solid #cbd8ce;break-inside:avoid}strong{font-weight:bold}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'
-
-<script>
-(function(){
-  const frame=document.getElementById('bioLabSlidesFrame');
-  if(!frame)return;
-  window.addEventListener('message',function(event){
-    if(event.origin!==window.location.origin||event.source!==frame.contentWindow)return;
-    const data=event.data;
-    if(data&&data.type==='biolab-slides-height'&&Number.isFinite(data.height)){
-      frame.style.height=Math.max(700,Math.min(12000,Math.ceil(data.height)))+'px';
-    }
-  });
-  frame.addEventListener('load',function(){
-    try{frame.contentWindow.postMessage({type:'biolab-slides-request-height'},window.location.origin);}catch(e){}
-  });
-})();
-</script>
-</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:auto;margin:18mm}body{font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;margin:0;color:#17251d}h1,h2,h3,h4{font-family:"Times New Roman",Times,serif;font-size:12pt;font-weight:bold;margin:12pt 0 6pt}p,td,th,div,article{font-family:"Times New Roman",Times,serif;font-size:12pt}p{white-space:pre-wrap;margin:0 0 8pt}table{width:100%;border-collapse:collapse;margin:10pt 0 14pt;table-layout:auto;break-inside:auto}thead{display:table-header-group}tr{break-inside:avoid}th,td{border:1px solid #8ca395;padding:6pt 7pt;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e6f0e9;font-weight:bold;text-align:center}tbody tr:nth-child(even){background:#f7faf8}.lesson-table-wrap{width:100%;overflow:visible;margin:10pt 0 14pt}.lesson-table{width:100%;min-width:0}.lesson-table th,.lesson-table td{border:1px solid #8ca395;padding:6pt 7pt}article,.objective{margin:10pt 0;padding:9pt;border:1px solid #cbd8ce;break-inside:avoid}strong{font-weight:bold}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'</body></html>';
   const blob=new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=title.replace(/[\\/:*?"<>|]+/g,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  });
