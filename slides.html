@@ -94,7 +94,7 @@ function renderLibrary(){const host=$('libraryList');const step=$('bookStep');st
 function updateSelectedBooksNote(){const chosen=libraryBooks.find(b=>selectedBookIds.has(b.id));$('selectedBooksNote').textContent=chosen?'Выбрана книга: '+chosen.name+' · '+selectedGrade+' класс':'Сначала выбери учебник из списка выше.';$('loadParagraphsBtn').disabled=!chosen;}
 document.querySelectorAll('[data-grade-select]').forEach(el=>el.addEventListener('click',()=>{selectedGrade=Number(el.dataset.gradeSelect);document.querySelectorAll('[data-grade-select]').forEach(x=>x.classList.toggle('active',x===el));selectedBookIds.clear();paragraphs=[];selectedParagraph=null;$('paragraphSelect').innerHTML='<option value="">Сначала выбери учебник</option>';$('paragraphSelect').disabled=true;$('topic').value='';$('generateBtn').disabled=true;updateSelectedBooksNote();renderLibrary();reportEmbedHeight();}));
 loadLibrary().catch(()=>{$('libraryList').innerHTML='<div class="empty-books"><strong>Не удалось открыть «Мои книги»</strong><p>Открой BioLab в обычном окне браузера и обнови страницу.</p></div>';});
-async async function detectParagraphs(){
+async function detectParagraphs(){
  const chosen=libraryBooks.filter(b=>selectedBookIds.has(b.id));
  if(!chosen.length)throw new Error('Сначала выбери учебник.');
  const book=chosen[0], opts=[];
