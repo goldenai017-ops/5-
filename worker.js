@@ -109,7 +109,9 @@ export default {
       return json({ ok: false, error: "Не удалось прочитать параметры запроса." }, 400, origin);
     }
 
-    const mode = cleanText(input.mode, 20).toLowerCase() === "claude" ? "claude" : "gemini";
+    const requestedMode = cleanText(input.mode, 20).toLowerCase();
+    const isSlides = requestedMode === "slides";
+    const mode = requestedMode === "claude" ? "claude" : "gemini";
     const topic = cleanText(input.topic, MAX_TOPIC_LENGTH);
     const grade = cleanText(input.grade, 30);
     const language = cleanText(input.language, 30);
@@ -123,9 +125,11 @@ export default {
       "Интерактивная игра",
       "Тест с ответами",
     ]);
-    const outputs = Array.isArray(input.outputs)
+    const outputs = isSlides ? ["Презентация"] : (Array.isArray(input.outputs)
       ? input.outputs.map(value => cleanText(value, 50)).filter(value => allowedOutputs.has(value)).slice(0, 6)
-      : [];
+      : []);
+    const slideCount = Math.min(15, Math.max(5, Number.parseInt(input.slideCount, 10) || 10));
+    const visualStyle = cleanText(input.visualStyle, 40) || "mixed";
 
     if (!topic) return json({ ok: false, error: "Укажите тему урока." }, 400, origin);
     if (!outputs.length) return json({ ok: false, error: "Выберите хотя бы один материал." }, 400, origin);
@@ -184,6 +188,41 @@ ${isKsp ? `ОСОБЫЕ ТРЕБОВАНИЯ К КСП:
 
 Проверь перед ответом: соответствует ли материал классу, верны ли биологические факты, хватает ли данных для выполнения заданий, нет ли придуманных официальных кодов и совпадает ли время этапов с общей длительностью.`;
 
+
+    const slidePrompt = `Ты — эксперт по созданию визуально выразительных учебных презентаций по биологии для школьников Казахстана.
+Создай презентацию на языке ${responseLanguage}. Верни ТОЛЬКО корректный JSON, без Markdown и без пояснений вокруг JSON.
+
+ТЕМА: ${topic}
+КЛАСС: ${grade || "не указан"}
+ЯЗЫК: ${responseLanguage}
+КОЛИЧЕСТВО СЛАЙДОВ: ровно ${slideCount}
+ВИЗУАЛЬНЫЙ СТИЛЬ: ${visualStyle === "photo" ? "реалистичные фотографии, крупные изображения, минимум текста" : visualStyle === "infographic" ? "инфографика, схемы, диаграммы и простые визуальные метафоры" : "сочетание фотографий, схем и инфографики как в современной учебной презентации"}
+
+Верни JSON такой структуры:
+{
+  "title": "Краткое название презентации",
+  "subtitle": "Одна короткая фраза о теме",
+  "slides": [
+    {
+      "title": "Заголовок слайда",
+      "bullets": ["Короткий тезис", "Короткий тезис", "Короткий тезис"],
+      "imageQuery": "specific English keywords for a relevant Wikimedia Commons educational photograph",
+      "visual": "Краткое описание схемы или визуального акцента на русском языке",
+      "speakerNotes": "Короткие заметки учителю для объяснения"
+    }
+  ]
+}
+
+Правила:
+- Верни ровно ${slideCount} слайдов, включая титульный и заключительный.
+- На каждом слайде максимум 3–4 коротких тезиса, каждый до 18 слов. Не перегружай слайды текстом.
+- Для каждого слайда укажи imageQuery на английском языке, конкретный и пригодный для поиска реальной фотографии или научной иллюстрации. Не используй абстрактные запросы.
+- Первый слайд — выразительная обложка с темой и кратким подзаголовком; последний — выводы или вопрос для обсуждения.
+- Соблюдай биологическую точность и возрастную уместность. Не придумывай факты, статистику или источники.
+- Содержимое JSON должно быть валидным: двойные кавычки, без trailing commas, без Markdown-обрамления.
+- Не добавляй поля кроме title, subtitle, slides и полей каждого слайда, указанных в примере.`;
+    const finalPrompt = isSlides ? slidePrompt : prompt;
+
     try {
       let apiResponse;
       let materials = "";
@@ -218,7 +257,7 @@ ${isKsp ? `ОСОБЫЕ ТРЕБОВАНИЯ К КСП:
           return json({ ok: false, error: "Claude вернул пустой ответ. Попробуйте изменить тему." }, 502, origin);
         }
       } else {
-        const gemini = await requestGemini(env.GEMINI_API_KEY, prompt);
+        const gemini = await requestGemini(env.GEMINI_API_KEY, finalPrompt);
         apiResponse = gemini.response;
         const result = gemini.result || {};
         if (!apiResponse?.ok) {
