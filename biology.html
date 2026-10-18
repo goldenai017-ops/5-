@@ -517,6 +517,7 @@ function renderMaterials(raw){
         const response=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
         const data=await response.json().catch(()=>({}));
         if(!response.ok||!data.ok)throw new Error(data.error||(isPresentation?'Presenton презентация жасай алмады.':'Gemini материал жасай алмады.'));
+        if(isPresentation&&(data.provider!=='Presenton'||(!data.path&&!data.edit_path)))throw new Error('Presenton әлі қосылмаған сияқты. Cloudflare Worker-ді жаңа worker.js кодымен жариялап, PRESENTON_API_KEY Secret қосу керек.');
         if(isPresentation){
           const links=[];
           if(data.path)links.push('<a href="'+escapeHtml(data.path)+'" target="_blank" rel="noopener noreferrer" download>↓ PPTX презентациясын жүктеу</a>');
