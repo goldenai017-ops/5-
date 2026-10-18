@@ -45,8 +45,8 @@
 <div class="altnex-w-top"><span><i class="altnex-w-dot"></i>SYSTEM ONLINE</span><span>ALTNEX OS · BIOLOGY DIVISION</span><span>SECURE SESSION <b>01</b></span></div>
 <div class="altnex-w-content"><div class="altnex-w-left">
 <div class="altnex-w-kicker"><span>01</span> PERSONAL LABORATORY</div>
-<h1 class="altnex-w-title" id="altnexWelcomeTitle">Добро пожаловать,<br><em>Алтынай.</em></h1>
-<p class="altnex-w-copy">Твоя лаборатория. Твои идеи.<br>Новый уровень преподавания биологии.</p>
+<h1 class="altnex-w-title" id="altnexWelcomeTitle">Добро пожаловать<br><em>в лабораторию Алтынай.</em></h1>
+<p class="altnex-w-copy">Твои учебники. Твои идеи.<br>Все инструменты для уроков — в одном месте.</p>
 <button class="altnex-w-enter" id="altnexEnterBtn" type="button"><span>ЗАПУСТИТЬ ЛАБОРАТОРИЮ</span><b>↗</b></button>
 <div class="altnex-w-sign">ALTNEX <span>/</span> THINK BEYOND THE CLASSROOM</div>
 </div><div class="altnex-w-visual" aria-hidden="true">
@@ -74,10 +74,10 @@
   <div class="side-bottom"><div class="avatar">А</div><div><strong>Профиль учителя</strong><small>Моё пространство</small></div></div>
 </aside>
 <main class="main">
-  <header class="topbar"><div class="crumb">ALTNEX BioLab <span style="padding:0 7px">/</span> <span id="crumbCurrent">Главная</span></div><div class="top-actions"><span class="status">● ПРОТОТИП</span><button class="iconbtn" id="helpBtn" title="Помощь">?</button></div></header>
+  <header class="topbar"><div class="crumb">ALTNEX LABS <span style="padding:0 7px">/</span> <span id="crumbCurrent">Главная</span></div><div class="top-actions"><span class="status">● ПРОТОТИП</span><button class="iconbtn" id="helpBtn" title="Помощь">?</button></div></header>
   <div class="content">
     <section class="page-panel active" id="page-home">
-      <div class="welcome"><div><div class="eyebrow">Ваша цифровая лаборатория</div><h1>Добро пожаловать в BioLab</h1><p>Создавайте уроки, собирайте материалы и превращайте сложную биологию в понятный интерактивный опыт.</p></div><div class="date-pill">🌿 Учительское пространство</div></div>
+      <div class="welcome"><div><div class="eyebrow">Ваша цифровая лаборатория</div><h1>Лаборатория Алтынай</h1><p>Создавайте уроки, собирайте материалы и превращайте сложную биологию в понятный интерактивный опыт.</p></div><div class="date-pill">🌿 Учительское пространство</div></div>
       <div class="hero"><div><div class="hero-tag">Ваш следующий урок начинается здесь</div><h2>От темы в учебнике — к готовому уроку за несколько шагов</h2><p>Выберите класс и тему. BioLab поможет подготовить план, задания, презентацию и проверку знаний.</p><button class="primary" data-go="create">＋ Создать урок <span style="margin-left:8px">→</span></button></div><div class="hero-art">🧬</div></div>
       <div class="stats"><div class="stat"><div class="stat-icon">📚</div><div><strong>5–11</strong><small>Классы в библиотеке</small></div></div><div class="stat"><div class="stat-icon">🌐</div><div><strong>KZ / RU</strong><small>Два языка обучения</small></div></div><div class="stat"><div class="stat-icon">✦</div><div><strong>AI</strong><small>Помощник учителя</small></div></div></div>
       <div class="section-head"><h2>Недавно открывали</h2><button class="textbtn" data-go="lessons">Все материалы →</button></div>
@@ -467,6 +467,10 @@ function renderMaterials(raw){
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachWelcomeButton);
   else attachWelcomeButton();
+  window.setTimeout(function () {
+    var button = document.getElementById('altnexEnterBtn');
+    if (button) button.click();
+  }, 3000);
 })();
 </script>
 </body>
