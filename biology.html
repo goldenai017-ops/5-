@@ -600,7 +600,7 @@ function renderMaterials(raw){
    const found=[];
    for(let i=0;i<lines.length;i++){
      let line=lines[i];
-     if(/^(?:§\s*\d+|параграф\s*№?\s*\d+)\b?/i.test(line)){
+     if(/^(?:§\s*\d+|параграф\s*№?\s*\d+)(?:\s|[.:—–-]|$)/i.test(line)){
        let title=line.replace(/^(?:§\s*\d+|параграф\s*№?\s*\d+)\s*[.:—–-]?\s*/i,'').trim();
        if(!title&&lines[i+1]&&!/^(?:§\s*\d+|параграф\s*№?\s*\d+)/i.test(lines[i+1]))title=lines[i+1];
        title=cleanTitle(title);
