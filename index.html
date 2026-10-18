@@ -3,46 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#081710">
-<meta name="description" content="ALTNEX LABS — цифровая лаборатория науки, образования и интерактивных проектов.">
-<title>ALTNEX LABS — исследуй будущее</title>
+<meta name="theme-color" content="#102f24">
+<meta name="description" content="ALTNEX LABS — рабочее пространство учителя Алтынай.">
+<title>ALTNEX LABS — лаборатория Алтынай</title>
 <style>
-:root{--bg:#07110d;--panel:#0d1d15;--green:#a8f0bd;--mint:#69d891;--text:#edf8ef;--muted:#a4b8a9;--line:#244331}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 75% 0%,#173c28 0,transparent 38%),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}a{color:inherit;text-decoration:none}.wrap{width:min(1120px,92%);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid #ffffff12}.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:2px}.logo{display:grid;place-items:center;width:39px;height:39px;border:1px solid var(--mint);border-radius:12px;color:var(--green);box-shadow:0 0 24px #69d89120;font-size:19px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:3px;font-weight:600}.nav{display:flex;gap:22px;color:var(--muted);font-size:14px}.nav a:hover{color:var(--green)}.hero{padding:76px 0 56px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:3px;text-transform:uppercase}.hero h1{font-size:clamp(42px,6vw,76px);line-height:1.02;letter-spacing:-3px;margin:16px 0 22px}.hero h1 span{color:var(--green)}.lead{max-width:620px;color:var(--muted);font-size:18px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;border:1px solid var(--line);font-weight:700;transition:.2s}.btn.primary{background:var(--green);color:#07140b;border-color:var(--green)}.btn:hover{transform:translateY(-2px)}.orb-wrap{min-height:290px;display:grid;place-items:center;position:relative}.orb{width:220px;height:220px;border-radius:50%;border:1px solid #69d89180;display:grid;place-items:center;position:relative;background:radial-gradient(circle,#244c32 0,#10271a 52%,#08130d 72%);box-shadow:0 0 70px #49c87820,inset 0 0 35px #69d89118}.orb:before,.orb:after{content:"";position:absolute;border:1px solid #69d89150;border-radius:50%;inset:-22px;transform:rotateX(67deg) rotateZ(-24deg)}.orb:after{inset:-40px;transform:rotateX(67deg) rotateZ(44deg)}.orb span{font-size:64px;filter:drop-shadow(0 0 15px #69d89180)}.orbit-label{position:absolute;right:0;bottom:28px;background:#0d1d15;border:1px solid var(--line);padding:10px 13px;border-radius:12px;color:var(--green);font-size:12px;letter-spacing:1px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 60px}.stat{padding:19px;border:1px solid var(--line);background:#0b1912bd;border-radius:16px}.stat b{display:block;font-size:25px;color:var(--green)}.stat span{font-size:13px;color:var(--muted)}section{padding:30px 0 70px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:24px}.section-head h2{font-size:clamp(27px,4vw,40px);margin:8px 0 0;letter-spacing:-1px}.section-head p{max-width:440px;color:var(--muted);margin:0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.card{padding:25px;border-radius:19px;border:1px solid var(--line);background:linear-gradient(145deg,#11251a,#0a1710);min-height:235px;display:flex;flex-direction:column;align-items:flex-start;transition:.22s}.card:hover{transform:translateY(-4px);border-color:#69d89199}.card-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#1c3a27;font-size:25px;margin-bottom:18px}.tag{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--green);font-weight:800}.card h3{font-size:23px;margin:7px 0}.card p{color:var(--muted);margin:0 0 20px}.bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:center;width:100%;gap:12px}.status{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:5px 9px;color:var(--muted)}.arrow{color:var(--green);font-weight:800}.about{border:1px solid var(--line);border-radius:20px;padding:28px;background:#0c1a12;display:grid;grid-template-columns:1fr 1fr;gap:24px}.about h2{margin:6px 0 12px;font-size:30px}.about p{color:var(--muted)}.principles{display:grid;gap:12px;align-content:center}.principle{display:flex;gap:12px;align-items:center;padding:13px;border:1px solid #ffffff0c;border-radius:12px;background:#ffffff04}.check{color:var(--green);font-weight:900}.contact{margin-top:35px;text-align:center;padding:38px 15px;border-top:1px solid #ffffff12}.contact h2{font-size:32px;margin:0 0 10px}.contact p{color:var(--muted)}footer{padding:20px 0 30px;color:#718878;font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}.notice{font-size:12px;color:#91a997;margin-top:12px}
-@media(max-width:760px){.nav{display:none}.hero{grid-template-columns:1fr;padding-top:54px;gap:5px}.orb-wrap{min-height:260px}.stats{gap:8px;margin-bottom:45px}.stat{padding:12px}.stat b{font-size:21px}.stat span{font-size:11px}.grid,.about{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.hero h1{letter-spacing:-2px}.card{min-height:220px}}
+:root{--green:#173f30;--green2:#245941;--mint:#c5ed83;--bg:#f4f7f4;--surface:#fff;--ink:#1e2b25;--muted:#718078;--line:#e0e8e1}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}button{font:inherit;cursor:pointer}a{color:inherit;text-decoration:none}
+.app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+.sidebar{background:var(--green);color:#f3faf5;padding:25px 15px;display:flex;flex-direction:column;gap:28px;min-height:100vh}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px}.brandmark{height:40px;width:40px;border-radius:13px;background:var(--mint);color:var(--green);display:grid;place-items:center;font-size:21px;font-weight:900}.brand strong{display:block;letter-spacing:1.5px;font-size:15px}.brand small{display:block;color:#b7d3c4;font-size:10px;letter-spacing:2px;margin-top:2px}
+.navlabel{color:#9fc1ae;font-size:10px;letter-spacing:1.6px;padding:0 12px;margin-bottom:7px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#d4e6db;text-align:left;border-radius:11px;padding:12px;display:flex;align-items:center;gap:12px;width:100%;transition:.18s}.nav button span:first-child{width:21px;text-align:center;font-size:17px}.nav button:hover,.nav button.active{background:#ffffff1a;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--mint)}
+.side-bottom{margin-top:auto;border-top:1px solid #ffffff26;padding:17px 7px 0;display:flex;gap:10px;align-items:center}.avatar{width:36px;height:36px;border-radius:50%;background:#d9eadf;color:var(--green);display:grid;place-items:center;font-weight:800}.side-bottom small{display:block;color:#b7d3c4;font-size:11px}
+.main{min-width:0;display:flex;flex-direction:column;min-height:100vh}.topbar{height:70px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,48px);border-bottom:1px solid var(--line);background:var(--surface)}.crumb{color:var(--muted);font-size:12px}.top-title{font-weight:700}.status{font-size:11px;color:#477b5b;background:#eaf5e9;border-radius:30px;padding:7px 11px}
+.workspace{padding:clamp(20px,4vw,48px);flex:1}.welcome h1{font-size:clamp(30px,4vw,46px);line-height:1.1;letter-spacing:-1.5px;margin:9px 0 12px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#53785f;font-weight:800}.muted{color:var(--muted);max-width:650px}.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:28px}.tile{border:1px solid var(--line);background:var(--surface);border-radius:17px;padding:22px;text-align:left;color:var(--ink);transition:.2s;min-height:140px}.tile:hover{border-color:#8cb89a;transform:translateY(-2px);box-shadow:0 10px 24px #183f3010}.tile .ico{font-size:25px}.tile h2{font-size:17px;margin:12px 0 5px}.tile p{color:var(--muted);margin:0;font-size:13px}.frame-wrap{display:none;flex:1;min-height:0}.frame-wrap.open{display:flex}.frame-wrap iframe{width:100%;height:calc(100vh - 70px);border:0;background:#f4f7f4}
+.home-view{display:block}.home-view.hidden{display:none}.menu-toggle{display:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px}
+.overlay{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 38%,#2d6248 0,#173f30 45%,#0b2118 100%);z-index:99;display:grid;place-items:center;color:#f4faf5;opacity:1;visibility:visible;transition:opacity .7s ease,visibility .7s ease}.overlay.hide{opacity:0;visibility:hidden;pointer-events:none}.welcome-card{text-align:center;padding:28px;animation:rise .8s ease both}.welcome-logo{width:72px;height:72px;border:1px solid #c5ed83;border-radius:23px;display:grid;place-items:center;color:#c5ed83;font-size:32px;margin:0 auto 24px;box-shadow:0 0 50px #c5ed8320}.welcome-card .eyebrow{color:#c5ed83}.welcome-card h1{font-size:clamp(28px,5vw,48px);line-height:1.1;margin:13px 0;font-weight:650;letter-spacing:-1px}.welcome-card p{color:#c1d8ca;margin:0}.welcome-line{height:2px;width:80px;background:#c5ed83;margin:28px auto 0;animation:expand 1.8s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes expand{from{width:0}to{width:80px}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{position:fixed;z-index:20;top:0;bottom:0;left:0;width:260px;min-height:100vh;transform:translateX(-105%);transition:transform .25s;box-shadow:12px 0 35px #0002}.sidebar.open{transform:translateX(0)}.menu-toggle{display:inline-flex}.topbar{gap:12px}.topbar-left{display:flex;align-items:center;gap:12px}.tiles{grid-template-columns:1fr}.workspace{padding:22px 17px}.frame-wrap iframe{height:calc(100vh - 70px)}}
 </style>
 </head>
 <body>
-<header class="wrap top">
-<a class="brand" href="#home"><span class="logo">A</span><span>ALTNEX<small>LABS · LEARN / EXPLORE / CREATE</small></span></a>
-<nav class="nav"><a href="#workspace">Жұмыс кеңістігі</a><a href="books.html">Кітапхана</a><a href="slides.html">Презентация</a><a href="#roadmap">Даму жоспары</a></nav>
-</header>
-<main class="wrap" id="home">
-<div class="hero">
-<div><div class="eyebrow">● цифровая лаборатория · версия 1.0</div><h1>Любопытство.<br><span>Наука.</span> Будущее.</h1><p class="lead">ALTNEX LABS — пространство интерактивных учебных проектов, где сложные идеи становятся понятными, а обучение превращается в исследование.</p><div class="actions"><a class="btn primary" href="#workspace">Сабақ құруды бастау ↘</a><a class="btn" href="books.html">Кітапханамды ашу</a></div><p class="notice">SCIENCE · EDUCATION · TECHNOLOGY</p></div>
-<div class="orb-wrap" aria-label="Декоративная научная сфера"><div class="orb"><span>⚛</span></div><div class="orbit-label">SYSTEM ONLINE · 01</div></div>
+<div class="overlay" id="welcomeOverlay" aria-label="Приветствие">
+  <div class="welcome-card">
+    <div class="welcome-logo">✳</div>
+    <div class="eyebrow">Ваше пространство для идей</div>
+    <h1>Добро пожаловать<br>в лабораторию Алтынай</h1>
+    <p>ALTNEX LABS · Учись. Создавай. Исследуй.</p>
+    <div class="welcome-line"></div>
+  </div>
 </div>
-<div class="stats"><div class="stat"><b>01</b><span>Главная лаборатория</span></div><div class="stat"><b>∞</b><span>Идей для исследований</span></div><div class="stat"><b>24/7</b><span>Доступ через браузер</span></div></div>
-<section id="workspace"><div class="section-head"><div><div class="eyebrow">МҰҒАЛІМНІҢ ЖҰМЫС КЕҢІСТІГІ</div><h2>Сабаққа қажеттінің бәрі бір жерде</h2></div><p>Алдымен оқулықты таңда. Кейін сол материал негізінде сабақ жоспары мен оқу ресурстарын дайындаймыз.</p></div>
-<div class="grid">
-<a class="card" href="books.html"><div class="card-icon">📚</div><div class="tag">01 · Кітапхана</div><h3>Менің оқулықтарым</h3><p>PDF/TXT кітаптарды бір рет жүкте, параграфтарды ізде және сабаққа қажет оқулықты таңда.</p><div class="bottom"><span class="status">Қазір қолжетімді</span><span class="arrow">Кітапхананы ашу ↗</span></div></a>
-<a class="card" href="slides.html"><div class="card-icon">▤</div><div class="tag">02 · Сабақ материалдары</div><h3>Презентация жасау</h3><p>Кітапханадағы оқулықты таңдап, параграф бойынша слайдтар дайында.</p><div class="bottom"><span class="status">Қазір қолжетімді</span><span class="arrow">Презентация құру ↗</span></div></a>
-<a class="card" href="#roadmap"><div class="card-icon">📝</div><div class="tag">03 · Сабақ жоспары</div><h3>КСП құрастыру</h3><p>Келесі кезеңде КСП мен презентация бір сабақ карточкасында, ортақ оқулық пен тақырыпқа байланысады.</p><div class="bottom"><span class="status">Келесі кезең</span><span class="arrow">Жоспарды көру ↗</span></div></a>
-<a class="card" href="#roadmap"><div class="card-icon">🏫</div><div class="tag">04 · Сыныптар</div><h3>Менің сыныптарым</h3><p>Сынып бойынша оқулықтарды, сабақтарды, презентациялар мен тапсырмаларды біріктіреміз.</p><div class="bottom"><span class="status">Келесі кезең</span><span class="arrow">Жоспарды көру ↗</span></div></a>
-</div></section>
-<section id="projects"><div class="section-head"><div><div class="eyebrow">Каталог</div><h2>Проекты лаборатории</h2></div><p>Выбирай направление. Новые инструменты будут появляться здесь по мере создания.</p></div>
-<div class="grid">
-<a class="card" href="biology.html"><div class="card-icon">🧬</div><div class="tag">Science · 01</div><h3>Интерактивная биология</h3><p>Клетка, генетика, экосистемы и научные мини-исследования в интерактивном формате.</p><div class="bottom"><span class="status">Первый проект</span><span class="arrow">Открыть ↗</span></div></a>
-<a class="card" href="#roadmap"><div class="card-icon">🎮</div><div class="tag">Learning · 02</div><h3>Образовательные игры</h3><p>Викторины, задания на время и командные испытания для закрепления знаний.</p><div class="bottom"><span class="status">В планах</span><span class="arrow">Скоро ↗</span></div></a>
-<a class="card" href="books.html"><div class="card-icon">📚</div><div class="tag">Teacher Workspace · 05</div><h3>Кітапхана</h3><p>Ортақ оқулықтар кітапханасы. Бір жүктелген кітапты кейін КСП, презентация және тапсырмалар үшін пайдаланамыз.</p><div class="bottom"><span class="status">Қолжетімді</span><span class="arrow">Ашу ↗</span></div></a>
-<a class="card" href="#workspace"><div class="card-icon">🧩</div><div class="tag">Teacher Workspace · 06</div><h3>Сабақ материалдары</h3><p>КСП, презентациялар, тапсырмалар мен тесттерді бір сабақтың ішінде біріктіру — келесі даму кезеңі.</p><div class="bottom"><span class="status">Біртұтас жүйе құрылады</span><span class="arrow">Жұмыс кеңістігі ↗</span></div></a>
-<a class="card" href="#roadmap"><div class="card-icon">🔭</div><div class="tag">Explore · 04</div><h3>Визуальные модели</h3><p>Интерактивные схемы и модели, помогающие увидеть, как устроен окружающий мир.</p><div class="bottom"><span class="status">В планах</span><span class="arrow">Скоро ↗</span></div></a>
-</div></section>
-<section id="about"><div class="about"><div><div class="eyebrow">Миссия</div><h2>Учиться — значит исследовать</h2><p>ALTNEX LABS объединяет науку, технологии и любознательность. Каждый модуль создаётся, чтобы превращать обучение в понятный и увлекательный опыт — от первого вопроса до собственного открытия.</p></div><div class="principles"><div class="principle"><span class="check">✦</span><span>Исследуй — задавай вопросы</span></div><div class="principle"><span class="check">✦</span><span>Понимай — разбирайся в причинах</span></div><div class="principle"><span class="check">✦</span><span>Создавай — делись знаниями</span></div></div></div></section>
-<section id="roadmap"><div class="section-head"><div><div class="eyebrow">План развития</div><h2>От идеи к лаборатории</h2></div><p>Проект будет расти постепенно. Для начала достаточно браузера и GitHub — ничего устанавливать не нужно.</p></div><div class="grid"><div class="card"><div class="card-icon">01</div><h3>Главная страница</h3><p>Витрина ALTNEX LABS с каталогом направлений и единым стилем.</p><div class="bottom"><span class="status">Текущий этап</span></div></div><div class="card"><div class="card-icon">02</div><h3>Биология</h3><p>Добавим интерактивную клетку, тематические тесты и объяснения.</p><div class="bottom"><span class="status">Следующий этап</span></div></div><div class="card"><div class="card-icon">03</div><h3>Учебные игры</h3><p>Викторины и задания, которые можно использовать на уроках.</p><div class="bottom"><span class="status">Позже</span></div></div><div class="card"><div class="card-icon">04</div><h3>Инструменты педагога</h3><p>Постепенно добавим полезные ресурсы для подготовки и организации учебного процесса.</p><div class="bottom"><span class="status">Позже</span></div></div></div></section>
-<section class="contact"><div class="eyebrow">ALTNEX LABS</div><h2>Идеи превращаются в проекты.</h2><p>Одна лаборатория. Много направлений. Постоянное исследование.</p><a class="btn primary" href="#projects">Вернуться к проектам ↑</a></section>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="brandmark">✳</div><div><strong>ALTNEX LABS</strong><small>TEACHER WORKSPACE</small></div></div>
+  <div>
+    <div class="navlabel">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+    <nav class="nav" aria-label="Основная навигация">
+      <button class="active" data-view="home"><span>⌂</span>Главная</button>
+      <button data-view="books"><span>▤</span>Мои учебники</button>
+      <button data-view="slides"><span>▧</span>Создать презентацию</button>
+      <button data-view="biology"><span>⚗</span>BioLab</button>
+      <button data-view="classes"><span>▦</span>Мои классы</button>
+      <button data-view="lesson"><span>✎</span>Создать урок</button>
+    </nav>
+  </div>
+  <div class="side-bottom"><div class="avatar">A</div><div><strong>Алтынай</strong><small>Учитель · ALTNEX LABS</small></div></div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left"><button class="menu-toggle" id="menuToggle" aria-label="Открыть меню">☰</button><div><div class="top-title" id="pageTitle">Главная</div><div class="crumb">ALTNEX LABS / <span id="crumb">Рабочее пространство</span></div></div></div>
+    <div class="status">● Личное пространство</div>
+  </header>
+  <section class="workspace home-view" id="homeView">
+    <div class="welcome"><div class="eyebrow">Рабочее пространство учителя</div><h1>Всё для урока —<br>в одном месте.</h1><p class="muted">Храните учебники, создавайте презентации и готовьте материалы к урокам. Выберите нужный раздел в боковой панели.</p></div>
+    <div class="tiles">
+      <button class="tile" data-view="books"><div class="ico">📚</div><h2>Мои учебники</h2><p>Загружайте учебники и возвращайтесь к ним при подготовке материалов.</p></button>
+      <button class="tile" data-view="slides"><div class="ico">🖥️</div><h2>Создать презентацию</h2><p>Подготовьте презентацию на основе учебника и темы урока.</p></button>
+      <button class="tile" data-view="biology"><div class="ico">🧪</div><h2>BioLab</h2><p>Интерактивные лаборатории и учебные активности.</p></button>
+      <button class="tile" data-view="lesson"><div class="ico">📝</div><h2>Создать урок</h2><p>Следующий этап: объединить КСП, задания и тесты в одном процессе.</p></button>
+    </div>
+  </section>
+  <section class="frame-wrap" id="frameWrap"><iframe id="contentFrame" title="Раздел ALTNEX LABS"></iframe></section>
 </main>
-<footer class="wrap"><span>© <span id="year"></span> ALTNEX LABS</span><span>LEARN · EXPLORE · CREATE</span></footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</div>
+<script>
+const titles={home:["Главная","Рабочее пространство"],books:["Мои учебники","Библиотека"],slides:["Создать презентацию","Материалы урока"],biology:["BioLab","Интерактивная лаборатория"],classes:["Мои классы","Классы и материалы"],lesson:["Создать урок","Конструктор урока"]};
+const urls={books:"books.html",slides:"slides.html",biology:"biology.html"};
+const homeView=document.getElementById("homeView"),frameWrap=document.getElementById("frameWrap"),frame=document.getElementById("contentFrame"),sidebar=document.getElementById("sidebar");
+let current="";
+function switchView(view){
+ if(!titles[view])return;
+ current=view;
+ document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+ document.getElementById("pageTitle").textContent=titles[view][0];
+ document.getElementById("crumb").textContent=titles[view][1];
+ sidebar.classList.remove("open");
+ if(view==="home"){homeView.classList.remove("hidden");frameWrap.classList.remove("open");frame.removeAttribute("src");return;}
+ if(urls[view]){homeView.classList.add("hidden");frameWrap.classList.add("open");if(!frame.src.endsWith("/"+urls[view]))frame.src=urls[view];return;}
+ homeView.classList.add("hidden");frameWrap.classList.remove("open");
+ homeView.innerHTML='<div class="welcome"><div class="eyebrow">В разработке</div><h1>'+titles[view][0]+'</h1><p class="muted">Этот раздел будет объединён с библиотекой учебников и материалами уроков. Пока можно пользоваться разделами «Мои учебники», «Создать презентацию» и «BioLab».</p><div class="tiles"><button class="tile" data-view="books"><div class="ico">📚</div><h2>Открыть учебники</h2><p>Перейти в библиотеку</p></button><button class="tile" data-view="slides"><div class="ico">🖥️</div><h2>Создать презентацию</h2><p>Открыть конструктор</p></button></div></div>';
+ homeView.classList.remove("hidden");
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-view]");if(b)switchView(b.dataset.view)});
+document.getElementById("menuToggle").addEventListener("click",()=>sidebar.classList.toggle("open"));
+window.setTimeout(()=>document.getElementById("welcomeOverlay").classList.add("hide"),2600);
+</script>
 </body>
 </html>
