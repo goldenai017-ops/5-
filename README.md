@@ -15,7 +15,24 @@
 3. В разделе **Build and deployment** выбери **Deploy from a branch**.
 4. В качестве ветки выбери **main**, а папки — **/(root)**.
 5. Нажми **Save** и подожди несколько минут.
-6. Адрес сайта обычно будет: https://goldenai017-ops.github.io/5-/
+6. Адрес сайта: https://goldenai017-ops.github.io/5-/
+
+## Подключение ИИ в ALTNEX BioLab
+
+Файл `biology.html` уже отправляет параметры урока в Cloudflare Worker. Серверная часть находится в `worker.js`. Для работы генерации нужно один раз развернуть Worker и добавить секрет Gemini API.
+
+1. Войди в **Cloudflare Dashboard**: https://dash.cloudflare.com/
+2. Открой **Workers & Pages** и создай Worker с именем **altnex-biolab-api**.
+3. Открой созданный Worker → **Edit code**. Скопируй содержимое файла `worker.js` из этого репозитория и замени им стартовый код Worker. Нажми **Deploy**.
+4. В настройках Worker открой **Settings → Variables and Secrets** и добавь секрет:
+   - **Name:** `GEMINI_API_KEY`
+   - **Value:** твой API-ключ Gemini из Google AI Studio: https://aistudio.google.com/apikey
+   Выбирай именно **Secret**, а не обычную переменную. Никогда не добавляй ключ в `biology.html` или в публичный репозиторий.
+5. После сохранения секрета снова выполни **Deploy** (если Cloudflare попросит).
+6. Проверь, что адрес Worker совпадает с адресом, который использует сайт: `https://altnex-biolab-api.goldenai017.workers.dev/`. Если Cloudflare выдал другой адрес `workers.dev`, измени URL в запросе `fetch(...)` в файле `biology.html` на выданный адрес и сохрани коммит.
+7. Открой сайт BioLab, выбери тему, класс и нужные материалы, затем нажми **«Подготовить материалы»**.
+
+Если генерация не работает, проверь секрет `GEMINI_API_KEY`, URL Worker и сообщение об ошибке в окне BioLab. Ключ API хранится только в Cloudflare Worker и не отправляется в браузер.
 
 ## План развития
 1. Опубликовать главную страницу.
@@ -25,4 +42,4 @@
 5. Улучшать доступность и адаптацию для телефона.
 
 ## Технологии
-HTML, CSS и JavaScript без установки дополнительных программ.
+HTML, CSS, JavaScript, GitHub Pages, Cloudflare Workers и Gemini API.
