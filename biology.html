@@ -396,52 +396,7 @@ document.getElementById('helpBtn').addEventListener('click',()=>alert('Это и
  word.addEventListener('click',()=>{
   if(!area.innerHTML.trim()){alert('Сначала подготовьте материалы урока.');return;}
   const title=document.getElementById('generatedTitle').textContent.trim()||'Материалы урока';
-  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:auto;margin:18mm}body{font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;margin:0;color:#17251d}h1,h2,h3,h4{font-family:"Times New Roman",Times,serif;font-size:12pt;font-weight:bold;margin:12pt 0 6pt}p,td,th,div,article{font-family:"Times New Roman",Times,serif;font-size:12pt}p{white-space:pre-wrap;margin:0 0 8pt}table{width:100%;border-collapse:collapse;margin:10pt 0 14pt;table-layout:auto;break-inside:auto}thead{display:table-header-group}tr{break-inside:avoid}th,td{border:1px solid #8ca395;padding:6pt 7pt;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e6f0e9;font-weight:bold;text-align:center}tbody tr:nth-child(even){background:#f7faf8}.lesson-table-wrap{width:100%;overflow:visible;margin:10pt 0 14pt}.lesson-table{width:100%;min-width:0}.lesson-table th,.lesson-table td{border:1px solid #8ca395;padding:6pt 7pt}article,.objective{margin:10pt 0;padding:9pt;border:1px solid #cbd8ce;break-inside:avoid}strong{font-weight:bold}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'
-<script id="altnex-create-presentation-from-paragraph">
-(function(){
- const button=document.getElementById('createPresentationFromParagraph');
- const grade=document.getElementById('grade');
- const source=document.getElementById('source');
- const book=document.getElementById('lessonTextbook');
- const paragraph=document.getElementById('lessonParagraph');
- const frame=document.getElementById('bioLabSlidesFrame');
- if(!button||!grade||!source||!book||!paragraph||!frame)return;
- function sync(){button.disabled=!(source.value==='Мой учебник / загруженный файл'&&book.value&&paragraph.value);}
- [grade,source,book,paragraph].forEach(el=>el.addEventListener('change',sync));
- button.addEventListener('click',function(){
-  sync();
-  if(button.disabled)return;
-  const gradeNumber=Number(String(grade.value).match(/\d+/)?.[0]||0);
-  if(!gradeNumber||!book.value||!paragraph.value)return;
-  const query=new URLSearchParams({embed:'1',grade:String(gradeNumber),book:book.value,paragraph:paragraph.value});
-  frame.src='slides.html?'+query.toString();
-  if(typeof window.go==='function')window.go('presentations');
-  else document.querySelector('[data-page="presentations"]')?.click();
- });
- sync();
-})();
-</script>
-
-<script id="altnex-paragraph-presenton-flow">
-(()=>{
- const button=document.getElementById('createPresentationFromParagraph'),form=document.getElementById('lessonForm');
- const source=document.getElementById('source'),book=document.getElementById('lessonTextbook'),paragraph=document.getElementById('lessonParagraph');
- const presentationBox=document.querySelector('input[name="output"][value="Презентация"]');
- if(!button||!form||!source||!book||!paragraph||!presentationBox)return;
- const sync=()=>{button.disabled=!(source.value==='Мой учебник / загруженный файл'&&book.value&&paragraph.value);};
- [source,book,paragraph,document.getElementById('grade')].forEach(el=>el.addEventListener('change',sync));
- button.addEventListener('click',()=>{
-   sync();if(button.disabled)return;
-   const topic=document.getElementById('topic');
-   if(topic)topic.value=paragraph.options[paragraph.selectedIndex].text;
-   presentationBox.checked=true;
-   if(typeof form.requestSubmit==='function')form.requestSubmit();
-   else form.querySelector('button[type="submit"]').click();
- });
- sync();
-})();
-</script>
-</body></html>';
+  const html='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:auto;margin:18mm}body{font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;margin:0;color:#17251d}h1,h2,h3,h4{font-family:"Times New Roman",Times,serif;font-size:12pt;font-weight:bold;margin:12pt 0 6pt}p,td,th,div,article{font-family:"Times New Roman",Times,serif;font-size:12pt}p{white-space:pre-wrap;margin:0 0 8pt}table{width:100%;border-collapse:collapse;margin:10pt 0 14pt;table-layout:auto;break-inside:auto}thead{display:table-header-group}tr{break-inside:avoid}th,td{border:1px solid #8ca395;padding:6pt 7pt;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#e6f0e9;font-weight:bold;text-align:center}tbody tr:nth-child(even){background:#f7faf8}.lesson-table-wrap{width:100%;overflow:visible;margin:10pt 0 14pt}.lesson-table{width:100%;min-width:0}.lesson-table th,.lesson-table td{border:1px solid #8ca395;padding:6pt 7pt}article,.objective{margin:10pt 0;padding:9pt;border:1px solid #cbd8ce;break-inside:avoid}strong{font-weight:bold}</style></head><body><h1>'+esc(title)+'</h1><p>'+esc(document.getElementById('generatedMeta').textContent)+'</p>'+area.innerHTML+'</body></html>';
   const blob=new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=title.replace(/[\\/:*?"<>|]+/g,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  });
