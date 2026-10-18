@@ -68,7 +68,7 @@
 <script>
 const titles={home:["Главная","Рабочее пространство"],books:["Мои учебники","Библиотека"],slides:["Создать презентацию","Материалы урока"],biology:["BioLab","Интерактивная лаборатория"],classes:["Мои классы","Классы и материалы"],lesson:["Создать урок","Конструктор урока"]};
 const urls={books:"books.html",slides:"slides.html",biology:"biology.html"};
-const homeView=document.getElementById("homeView"),frameWrap=document.getElementById("frameWrap"),frame=document.getElementById("contentFrame"),sidebar=document.getElementById("sidebar");
+const homeView=document.getElementById("homeView"),homeContent=document.getElementById("homeView").innerHTML,frameWrap=document.getElementById("frameWrap"),frame=document.getElementById("contentFrame"),sidebar=document.getElementById("sidebar");
 let current="";
 function switchView(view){
  if(!titles[view])return;
@@ -77,7 +77,7 @@ function switchView(view){
  document.getElementById("pageTitle").textContent=titles[view][0];
  document.getElementById("crumb").textContent=titles[view][1];
  sidebar.classList.remove("open");
- if(view==="home"){homeView.classList.remove("hidden");frameWrap.classList.remove("open");frame.removeAttribute("src");return;}
+ if(view==="home"){if(!homeView.innerHTML.includes("Всё для урока"))homeView.innerHTML=homeContent;homeView.classList.remove("hidden");frameWrap.classList.remove("open");frame.removeAttribute("src");return;}
  if(urls[view]){homeView.classList.add("hidden");frameWrap.classList.add("open");if(!frame.src.endsWith("/"+urls[view]))frame.src=urls[view];return;}
  homeView.classList.add("hidden");frameWrap.classList.remove("open");
  homeView.innerHTML='<div class="welcome"><div class="eyebrow">В разработке</div><h1>'+titles[view][0]+'</h1><p class="muted">Этот раздел будет объединён с библиотекой учебников и материалами уроков. Пока можно пользоваться разделами «Мои учебники», «Создать презентацию» и «BioLab».</p><div class="tiles"><button class="tile" data-view="books"><div class="ico">📚</div><h2>Открыть учебники</h2><p>Перейти в библиотеку</p></button><button class="tile" data-view="slides"><div class="ico">🖥️</div><h2>Создать презентацию</h2><p>Открыть конструктор</p></button></div></div>';
