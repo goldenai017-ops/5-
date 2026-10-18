@@ -95,7 +95,7 @@ async function loadLibrary(){const db=await openLibraryDB();const rows=await new
 function renderLibrary(){const host=$('libraryList');const step=$('bookStep');step.hidden=selectedGrade===null;if(selectedGrade===null){host.innerHTML='';return;}const books=libraryBooks.filter(b=>Number(b.grade)===Number(selectedGrade));if(!books.length){host.innerHTML='<div class="empty-books"><strong>В этом классе пока нет учебников</strong><p>Сначала добавь учебник в «Мои книги», затем вернись сюда.</p></div>';$('selectedBooksNote').textContent='Выбран '+selectedGrade+' класс. Добавь учебник в разделе «Мои книги».';return;}host.innerHTML=books.map(b=>'<button type="button" class="presentation-book '+(selectedBookIds.has(b.id)?'active':'')+'" data-book-id="'+escapeHtml(b.id)+'"><span class="book-symbol">📘</span><span style="min-width:0;flex:1"><strong>'+escapeHtml(b.name)+'</strong><small>'+(b.name.toLowerCase().endsWith('.pdf')?'PDF':'TXT')+' · '+(b.size/1048576).toFixed(1)+' МБ</small></span>'+(selectedBookIds.has(b.id)?'<span class="book-check">✓</span>':'')+'</button>').join('');host.querySelectorAll('[data-book-id]').forEach(el=>el.addEventListener('click',async()=>{const id=el.dataset.bookId;selectedBookIds.clear();selectedBookIds.add(id);paragraphs=[];selectedParagraph=null;$('builderArea').hidden=false;$('workarea').hidden=true;$('paragraphSelect').innerHTML='<option value="">Читаю учебник…</option>';$('paragraphSelect').disabled=true;$('topic').value='';$('designStep').hidden=true;$('generateBtn').disabled=true;$('paragraphStep').hidden=false;renderLibrary();updateSelectedBooksNote();reportEmbedHeight();try{await detectParagraphs();}catch(e){$('paragraphHint').textContent=e.message||'Не удалось прочитать учебник.';showStatus(escapeHtml(e.message||String(e)),true);}reportEmbedHeight();}));updateSelectedBooksNote();}
 function updateSelectedBooksNote(){const chosen=libraryBooks.find(b=>selectedBookIds.has(b.id));$('selectedBooksNote').textContent=chosen?'Выбрана книга: '+chosen.name+' · '+selectedGrade+' класс':'Сначала выбери учебник из списка выше.';$('loadParagraphsBtn').disabled=!chosen;}
 document.querySelectorAll('[data-grade-select]').forEach(el=>el.addEventListener('click',()=>{selectedGrade=Number(el.dataset.gradeSelect);$('grade').value=String(selectedGrade);document.querySelectorAll('[data-grade-select]').forEach(x=>x.classList.toggle('active',x===el));selectedBookIds.clear();paragraphs=[];selectedParagraph=null;$('builderArea').hidden=true;$('workarea').hidden=true;$('paragraphStep').hidden=true;$('designStep').hidden=true;$('paragraphSelect').innerHTML='<option value="">Сначала выбери учебник</option>';$('paragraphSelect').disabled=true;$('topic').value='';$('generateBtn').disabled=true;updateSelectedBooksNote();renderLibrary();reportEmbedHeight();}));
-loadLibrary().catch(()=>{$('libraryList').innerHTML='<div class="empty-books"><strong>Не удалось открыть «Мои книги»</strong><p>Открой BioLab в обычном окне браузера и обнови страницу.</p></div>';});
+loadLibrary().then(()=>applyPresetFromQuery()).catch(()=>{$('libraryList').innerHTML='<div class="empty-books"><strong>Не удалось открыть «Мои книги»</strong><p>Открой BioLab в обычном окне браузера и обнови страницу.</p></div>';});
 async function detectParagraphs(){
  const chosen=libraryBooks.filter(b=>selectedBookIds.has(b.id));
  if(!chosen.length)throw new Error('Сначала выбери учебник.');
@@ -128,6 +128,50 @@ async function detectParagraphs(){
   else{$('paragraphSelect').innerHTML='<option value="">Не удалось найти параграфы</option>';$('paragraphHint').textContent='Не удалось распознать параграфы. Возможно, PDF — скан или в книге нет текстового слоя.';}
  }finally{$('loadParagraphsBtn').disabled=false;$('loadParagraphsBtn').textContent='Найти параграфы в учебнике';}
 }
+
+async function applyPresetFromQuery(){
+ const params=new URLSearchParams(location.search);
+ const grade=Number(params.get('grade')),bookId=params.get('book'),target=params.get('paragraph');
+ if(!grade||!bookId||!target)return;
+ const book=libraryBooks.find(item=>String(item.id)===String(bookId)&&Number(item.grade)===grade);
+ if(!book){showStatus('Не удалось найти выбранный учебник. Проверь раздел «Мои книги».',true);return;}
+ selectedGrade=grade;
+ $('grade').value=String(grade);
+ document.querySelectorAll('[data-grade-select]').forEach(el=>el.classList.toggle('active',Number(el.dataset.gradeSelect)===grade));
+ selectedBookIds.clear();
+ selectedBookIds.add(book.id);
+ paragraphs=[];
+ selectedParagraph=null;
+ $('builderArea').hidden=false;
+ $('workarea').hidden=true;
+ $('paragraphStep').hidden=false;
+ $('designStep').hidden=true;
+ $('paragraphSelect').innerHTML='<option value="">Читаю выбранный параграф…</option>';
+ $('paragraphSelect').disabled=true;
+ $('topic').value='';
+ $('generateBtn').disabled=true;
+ renderLibrary();
+ updateSelectedBooksNote();
+ reportEmbedHeight();
+ try{
+  await detectParagraphs();
+  const normalize=value=>String(value||'').replace(/^§\s*\d+\s*[—–-]\s*/i,'').replace(/\s+/g,' ').trim().toLocaleLowerCase();
+  const wanted=normalize(target);
+  const options=Array.from($('paragraphSelect').options).filter(option=>option.value!=='');
+  const match=options.find(option=>normalize(option.textContent)===wanted||normalize(option.value)===wanted)
+   ||options.find(option=>normalize(option.textContent).includes(wanted)||wanted.includes(normalize(option.textContent)));
+  if(match){
+   $('paragraphSelect').value=match.value;
+   $('paragraphSelect').dispatchEvent(new Event('change',{bubbles:true}));
+   showStatus('Выбран параграф: <strong>'+escapeHtml(match.textContent)+'</strong>. Теперь выбери дизайн и нажми «Создать презентацию».');
+  }else{
+   $('paragraphHint').textContent='Учебник открыт, но нужный параграф не удалось сопоставить автоматически. Выбери его в списке.';
+   showStatus('Учебник открыт. Выбери нужный параграф в списке вручную.',true);
+  }
+ }catch(error){showStatus(escapeHtml(error.message||String(error)),true);}
+ reportEmbedHeight(true);
+}
+
 $('loadParagraphsBtn').addEventListener('click',async()=>{try{await detectParagraphs();}catch(e){showStatus(escapeHtml(e.message||String(e)),true);}});
 $('paragraphSelect').addEventListener('change',()=>{const value=$('paragraphSelect').value;const i=value===''?-1:Number(value);selectedParagraph=paragraphs[i]||null;$('topic').value=selectedParagraph?.title||'';$('designStep').hidden=!selectedParagraph;$('generateBtn').disabled=!selectedParagraph;reportEmbedHeight(!!selectedParagraph);if(selectedParagraph&&!EMBED_MODE)$('designStep').scrollIntoView({behavior:'smooth',block:'nearest'});});
 
