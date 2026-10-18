@@ -226,7 +226,7 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
           <div class="form-actions"><span class="subtle">Будут созданы только отмеченные материалы. Каждый — в отдельной карточке.</span><button class="primary" type="submit">Подготовить материалы →</button></div>
         </form>
         <div class="notice" id="formNotice" role="status"></div>
-        <section class="generated" id="generatedPreview" aria-live="polite"><div class="generated-head"><div><h2 id="generatedTitle">Материалы урока</h2><p id="generatedMeta"></p></div><span class="demo-label">ПРИМЕР МАКЕТА</span></div><div id="generatedContent" class="output-grid"></div><div class="generated-actions"><button type="button" class="secondary" id="editLessonBtn">← Изменить параметры</button><button type="button" class="secondary" id="exportWordBtn">↓ Скачать Word</button><button type="button" class="secondary" id="exportPdfBtn">↓ Печать / PDF</button><button type="button" class="primary" id="copyLessonBtn">Скопировать план</button></div></section>
+        <section class="generated" id="generatedPreview" aria-live="polite"><div class="generated-head"><div><h2 id="generatedTitle">Материалы урока</h2><p id="generatedMeta"></p></div><span class="demo-label">ПРИМЕР МАКЕТА</span></div><div id="generatedContent" class="output-grid"></div><div class="generated-actions" hidden></div></section>
       </div>
     </section>
     <section class="page-panel" id="page-library">
@@ -485,10 +485,15 @@ function renderMaterials(raw){
         if(!response.ok||!data.ok)throw new Error(data.error||(isPresentation?'Presenton презентация жасай алмады.':'Материал жасай алмады.'));
         if(isPresentation&&(data.provider!=='Presenton'||(!data.path&&!data.edit_path)))throw new Error('Presenton әлі қосылмаған сияқты. Cloudflare Worker-ді жаңа worker.js кодымен жариялап, PRESENTON_API_KEY Secret қосу керек.');
         if(isPresentation){
-          const links=[];
-          if(data.path)links.push('<a href="'+escapeHtml(data.path)+'" target="_blank" rel="noopener noreferrer" download>↓ PPTX презентациясын жүктеу</a>');
-          if(data.edit_path)links.push('<a href="'+escapeHtml(data.edit_path)+'" target="_blank" rel="noopener noreferrer">Presenton ішінде ашу және өңдеу ↗</a>');
-          card.innerHTML='<h3>'+escapeHtml(outputNames[name])+'</h3><div class="material-body"><p><strong>Презентация дайын!</strong></p><p>Presenton арқылы жасалды. PowerPoint файлын жүктеуге немесе Presenton редакторында ашуға болады.</p><p>'+links.join('<br>')+'</p></div>';
+          card.innerHTML='<h3>'+escapeHtml(outputNames[name])+'</h3><div class="material-card-actions"><button class="primary material-download" type="button">↓ Скачать</button><button class="secondary material-edit" type="button">✎ Редактировать</button></div><p class="material-status" style="margin-top:10px">Презентация готова.</p>';
+          card.querySelector('.material-download').addEventListener('click',()=>{
+            if(!data.path){notice.textContent='Ссылка для скачивания презентации не получена.';return;}
+            const a=document.createElement('a');a.href=data.path;a.target='_blank';a.rel='noopener noreferrer';a.download='';document.body.appendChild(a);a.click();a.remove();
+          });
+          card.querySelector('.material-edit').addEventListener('click',()=>{
+            if(data.edit_path){window.open(data.edit_path,'_blank','noopener,noreferrer');}
+            else{notice.textContent='Ссылка на редактор презентации не получена. Можно скачать PPTX и отредактировать его в PowerPoint.';if(data.path){const a=document.createElement('a');a.href=data.path;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Скачать презентацию для редактирования';notice.appendChild(document.createElement('br'));notice.appendChild(a);}}
+          });
         }else{
           const rawMaterial=String(data.materials||'Модель мәтін қайтармады.');
           card.dataset.material=rawMaterial;
