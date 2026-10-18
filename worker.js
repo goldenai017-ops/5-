@@ -38,7 +38,7 @@ function cleanText(value, maxLength = 500) {
   return String(value ?? "").trim().slice(0, maxLength);
 }
 
-async function requestGemini(apiKey, prompt) {
+async function requestGemini(apiKey, prompt, sourceImages = []) {
   // Try the primary stable model and fall back if this model is unavailable for the key/project.
   const models = [MODEL, ...FALLBACK_MODELS];
   let lastResult = null;
@@ -57,7 +57,13 @@ async function requestGemini(apiKey, prompt) {
             "x-goog-api-key": apiKey,
           },
           body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            contents: [{ role: "user", parts: [
+              { text: prompt },
+              ...sourceImages.slice(0, 8).flatMap((image, index) => [
+                { text: `ВИЗУАЛЬНЫЙ СНИМОК СТРАНИЦЫ УЧЕБНИКА №${image.page || index + 1}. Анализируй изображение, диаграммы, схемы, подписи и иллюстрации на этой странице.` },
+                { inline_data: { mime_type: image.mimeType || "image/jpeg", data: image.data } },
+              ]),
+            ] }],
             generationConfig: {
               temperature: 0.55,
               topP: 0.9,
@@ -131,6 +137,17 @@ export default {
     const slideCount = Math.min(15, Math.max(5, Number.parseInt(input.slideCount, 10) || 10));
     const visualStyle = cleanText(input.visualStyle, 40) || "mixed";
     const sourceMaterial = cleanText(input.sourceMaterial, 48000);
+    const sourceImages = Array.isArray(input.sourceImages)
+      ? input.sourceImages.slice(0, 8).filter(image =>
+          image && Number.isFinite(Number(image.page)) &&
+          typeof image.data === "string" && image.data.length > 100 &&
+          image.data.length <= 900000
+        ).map(image => ({
+          page: Number(image.page),
+          mimeType: image.mimeType === "image/png" ? "image/png" : "image/jpeg",
+          data: image.data.replace(/^data:image\\/(?:jpeg|png);base64,/, ""),
+        }))
+      : [];
 
     if (!topic) return json({ ok: false, error: "Укажите тему урока." }, 400, origin);
     if (!outputs.length) return json({ ok: false, error: "Выберите хотя бы один материал." }, 400, origin);
@@ -272,7 +289,7 @@ ${sourceMaterial}
           return json({ ok: false, error: "Claude вернул пустой ответ. Попробуйте изменить тему." }, 502, origin);
         }
       } else {
-        const gemini = await requestGemini(env.GEMINI_API_KEY, finalPrompt);
+        const gemini = await requestGemini(env.GEMINI_API_KEY, finalPrompt, isSlides ? sourceImages : []);
         apiResponse = gemini.response;
         const result = gemini.result || {};
         if (!apiResponse?.ok) {
