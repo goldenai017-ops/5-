@@ -145,7 +145,7 @@ export default {
         ).map(image => ({
           page: Number(image.page),
           mimeType: image.mimeType === "image/png" ? "image/png" : "image/jpeg",
-          data: image.data.replace(/^data:image\\/(?:jpeg|png);base64,/, ""),
+          data: image.data,
         }))
       : [];
 
