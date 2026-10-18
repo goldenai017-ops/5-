@@ -165,18 +165,45 @@ export default {
         "Язык презентации: " + (isKzPresentation ? "казахский" : "русский"),
         textbookName ? "Выбранный учебник: " + textbookName : "",
         paragraphName ? "Выбранный параграф: " + paragraphName : "",
+        sourceMaterial
+          ? "\\n\\nСТРОГОЕ ПРАВИЛО: ниже приведён текст из выбранного учебника. Используй его как ЕДИНСТВЕННЫЙ источник фактов и терминов. Не используй интернет и внешние знания для дополнения. Не переводи термины через посторонние значения. Если сведения отсутствуют в учебнике, не выдумывай их; напиши «В предоставленном фрагменте учебника не указано». Сохраняй исходные казахские/русские термины и формулировки.\\n\\nТЕКСТ УЧЕБНИКА:\\n" + sourceMaterial
+          : "\\n\\nВНИМАНИЕ: текст учебника не передан. Не выдавай презентацию за основанную на книге; верни ошибку/сообщи, что нужно выбрать учебник и параграф.",
         "Планируй презентацию на один школьный урок. Объясняй понятия точно и доступно для указанного класса."
-      ].filter(Boolean).join("\n");
+      ].filter(Boolean).join("\\n");
       try {
+        let uploadedFiles = [];
+        if (sourceImages.length) {
+          const formData = new FormData();
+          sourceImages.slice(0, 8).forEach((image, index) => {
+            const bytes = Uint8Array.from(atob(image.data), char => char.charCodeAt(0));
+            const blob = new Blob([bytes], { type: image.mimeType || "image/jpeg" });
+            formData.append("files", blob, "textbook-page-" + (image.page || index + 1) + ".jpg");
+          });
+          const uploadResponse = await fetch("https://api.presenton.ai/api/v1/ppt/files/upload", {
+            method: "POST",
+            headers: { "Authorization": "Bearer " + env.PRESENTON_API_KEY },
+            body: formData
+          });
+          const uploaded = await uploadResponse.json().catch(() => null);
+          if (!uploadResponse.ok || !Array.isArray(uploaded)) {
+            return json({ ok: false, error: "Presenton оқу құралының суреттерін қабылдай алмады. HTTP " + uploadResponse.status + ". Суретсіз презентация жасалған жоқ." }, 502, origin);
+          }
+          uploadedFiles = uploaded.filter(file => typeof file === "string");
+        }
+        if (!sourceMaterial) {
+          return json({ ok: false, error: "Презентация үшін таңдалған оқулықтың мәтіні берілмеді. Алдымен «Мои учебники» бөлімінен кітап пен параграфты таңда." }, 400, origin);
+        }
         const presentonResponse = await fetch("https://api.presenton.ai/api/v1/ppt/presentation/generate", {
           method: "POST",
           headers: { "Authorization": "Bearer " + env.PRESENTON_API_KEY, "Content-Type": "application/json" },
           body: JSON.stringify({
             content,
+            files: uploadedFiles,
+            content_generation: "preserve",
             n_slides: Math.min(15, Math.max(5, Number.parseInt(input.slideCount, 10) || 8)),
             language: isKzPresentation ? "Kazakh" : "Russian",
-            instructions: "Создай научно корректную школьную презентацию по биологии. Один слайд — одна главная мысль, короткие тезисы, подходящие иллюстрации и понятная последовательность. Не выдумывай официальные коды целей обучения РК, статистику или источники. Добавь титульный слайд и итоговый слайд. Презентация должна быть пригодна для показа ученикам.",
-            tone: "default", verbosity: "standard", template: "general", export_as: "pptx",
+            instructions: "Оқулықтан алынған деректер мен терминдерді ғана қолдан. Сыртқы интернеттен дерек қоспа. Берілген оқулық беттеріндегі иллюстрациялар/сызбалар сәйкес келсе, соларды басым пайдалан; басқа мағынадағы немесе тақырыпқа қатысы жоқ суреттерді қоспа. Оқулықта жоқ фактіні, аударманы, анықтаманы ойдан шығарма. «Тіс тәжі» сияқты терминдерді тек оқулықтағы контексте түсіндір. Тақырыпқа сәйкес келетін мәтінді сақта, тек қысқа слайдтарға бөл. Бір слайд — бір негізгі ой. Қосымша мәлімет жоқ болса, оны ойдан толықтырма. Титул және қорытынды слайд қос.",
+            tone: "educational", verbosity: "standard", template: "general", export_as: "pptx",
             include_title_slide: true, web_search: false, image_type: "stock"
           })
         });
