@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALTNEX BioLab — прототип</title>
+<title>Лаборатория Алтынай — ALTNEX LABS</title>
 <style>
 :root { color-scheme: light dark; --green:#123d31; --green-2:#1b5945; --mint:#dff2e8; --lime:#c5ed83; --ink:light-dark(#1e2b25,#edf4ef); --muted:light-dark(#6c7b73,#a4b5ac); --page:light-dark(#f4f7f4,#101713); --surface:light-dark(#ffffff,#19231d); --line:light-dark(#e1e9e3,#2c3b31); --soft:light-dark(#edf3ee,#202e25); }
 *{box-sizing:border-box} body{margin:0;background:var(--page);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif} button,input,select{font:inherit} button{cursor:pointer} .app{min-height:100vh;display:grid;grid-template-columns:246px minmax(0,1fr);background:var(--page)}
@@ -58,10 +58,12 @@
 </div>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brandmark">✳</div><div><strong>ALTNEX</strong><small>BIOLAB · EDU</small></div></div>
+  <div class="brand"><div class="brandmark">✳</div><div><strong>ALTNEX LABS</strong><small>ЛАБОРАТОРИЯ АЛТЫНАЙ</small></div></div>
   <div><div class="navlabel">РАБОЧЕЕ ПРОСТРАНСТВО</div><nav class="nav" aria-label="Основная навигация">
     <button class="active" data-page="home"><span>⌂</span> Главная</button>
-    <button data-page="library"><span>▤</span> Библиотека</button>
+    <button data-page="library"><span>▤</span> Библиотека BioLab</button>
+    <button data-page="textbooks"><span>📚</span> Мои учебники</button>
+    <button data-page="presentations"><span>▧</span> Презентации</button>
     <button data-page="create"><span>＋</span> Создать урок</button>
     <button data-page="lessons"><span>▣</span> Мои уроки</button>
     <button data-page="games"><span>◈</span> Игры</button>
@@ -107,7 +109,17 @@
       </div>
     </section>
     <section class="page-panel" id="page-library"><div class="welcome"><div><div class="eyebrow">Единая база знаний</div><h1>Библиотека биологии</h1><p>Учебные темы 5–11 классов на казахском и русском языках. В полноценной версии библиотека будет связана с источниками и учебными программами.</p></div></div><div class="formbox"><div class="formgrid"><div class="field"><label for="libGrade">Выберите класс</label><select id="libGrade"><option>Все классы</option><option>5 класс</option><option>6 класс</option><option>7 класс</option><option>8 класс</option><option>9 класс</option><option>10 класс</option><option>11 класс</option></select></div><div class="field"><label for="libSearch">Поиск по теме</label><input id="libSearch" placeholder="Например, клетка, экология…"></div></div><div id="topicList" class="cards" style="margin-top:20px"><article class="lesson topic" data-grade="8 класс" data-topic="иммунитет"><div class="lesson-top"><div class="subject-icon">🛡️</div><span class="tag">8 класс</span></div><h3>Иммунитет человека</h3><p>Иммунная система, врождённый и приобретённый иммунитет</p><div class="lesson-foot"><span>Тема для изучения</span><button data-topic-create="Иммунитет человека">Создать урок</button></div></article><article class="lesson topic" data-grade="7 класс" data-topic="фотосинтез"><div class="lesson-top"><div class="subject-icon">🌿</div><span class="tag">7 класс</span></div><h3>Фотосинтез</h3><p>Условия, этапы и значение фотосинтеза</p><div class="lesson-foot"><span>Тема для изучения</span><button data-topic-create="Фотосинтез">Создать урок</button></div></article><article class="lesson topic" data-grade="9 класс" data-topic="генетика наследственность"><div class="lesson-top"><div class="subject-icon">🧬</div><span class="tag">9 класс</span></div><h3>Наследственность</h3><p>Гены, признаки и основы генетики</p><div class="lesson-foot"><span>Тема для изучения</span><button data-topic-create="Наследственность">Создать урок</button></div></article><article class="lesson topic" data-grade="6 класс" data-topic="клетка"><div class="lesson-top"><div class="subject-icon">🔬</div><span class="tag">6 класс</span></div><h3>Строение клетки</h3><p>Основные части клетки и их функции</p><div class="lesson-foot"><span>Тема для изучения</span><button data-topic-create="Строение клетки">Создать урок</button></div></article></div><p id="noTopics" class="empty-note" style="display:none;margin-top:16px">По вашему запросу темы не найдены.</p></div></section>
-    <section class="page-panel" id="page-lessons"><div class="welcome"><div><div class="eyebrow">Ваши материалы</div><h1>Мои уроки</h1><p>Здесь будут храниться созданные вами планы, презентации и задания.</p></div><button class="primary" data-go="create">＋ Новый урок</button></div><div class="cards"><article class="lesson"><div class="lesson-top"><div class="subject-icon">🛡️</div><span class="tag">Черновик</span></div><h3>Иммунитет человека</h3><p>8 класс · Қазақша · 45 минут</p><div class="lesson-foot"><span>Демонстрационный материал</span><button data-go="create">Открыть</button></div></article></div></section>
+    
+<section class="page-panel" id="page-textbooks">
+  <div class="welcome"><div><div class="eyebrow">Единая библиотека</div><h1>Мои учебники</h1><p>Загружайте учебники здесь и используйте их при подготовке материалов.</p></div></div>
+  <div style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)"><iframe title="Библиотека учебников" src="books.html" style="display:block;width:100%;height:78vh;min-height:650px;border:0;background:#f4f7f4"></iframe></div>
+</section>
+<section class="page-panel" id="page-presentations">
+  <div class="welcome"><div><div class="eyebrow">Материалы урока</div><h1>Создать презентацию</h1><p>Откройте конструктор презентаций, не выходя из лаборатории.</p></div></div>
+  <div style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)"><iframe title="Конструктор презентаций" src="slides.html" style="display:block;width:100%;height:82vh;min-height:720px;border:0;background:#f4f7f4"></iframe></div>
+</section>
+
+<section class="page-panel" id="page-lessons"><div class="welcome"><div><div class="eyebrow">Ваши материалы</div><h1>Мои уроки</h1><p>Здесь будут храниться созданные вами планы, презентации и задания.</p></div><button class="primary" data-go="create">＋ Новый урок</button></div><div class="cards"><article class="lesson"><div class="lesson-top"><div class="subject-icon">🛡️</div><span class="tag">Черновик</span></div><h3>Иммунитет человека</h3><p>8 класс · Қазақша · 45 минут</p><div class="lesson-foot"><span>Демонстрационный материал</span><button data-go="create">Открыть</button></div></article></div></section>
     <section class="page-panel" id="page-games"><div class="welcome"><div><div class="eyebrow">Учимся играя</div><h1>Интерактивные игры</h1><p>Создавайте задания для повторения и закрепления биологических понятий.</p></div></div><div class="cards"><article class="lesson"><div class="lesson-top"><div class="subject-icon">🧩</div><span class="tag">Идея</span></div><h3>Собери клетку</h3><p>Расположите органоиды и сопоставьте их функции.</p><div class="lesson-foot"><span>6–7 класс</span><button data-go="create">Подготовить</button></div></article><article class="lesson"><div class="lesson-top"><div class="subject-icon">⚡</div><span class="tag">Идея</span></div><h3>Верно или неверно?</h3><p>Быстрый раунд по теме иммунитета.</p><div class="lesson-foot"><span>8 класс</span><button data-go="create">Подготовить</button></div></article></div></section>
     <section class="page-panel" id="page-assessment"><div class="welcome"><div><div class="eyebrow">Проверка знаний</div><h1>Оценивание</h1><p>В будущем здесь можно будет собирать тесты, проверять ответы и видеть типичные затруднения класса.</p></div></div><div class="empty-note">📊 <strong>Аналитика ответов появится после подключения тестирования.</strong><br><br>Сначала создайте тест с ключами ответов в конструкторе уроков.</div><button class="primary" style="margin-top:16px" data-go="create">Создать тест →</button></section>
     <section class="page-panel" id="page-classes"><div class="welcome"><div><div class="eyebrow">Обучающиеся</div><h1>Мои классы</h1><p>Пространство для групп, назначенных заданий и прогресса учеников.</p></div></div><div class="empty-note">👩‍🏫 Управление классами и учениками подключим на этапе аккаунтов и базы данных.</div></section>
@@ -116,7 +128,7 @@
 </main>
 </div>
 <script>
-const labels={home:'Главная',library:'Библиотека',create:'Создать урок',lessons:'Мои уроки',games:'Игры',assessment:'Оценивание',classes:'Мои классы',analytics:'Аналитика'};
+const labels={home:'Главная',library:'Библиотека BioLab',textbooks:'Мои учебники',presentations:'Презентации',create:'Создать урок',lessons:'Мои уроки',games:'Игры',assessment:'Оценивание',classes:'Мои классы',analytics:'Аналитика'};
 function go(page){document.querySelectorAll('.page-panel').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===page));document.getElementById('crumbCurrent').textContent=labels[page]||'Главная';window.scrollTo({top:0,behavior:'smooth'});}
 document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
