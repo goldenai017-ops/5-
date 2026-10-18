@@ -113,9 +113,10 @@ async function detectParagraphs(){
    const pdf=await pdfjsLib.getDocument({data:await book.blob.arrayBuffer()}).promise;
    const pages=[];
    for(let n=1;n<=pdf.numPages;n++){const p=await pdf.getPage(n),ct=await p.getTextContent();pages.push({page:n,text:ct.items.map(x=>x.str).join(' ').replace(/\s+/g,' ').trim()});}
-   const re=/(?:§\s*\d+[.]?|параграф\s*\d+[.]?|глава\s*\d+[.]?|раздел\s*\d+[.]?|тарау\s*\d+[.]?|тақырып\s*\d+[.]?)/i;
-   pages.forEach(p=>{const match=p.text.match(re);if(match){const title=p.text.slice(Math.max(0,match.index-15),Math.min(p.text.length,match.index+170)).trim();opts.push({title:title||('Страница '+p.page),start:p.page,end:pdf.numPages});}});
-   opts.forEach((o,i)=>{o.end=(opts[i+1]?.start||pdf.numPages+1)-1;o.title=o.title.replace(/\s+/g,' ').slice(0,150);});
+   const re=/(§\s*(\d{1,3})\s*[.:—–-]?|параграф\s*№?\s*(\d{1,3})\s*[.:—–-]?|глава\s*(\d{1,3})\s*[.:—–-]?|раздел\s*(\d{1,3})\s*[.:—–-]?|тарау\s*(\d{1,3})\s*[.:—–-]?|тақырып\s*(\d{1,3})\s*[.:—–-]?)/i;
+   const seen=new Set();
+   pages.forEach(p=>{const match=p.text.match(re);if(match){const number=match.slice(2).find(Boolean);let title=p.text.slice(match.index+match[0].length).replace(/^\s*[.:—–-]?\s*/,'').trim();title=title.split(/(?:§\s*\d{1,3}|параграф\s*№?\s*\d{1,3}|глава\s*\d{1,3}|раздел\s*\d{1,3})/i)[0].trim().slice(0,150);if(title.length<3)title='Страница '+p.page;const key=(number||p.page)+'|'+title.toLocaleLowerCase();if(seen.has(key))return;seen.add(key);opts.push({title:(number?'§ '+number+' — ':'')+title,start:p.page,end:pdf.numPages});}});
+   opts.forEach((o,i)=>{o.end=(opts[i+1]?.start||pdf.numPages+1)-1;o.title=o.title.replace(/\s+/g,' ').slice(0,180);});
    if(!opts.length){for(let n=1;n<=pdf.numPages;n+=4){const sample=(pages[n-1]?.text||'').slice(0,90);opts.push({title:'Страницы '+n+'–'+Math.min(pdf.numPages,n+3)+(sample?' · '+sample:'') ,start:n,end:Math.min(pdf.numPages,n+3)});}}
   }
   paragraphs=opts.filter(o=>o.end>=o.start);
