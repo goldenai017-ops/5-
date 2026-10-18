@@ -37,6 +37,55 @@ function cleanText(value, maxLength = 500) {
   return String(value ?? "").trim().slice(0, maxLength);
 }
 
+async function requestGemini(apiKey, prompt) {
+  // Retry temporary server errors, then try backup models if the main model is overloaded.
+  const models = [MODEL, "gemini-3.5-flash", "gemini-3.1-flash-lite"];
+  let lastResult = null;
+  let lastResponse = null;
+
+  for (let modelIndex = 0; modelIndex < models.length; modelIndex++) {
+    const model = models[modelIndex];
+    const attempts = modelIndex === 0 ? 2 : 1;
+
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      if (attempt > 0) {
+        await new Promise(resolve => setTimeout(resolve, 900));
+      }
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
+          },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.55,
+              topP: 0.9,
+              maxOutputTokens: 8192,
+            },
+          }),
+        }
+      );
+
+      const result = await response.json().catch(() => ({}));
+      lastResponse = response;
+      lastResult = result;
+
+      if (response.ok) return { response, result, model };
+      const status = response.status;
+      const retryable = status === 503 || status === 500 || status === 502 || status === 504;
+      if (!retryable) return { response, result, model };
+      if (status !== 503) break;
+    }
+  }
+
+  return { response: lastResponse, result: lastResult, model: null };
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -166,26 +215,10 @@ ${isKsp ? `ОСОБЫЕ ТРЕБОВАНИЯ К КСП:
           return json({ ok: false, error: "Claude вернул пустой ответ. Попробуйте изменить тему." }, 502, origin);
         }
       } else {
-        apiResponse = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-goog-api-key": env.GEMINI_API_KEY,
-            },
-            body: JSON.stringify({
-              contents: [{ role: "user", parts: [{ text: prompt }] }],
-              generationConfig: {
-                temperature: 0.55,
-                topP: 0.9,
-                maxOutputTokens: 8192,
-              },
-            }),
-          }
-        );
-        const result = await apiResponse.json().catch(() => ({}));
-        if (!apiResponse.ok) {
+        const gemini = await requestGemini(env.GEMINI_API_KEY, prompt);
+        apiResponse = gemini.response;
+        const result = gemini.result || {};
+        if (!apiResponse?.ok) {
           const message = result?.error?.message || "Проверьте API-ключ Gemini и доступность модели.";
           return json({ ok: false, error: `Ошибка Gemini API: ${message}` }, 502, origin);
         }
