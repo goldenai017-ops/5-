@@ -23,27 +23,35 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ALTNEX BioLab welcome screen — editorial typography */
-#altnexWelcome{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;padding:clamp(22px,4vw,48px);background:#07110f;color:#e8fff8;font-family:'Manrope',sans-serif;isolation:isolate;transition:opacity .65s ease,visibility .65s ease}
-#altnexWelcome:before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 73% 48%,#0b514a 0%,#092b29 23%,#07110f 62%)}
+/* ALTNEX minimalist welcome screen */
+#altnexWelcome{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden;padding:24px;background:radial-gradient(ellipse at 50% 42%,#10483d 0%,#092b25 38%,#061511 78%);color:#effff8;font-family:'Manrope',sans-serif;text-align:center;isolation:isolate;transition:opacity .18s ease,visibility .18s ease}
+#altnexWelcome:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.18;background-image:linear-gradient(#58dbc510 1px,transparent 1px),linear-gradient(90deg,#58dbc510 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at center,#000,transparent 75%)}
 #altnexWelcome:after{content:"";position:absolute;inset:12px;border:1px solid #79ffe51c;pointer-events:none}
-.altnex-w-grid{position:absolute;inset:0;z-index:-1;opacity:.2;background-image:linear-gradient(#58dbc510 1px,transparent 1px),linear-gradient(90deg,#58dbc510 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(90deg,transparent,#000 60%)}
-.altnex-w-top,.altnex-w-bottom{display:flex;justify-content:space-between;gap:16px;color:#83aaa2;font:400 9px/1.4 'DM Mono',monospace;letter-spacing:1.7px}
+.altnex-w-top,.altnex-w-bottom{position:absolute;left:clamp(22px,4vw,48px);right:clamp(22px,4vw,48px);display:flex;justify-content:space-between;gap:16px;color:#83aaa2;font:400 9px/1.4 'DM Mono',monospace;letter-spacing:1.7px}
+.altnex-w-top{top:clamp(24px,4vw,42px)}.altnex-w-bottom{bottom:clamp(24px,4vw,42px)}
 .altnex-w-top b,.altnex-w-bottom b{color:#5cf4d5}.altnex-w-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5cf4d5;box-shadow:0 0 12px #5cf4d5;margin-right:8px}
-.altnex-w-content{width:min(1180px,100%);margin:auto;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:clamp(10px,4vw,60px);padding:30px 0}
-.altnex-w-left{position:relative;z-index:2}.altnex-w-kicker{font:400 10px/1.5 'DM Mono',monospace;letter-spacing:2.4px;color:#9bffe7}.altnex-w-kicker span{border:1px solid #8af5d977;padding:6px 8px;margin-right:12px}
-.altnex-w-title{font:600 clamp(58px,7.1vw,96px)/.91 'Cormorant Garamond',Georgia,serif;letter-spacing:-2.3px;margin:28px 0 24px;text-wrap:balance}
-.altnex-w-title em{display:inline-block;font:italic 500 1.05em/1 'Cormorant Garamond',Georgia,serif;letter-spacing:-1.8px;color:#a0ffe7;text-shadow:0 0 42px #42ebc535}
-.altnex-w-copy{font:400 clamp(14px,1.5vw,17px)/1.85 'Manrope',sans-serif;color:#9abbb4;margin:0 0 34px;max-width:470px}
-.altnex-w-enter{display:flex;align-items:center;justify-content:space-between;gap:30px;width:min(330px,100%);padding:17px 19px;border:1px solid #70f8db;border-radius:3px;background:#5cf4d5;color:#06201c;font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.7px;box-shadow:5px 5px 0 #2a8d79;transition:transform .2s,box-shadow .2s,background .2s}
-.altnex-w-enter:hover{transform:translate(-2px,-2px);background:#a2ffe9;box-shadow:8px 8px 0 #2a8d79}.altnex-w-enter b{font:600 18px/1 'Manrope',sans-serif}
-.altnex-w-sign{margin-top:50px;color:#5e8980;font:400 9px/1.5 'DM Mono',monospace;letter-spacing:2.3px}.altnex-w-sign span{color:#5cf4d5;padding:0 7px}
-.altnex-w-visual{position:relative;aspect-ratio:1;display:grid;place-items:center;min-width:0}.altnex-w-ring{position:absolute;border:1px solid #72f8df45;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}.altnex-w-ring.a{width:83%;aspect-ratio:1;border-right-color:#73f9df;border-bottom-color:transparent;animation:altnexOrbit 24s linear infinite}.altnex-w-ring.b{width:68%;aspect-ratio:1;border-style:dashed;opacity:.65;animation:altnexOrbit 34s linear infinite reverse}.altnex-w-ring.c{width:52%;aspect-ratio:1;border-color:#65ffe044;box-shadow:0 0 40px #4affd50c,inset 0 0 40px #4affd50c}
-.altnex-w-core{position:relative;width:43%;aspect-ratio:1;display:grid;place-items:center;border:1px solid #77ffe064;border-radius:50%;background:radial-gradient(circle,#1b7366a0 0%,#0a2827a8 58%,#071b1a88 100%);box-shadow:0 0 55px #41f7d41e,inset 0 0 28px #5df8d515}
-.altnex-w-core svg{width:65%;height:75%;overflow:visible;filter:drop-shadow(0 0 9px #6fffe0)}.altnex-w-core svg path{fill:none;stroke:#83ffe3;stroke-width:2.2}.altnex-w-core svg .rungs{stroke:#50d9c2;stroke-width:1.5;opacity:.7}
-.altnex-w-label{position:absolute;font:400 9px/1.4 'DM Mono',monospace;letter-spacing:1.5px;color:#8cfbe4}.altnex-w-label span{display:block;color:#5d9388;font-size:8px;margin-top:6px}.altnex-w-label.top{top:13%;right:0;text-align:right}.altnex-w-label.bottom{bottom:12%;left:1%}.altnex-w-label b{color:#62f4d5;margin-left:9px}
-#altnexWelcome.leaving{opacity:0;visibility:hidden;pointer-events:none}@keyframes altnexOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
-@media(max-width:700px){#altnexWelcome{padding:24px}.altnex-w-top,.altnex-w-bottom{font-size:8px;letter-spacing:.8px}.altnex-w-top span:nth-child(2),.altnex-w-bottom span:nth-child(2){display:none}.altnex-w-content{grid-template-columns:1fr;gap:0;padding:14px 0}.altnex-w-title{font-size:clamp(49px,12.5vw,70px);letter-spacing:-1.5px;line-height:.94;margin:22px 0 17px}.altnex-w-copy{font-size:14px;margin-bottom:24px}.altnex-w-sign{margin-top:25px}.altnex-w-visual{position:absolute;right:-27%;top:24%;width:75%;opacity:.35;z-index:-1}.altnex-w-bottom span:last-child{margin-left:auto}}
+.altnex-w-content{width:min(100%,600px);margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px 0}
+.altnex-w-left{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+.altnex-w-kicker{font:400 10px/1.5 'DM Mono',monospace;letter-spacing:2.4px;color:#9bffe7;margin-bottom:20px}
+.altnex-w-kicker span{border:1px solid #8af5d977;padding:6px 8px;margin-right:12px}
+.altnex-w-title{font:600 clamp(38px,6vw,64px)/.98 'Cormorant Garamond',Georgia,serif;letter-spacing:-1.4px;margin:0 0 16px;text-wrap:balance}
+.altnex-w-title em{display:block;font:italic 500 1.02em/1.05 'Cormorant Garamond',Georgia,serif;letter-spacing:-1px;color:#a0ffe7;text-shadow:0 0 42px #42ebc535}
+.altnex-w-copy{font:400 clamp(12px,1.5vw,15px)/1.7 'Manrope',sans-serif;color:#9abbb4;margin:0;max-width:450px}
+.altnex-w-enter{display:none}
+.altnex-w-sign{margin-top:22px;color:#5e8980;font:400 9px/1.5 'DM Mono',monospace;letter-spacing:2.3px}
+.altnex-w-sign span{color:#5cf4d5;padding:0 7px}
+.altnex-w-visual{position:relative;width:clamp(110px,20vw,175px);aspect-ratio:1;display:grid;place-items:center;min-width:0;order:-1;margin-bottom:4px}
+.altnex-w-ring{position:absolute;border:1px solid #72f8df45;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.altnex-w-ring.a{width:100%;aspect-ratio:1;border-right-color:#73f9df;border-bottom-color:transparent;animation:altnexOrbit 24s linear infinite}
+.altnex-w-ring.b{width:82%;aspect-ratio:1;border-style:dashed;opacity:.65;animation:altnexOrbit 34s linear infinite reverse}
+.altnex-w-ring.c{width:64%;aspect-ratio:1;border-color:#65ffe044;box-shadow:0 0 40px #4affd50c,inset 0 0 40px #4affd50c}
+.altnex-w-core{position:relative;width:55%;aspect-ratio:1;display:grid;place-items:center;border:1px solid #77ffe064;border-radius:50%;background:radial-gradient(circle,#1b7366a0 0%,#0a2827a8 58%,#071b1a88 100%);box-shadow:0 0 55px #41f7d41e,inset 0 0 28px #5df8d515}
+.altnex-w-core svg{width:65%;height:75%;overflow:visible;filter:drop-shadow(0 0 9px #6fffe0)}
+.altnex-w-core svg path{fill:none;stroke:#83ffe3;stroke-width:2.2}.altnex-w-core svg .rungs{stroke:#50d9c2;stroke-width:1.5;opacity:.7}
+.altnex-w-label{display:none}
+#altnexWelcome.leaving{opacity:0;visibility:hidden;pointer-events:none}
+@keyframes altnexOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@media(max-width:700px){#altnexWelcome{padding:22px}.altnex-w-top,.altnex-w-bottom{font-size:8px;letter-spacing:.6px}.altnex-w-top span:nth-child(2),.altnex-w-bottom span:nth-child(2){display:none}.altnex-w-content{gap:18px}.altnex-w-title{font-size:clamp(37px,10vw,52px)}.altnex-w-copy{font-size:12px}.altnex-w-sign{margin-top:17px}.altnex-w-bottom span:last-child{margin-left:auto}}
 @media(prefers-reduced-motion:reduce){#altnexWelcome *{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -53,9 +61,8 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
 <div class="altnex-w-top"><span><i class="altnex-w-dot"></i>SYSTEM ONLINE</span><span>ALTNEX OS · BIOLOGY DIVISION</span><span>SECURE SESSION <b>01</b></span></div>
 <div class="altnex-w-content"><div class="altnex-w-left">
 <div class="altnex-w-kicker"><span>01</span> PERSONAL LABORATORY</div>
-<h1 class="altnex-w-title" id="altnexWelcomeTitle">Добро пожаловать<br><em>в лабораторию Алтынай.</em></h1>
-<p class="altnex-w-copy">Твои учебники. Твои идеи.<br>Все инструменты для уроков — в одном месте.</p>
-<button class="altnex-w-enter" id="altnexEnterBtn" type="button"><span>ЗАПУСТИТЬ ЛАБОРАТОРИЮ</span><b>↗</b></button>
+<h1 class="altnex-w-title" id="altnexWelcomeTitle">Добро пожаловать<em>в лабораторию ALTNEX</em></h1>
+<p class="altnex-w-copy">Твоя цифровая лаборатория для обучения, идей и открытий.</p>
 <div class="altnex-w-sign">ALTNEX <span>/</span> THINK BEYOND THE CLASSROOM</div>
 </div><div class="altnex-w-visual" aria-hidden="true">
 <div class="altnex-w-ring a"></div><div class="altnex-w-ring b"></div><div class="altnex-w-ring c"></div>
@@ -506,9 +513,12 @@ function renderMaterials(raw){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachWelcomeButton);
   else attachWelcomeButton();
   window.setTimeout(function () {
-    var button = document.getElementById('altnexEnterBtn');
-    if (button) button.click();
-  }, 1000);
+    var overlay = document.getElementById('altnexWelcome');
+    if (overlay) {
+      overlay.classList.add('leaving');
+      window.setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 250);
+    }
+  }, 500);
 })();
 </script>
 \n<script id="altnex-class-textbooks">
