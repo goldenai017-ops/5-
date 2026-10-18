@@ -524,6 +524,7 @@ document.getElementById('lessonForm').addEventListener('submit',()=>{
   if(!data||data.type!=='biolab-slides-height')return;
   const height=Number(data.height);
   if(Number.isFinite(height)&&height>300&&height<30000)frame.style.height=Math.max(900,Math.ceil(height+24))+'px';
+  if(data.scrollToDesign&&Number.isFinite(Number(data.designOffset))){const top=frame.getBoundingClientRect().top+window.scrollY+Math.max(0,Number(data.designOffset))-90;window.scrollTo({top:Math.max(0,top),behavior:'smooth'});}
  });
  frame.addEventListener('load',function(){try{frame.contentWindow.postMessage({type:'biolab-slides-parent-ready'},window.location.origin);}catch(e){}});
 })();
