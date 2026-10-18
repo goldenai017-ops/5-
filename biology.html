@@ -53,6 +53,29 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
 @keyframes altnexOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
 @media(max-width:700px){#altnexWelcome{padding:22px}.altnex-w-top,.altnex-w-bottom{font-size:8px;letter-spacing:.6px}.altnex-w-top span:nth-child(2),.altnex-w-bottom span:nth-child(2){display:none}.altnex-w-content{gap:18px}.altnex-w-title{font-size:clamp(37px,10vw,52px)}.altnex-w-copy{font-size:12px}.altnex-w-sign{margin-top:17px}.altnex-w-bottom span:last-child{margin-left:auto}}
 @media(prefers-reduced-motion:reduce){#altnexWelcome *{animation:none!important;transition:none!important}}
+
+/* Welcome screen: clean white background, dark green readable branding */
+#altnexWelcome{background:#fff!important;color:#173d30!important}
+#altnexWelcome:before{opacity:.55;background-image:linear-gradient(#174b3710 1px,transparent 1px),linear-gradient(90deg,#174b3710 1px,transparent 1px)!important}
+#altnexWelcome:after{border-color:#174b3720!important}
+.altnex-w-top,.altnex-w-bottom{color:#587267!important}
+.altnex-w-top b,.altnex-w-bottom b{color:#23785a!important}
+.altnex-w-dot{background:#26966b!important;box-shadow:0 0 10px #26966b55!important}
+.altnex-w-kicker{color:#3e7560!important}
+.altnex-w-kicker span{border-color:#8ab7a2!important}
+.altnex-w-title{color:#173d30!important}
+.altnex-w-title em{color:#25815e!important;text-shadow:none!important}
+.altnex-w-copy{color:#526b60!important}
+.altnex-w-sign{color:#648276!important}
+.altnex-w-sign span{color:#25815e!important}
+.altnex-w-ring{border-color:#24876135!important}
+.altnex-w-ring.a{border-top-color:#248761!important;border-right-color:#248761!important}
+.altnex-w-ring.c{border-color:#24876125!important;box-shadow:0 0 35px #2487610b,inset 0 0 30px #2487610b!important}
+.altnex-w-core{border-color:#24876155!important;background:radial-gradient(circle,#e3f5eb 0%,#f5fbf7 62%,#fff 100%)!important;box-shadow:0 0 35px #24876112,inset 0 0 20px #2487610a!important}
+.altnex-w-core svg{filter:none!important}
+.altnex-w-core svg path{stroke:#248761!important}
+.altnex-w-core svg .rungs{stroke:#62a98b!important;opacity:.9!important}
+
 </style>
 </head>
 <body>
@@ -518,7 +541,7 @@ function renderMaterials(raw){
       overlay.classList.add('leaving');
       window.setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 250);
     }
-  }, 500);
+  }, 1000);
 })();
 </script>
 \n<script id="altnex-class-textbooks">
