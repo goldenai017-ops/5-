@@ -507,12 +507,25 @@ function renderMaterials(raw){
     if(submitButton)submitButton.disabled=true;
     let completed=0,successful=0;
     const updateProgress=()=>{notice.textContent='Дайын: '+completed+'/'+outputs.length+' · Сәтті: '+successful+'. Әр материал жеке карточкада.';};
+    let textbookMaterial={text:'',images:[],book:selectedTextbook,paragraph:selectedParagraph};
+    if(source==='Мой учебник / загруженный файл'&&outputs.includes('Презентация')){
+      try{
+        if(typeof window.altnexGetSelectedBookMaterial!=='function')throw new Error('Модуль чтения учебника не загружен. Обнови страницу и попробуй ещё раз.');
+        textbookMaterial=await window.altnexGetSelectedBookMaterial();
+      }catch(error){
+        notice.style.display='block';notice.textContent=error.message||'Не удалось прочитать выбранный учебник.';
+        if(submitButton)submitButton.disabled=false;
+        const presentationCard=document.getElementById('material-card-'+outputs.indexOf('Презентация'));
+        if(presentationCard)presentationCard.innerHTML='<h3>Презентация · Presenton</h3><p class="material-error">⚠ '+escapeHtml(error.message||'Не удалось прочитать учебник.')+'</p>';
+        return;
+      }
+    }
     const jobs=outputs.map(async(name,index)=>{
       const card=document.getElementById('material-card-'+index);
       try{
         const isPresentation=name==='Презентация';
         const body=isPresentation
-          ?{mode:'presenton',topic,grade,language,duration,lessonType,outputs:['Презентация'],slideCount:8,textbook:selectedTextbook,paragraph:selectedParagraph,source}
+          ?{mode:'presenton',topic,grade,language,duration,lessonType,outputs:['Презентация'],slideCount:8,textbook:textbookMaterial.book||selectedTextbook,paragraph:textbookMaterial.paragraph||selectedParagraph,source,sourceMaterial:textbookMaterial.text,sourceImages:textbookMaterial.images}
           :{mode:'gemini',topic,grade,language,duration,lessonType,outputs:[name],source,textbook:selectedTextbook,paragraph:selectedParagraph};
         const response=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
         const data=await response.json().catch(()=>({}));
@@ -595,6 +608,55 @@ function renderMaterials(raw){
    if(name.endsWith('.pdf')||book.blob.type==='application/pdf')return await extractPdf(book.blob);
    throw new Error('Поддерживаются только файлы PDF и TXT.');
  }
+ // Return the selected paragraph's actual textbook text and its page images.
+ window.altnexGetSelectedBookMaterial=async function(){
+   const book=booksCache.find(b=>b.id===select.value);
+   const title=String(paragraph.value||'').trim();
+   const selected=paragraph.options[paragraph.selectedIndex]?.text||title;
+   if(!book||!title)throw new Error('Сначала выбери учебник и параграф.');
+   const isText=String(book.name||'').toLowerCase().endsWith('.txt')||book.blob.type==='text/plain';
+   if(isText){
+     const full=await book.blob.text(),idx=full.toLocaleLowerCase().indexOf(title.toLocaleLowerCase());
+     if(idx<0)throw new Error('Не удалось найти выбранный параграф в тексте учебника. Проверь название параграфа.');
+     const tail=full.slice(idx);
+     const next=tail.slice(1).search(/(?:^|\n)\s*(?:§\s*\d{1,3}|\d{1,3}\s*[-–—]?\s*параграф)\b/i);
+     return {text:tail.slice(0,next>0?next+1:Math.min(tail.length,30000)).slice(0,30000),images:[],book:book.name,paragraph:selected};
+   }
+   const pdfjs=await ensurePdfJs(),pdf=await pdfjs.getDocument({data:await book.blob.arrayBuffer()}).promise;
+   const pageTexts=[];
+   for(let p=1;p<=pdf.numPages;p++){
+     const page=await pdf.getPage(p),tc=await page.getTextContent();
+     pageTexts.push(tc.items.map(it=>it.str||'').join(' ').replace(/\s+/g,' ').trim());
+   }
+   const normalize=s=>String(s||'').toLocaleLowerCase().replace(/[«»"'’]/g,'').replace(/\s+/g,' ').trim();
+   const target=normalize(title);
+   let start=pageTexts.findIndex(t=>normalize(t).includes(target));
+   if(start<0){
+     const words=target.split(/\s+/).filter(w=>w.length>3);
+     start=pageTexts.findIndex(t=>{const n=normalize(t);return words.length>=2&&words.filter(w=>n.includes(w)).length>=Math.min(3,words.length);});
+   }
+   if(start<0)throw new Error('Оқулықтан таңдалған параграф табылмады. Қате тақырыппен презентация жасамау үшін тоқтаттым. Параграф атауын тексер немесе мәтіндік PDF/TXT қолдан.');
+   let textParts=[];
+   const images=[];
+   for(let i=start;i<Math.min(pdf.numPages,start+8);i++){
+     const page=await pdf.getPage(i+1),text=pageTexts[i]||'';
+     if(i>start&&/^\s*(?:§\s*\d{1,3}|\d{1,3}\s*[-–—]?\s*параграф)\b/i.test(text))break;
+     textParts.push('[Оқулық беті '+(i+1)+']\n'+text);
+     if(images.length<6){
+       const viewport=page.getViewport({scale:1.15}),canvas=document.createElement('canvas');
+       canvas.width=Math.round(viewport.width);canvas.height=Math.round(viewport.height);
+       const ctx=canvas.getContext('2d');await page.render({canvasContext:ctx,viewport}).promise;
+       let dataUrl=canvas.toDataURL('image/jpeg',0.62);
+       if(dataUrl.length>900000){dataUrl=canvas.toDataURL('image/jpeg',0.42);}
+       const comma=dataUrl.indexOf(',');
+       if(comma>0&&dataUrl.length-comma-1<=900000)images.push({page:i+1,mimeType:'image/jpeg',data:dataUrl.slice(comma+1)});
+       canvas.width=canvas.height=1;
+     }
+   }
+   const sourceText=textParts.join('\n\n').slice(0,30000);
+   if(!sourceText.trim())throw new Error('Оқулықтың таңдалған беттерінен мәтін оқылмады.');
+   return {text:sourceText,images,book:book.name,paragraph:selected};
+ };
  function setParagraphOptions(items,message){paragraph.innerHTML='';if(!items.length){const o=document.createElement('option');o.value='';o.textContent=message||'Параграфы не найдены';paragraph.appendChild(o);paragraph.disabled=true;return;}const first=document.createElement('option');first.value='';first.textContent='Выбери параграф…';paragraph.appendChild(first);items.forEach(item=>{const o=document.createElement('option');o.value=item.title;o.textContent=item.label;paragraph.appendChild(o);});paragraph.disabled=false;}
  async function loadParagraphs(){
    const token=++parseToken,book=booksCache.find(b=>b.id===select.value);
