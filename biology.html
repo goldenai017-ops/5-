@@ -406,7 +406,7 @@ document.getElementById('helpBtn').addEventListener('click',()=>alert('Это и
 
 
 <script>
-// Преобразует Markdown-таблицы ответа Gemini в настоящие HTML-таблицы.
+// Преобразует Markdown-таблицы ответа модели в настоящие HTML-таблицы.
 function renderMaterials(raw){
   const source=String(raw||'').replace(/\r/g,'').trim();
   if(!source)return '<p>Модель не вернула текст.</p>';
@@ -431,7 +431,7 @@ function renderMaterials(raw){
   return output.join('')||'<p>'+format(source)+'</p>';
 }
 
-// Подключение Gemini через Cloudflare Worker.
+// Подключение генератора материалов через Cloudflare Worker.
 (()=>{
   const form=document.getElementById('lessonForm');
   if(!form)return;
@@ -456,7 +456,7 @@ function renderMaterials(raw){
     const badge=document.querySelector('#generatedPreview .demo-label');
     if(badge)badge.textContent='AI · ЖЕКЕ КАРТОЧКАЛАР';
     preview.style.display='block';
-    content.innerHTML=outputs.map((name,index)=>'<article class="output-card material-output" id="material-card-'+index+'"><h3>'+escapeHtml(outputNames[name]||name)+'</h3><p class="material-status">⏳ '+(name==='Презентация'?'Presenton':'Gemini')+' дайындап жатыр…</p></article>').join('');
+    content.innerHTML=outputs.map((name,index)=>'<article class="output-card material-output" id="material-card-'+index+'"><h3>'+escapeHtml(outputNames[name]||name)+'</h3><p class="material-status">⏳ '+(name==='Презентация'?'Презентация':'Материал')+' дайындалып жатыр…</p></article>').join('');
     preview.scrollIntoView({behavior:'smooth',block:'start'});
     notice.style.display='block';notice.textContent='Дайындалып жатыр: '+outputs.length+' материал. Әрқайсысының нәтижесі өз карточкасында көрсетіледі.';
     if(submitButton)submitButton.disabled=true;
@@ -484,7 +484,7 @@ function renderMaterials(raw){
           :{mode:'gemini',topic,grade,language,duration,lessonType,outputs:[name],source,textbook:selectedTextbook,paragraph:selectedParagraph};
         const response=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
         const data=await response.json().catch(()=>({}));
-        if(!response.ok||!data.ok)throw new Error(data.error||(isPresentation?'Presenton презентация жасай алмады.':'Gemini материал жасай алмады.'));
+        if(!response.ok||!data.ok)throw new Error(data.error||(isPresentation?'Presenton презентация жасай алмады.':'Материал жасай алмады.'));
         if(isPresentation&&(data.provider!=='Presenton'||(!data.path&&!data.edit_path)))throw new Error('Presenton әлі қосылмаған сияқты. Cloudflare Worker-ді жаңа worker.js кодымен жариялап, PRESENTON_API_KEY Secret қосу керек.');
         if(isPresentation){
           const links=[];
