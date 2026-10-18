@@ -46,7 +46,7 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
 .material-status{font-size:13px;color:var(--muted);padding:10px 0}
 .material-error{font-size:13px;color:#9d352b;white-space:pre-wrap;overflow-wrap:anywhere}
 .material-body{min-width:0;overflow-wrap:anywhere}
-.material-body a{display:inline-block;margin:5px 12px 5px 0;color:var(--green-2);font-weight:700}
+.material-body a{display:inline-block;margin:5px 12px 5px 0;color:var(--green-2);font-weight:700}\n.material-card-actions,.material-editor-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}\n.material-editor{margin-top:14px}\n.material-editor textarea{width:100%;min-height:220px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--page);color:var(--ink);font:13px/1.6 ui-monospace,monospace;resize:vertical}\n.material-card-actions button,.material-editor-actions button{min-height:39px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -492,7 +492,29 @@ function renderMaterials(raw){
           if(data.edit_path)links.push('<a href="'+escapeHtml(data.edit_path)+'" target="_blank" rel="noopener noreferrer">Presenton ішінде ашу және өңдеу ↗</a>');
           card.innerHTML='<h3>'+escapeHtml(outputNames[name])+'</h3><div class="material-body"><p><strong>Презентация дайын!</strong></p><p>Presenton арқылы жасалды. PowerPoint файлын жүктеуге немесе Presenton редакторында ашуға болады.</p><p>'+links.join('<br>')+'</p></div>';
         }else{
-          card.innerHTML='<h3>'+escapeHtml(outputNames[name]||name)+'</h3><div class="material-body">'+renderMaterials(data.materials||'Модель мәтін қайтармады.')+'</div>';
+          const rawMaterial=String(data.materials||'Модель мәтін қайтармады.');
+          card.dataset.material=rawMaterial;
+          card.innerHTML='<h3>'+escapeHtml(outputNames[name]||name)+'</h3><div class="material-card-actions"><button class="primary material-download" type="button">↓ Скачать</button><button class="secondary material-edit" type="button">✎ Редактировать</button></div><div class="material-editor" hidden><textarea aria-label="Редактировать материал" rows="12"></textarea><div class="material-editor-actions"><button class="primary material-save" type="button">Сохранить</button><button class="secondary material-cancel" type="button">Отмена</button></div></div>';
+          const editor=card.querySelector('textarea');
+          editor.value=rawMaterial;
+          card.querySelector('.material-download').addEventListener('click',()=>{
+            const blob=new Blob(['\\uFEFF',editor.value],{type:'application/msword;charset=utf-8'});
+            const url=URL.createObjectURL(blob),a=document.createElement('a');
+            a.href=url;a.download=(topic+' — '+(outputNames[name]||name)).replace(/[\\\\/:*?"<>|]+/g,'-')+'.doc';
+            document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+          });
+          card.querySelector('.material-edit').addEventListener('click',()=>{
+            const area=card.querySelector('.material-editor');area.hidden=!area.hidden;
+            card.querySelector('.material-edit').textContent=area.hidden?'✎ Редактировать':'Скрыть редактор';
+          });
+          card.querySelector('.material-save').addEventListener('click',()=>{
+            card.dataset.material=editor.value;
+            card.querySelector('.material-save').textContent='Сохранено ✓';
+          });
+          card.querySelector('.material-cancel').addEventListener('click',()=>{
+            editor.value=card.dataset.material||rawMaterial;card.querySelector('.material-editor').hidden=true;
+            card.querySelector('.material-edit').textContent='✎ Редактировать';
+          });
         }
         successful++;
       }catch(error){
@@ -500,7 +522,7 @@ function renderMaterials(raw){
       }finally{completed++;updateProgress();}
     });
     await Promise.all(jobs);
-    notice.innerHTML='<strong>Дайын: '+successful+'/'+outputs.length+' материал.</strong><br><span style="font-size:11px">КСП, ойын, тест және тапсырмалар — Gemini; презентация — Presenton. Материалдарды сабақта қолданар алдында тексеріңіз.</span>';
+    notice.innerHTML='<strong>Дайын: '+successful+'/'+outputs.length+' материал.</strong><br><span style="font-size:11px">Материалдарды жүктеп алыңыз немесе қажет болса өңдеңіз. Сабақта қолданар алдында тексеріңіз.</span>';
     if(submitButton)submitButton.disabled=false;
   });
 })();
