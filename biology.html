@@ -224,7 +224,7 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
             <label for="topicFallback">Тема урока</label>
             <input id="topicFallback" value="Иммунитет человека" placeholder="Например, фотосинтез">
           </div>
-          <div style="margin-top:22px"><div class="field"><label>Что подготовить?</label><div class="checks"><label class="check"><input type="checkbox" name="output" value="План урока" checked> КСП · Gemini</label><label class="check"><input type="checkbox" name="output" value="Презентация" checked> Презентация · Presenton</label><label class="check"><input type="checkbox" name="output" value="Задания" checked> Задания · Gemini</label><label class="check"><input type="checkbox" name="output" value="Игра"> Интерактивная игра · Gemini</label><label class="check"><input type="checkbox" name="output" value="Тест с ответами" checked> Тест с ответами · Gemini</label></div></div></div>
+          <div style="margin-top:22px"><div class="field"><label>Что подготовить?</label><div class="checks"><label class="check"><input type="checkbox" name="output" value="План урока" checked> КСП</label><label class="check"><input type="checkbox" name="output" value="Презентация" checked> Презентация · Presenton</label><label class="check"><input type="checkbox" name="output" value="Задания" checked> Задания</label><label class="check"><input type="checkbox" name="output" value="Игра"> Интерактивная игра</label><label class="check"><input type="checkbox" name="output" value="Тест с ответами" checked> Тест с ответами</label></div></div></div>
           <div class="form-actions"><span class="subtle">Будут созданы только отмеченные материалы. Каждый — в отдельной карточке.</span><button class="primary" type="submit">Подготовить материалы →</button></div>
         </form>
         <div class="notice" id="formNotice" role="status"></div>
@@ -436,7 +436,7 @@ function renderMaterials(raw){
   const form=document.getElementById('lessonForm');
   if(!form)return;
   const apiUrl='https://altnex-biolab-api.goldenai017.workers.dev/';
-  const outputNames={'План урока':'КСП · Gemini','Презентация':'Презентация · Presenton','Задания':'Задания · Gemini','Игра':'Интерактивная игра · Gemini','Интерактивная игра':'Интерактивная игра · Gemini','Тест с ответами':'Тест с ответами · Gemini'};
+  const outputNames={'План урока':'КСП','Презентация':'Презентация · Presenton','Задания':'Задания','Игра':'Интерактивная игра','Интерактивная игра':'Интерактивная игра','Тест с ответами':'Тест с ответами'};
   form.addEventListener('submit',async(event)=>{
     event.preventDefault();
     const topicInput=document.getElementById('source').value==='Мой учебник / загруженный файл'?document.getElementById('topic'):document.getElementById('topicFallback');
