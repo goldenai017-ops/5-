@@ -86,7 +86,7 @@ body.embed-mode .stage{scroll-margin:0}
 const API_URL='https://altnex-biolab-api.goldenai017.workers.dev/';
 const $=id=>document.getElementById(id);
 const EMBED_MODE=new URLSearchParams(location.search).get('embed')==='1';
-function reportEmbedHeight(){if(!EMBED_MODE||window.parent===window)return;const height=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);window.parent.postMessage({type:'biolab-slides-height',height},location.origin);}
+function reportEmbedHeight(scrollToDesign=false){if(!EMBED_MODE||window.parent===window)return;const height=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);const design=$('designStep');window.parent.postMessage({type:'biolab-slides-height',height,scrollToDesign:!!scrollToDesign&&!!design&&!design.hidden,designOffset:design&&!design.hidden?Math.max(0,design.getBoundingClientRect().top):0},location.origin);}
 let deck=null,currentIndex=0,images=[],imageData=[],bookVisualData=[],sourcePageCanvases={},sourceMaterial="",sourceNames=[],libraryBooks=[],selectedBookIds=new Set(),paragraphs=[],selectedParagraph=null;
 const LIBRARY_DB='altnex-class-textbooks-v1',LIBRARY_STORE='books';
 let selectedGrade=null;
@@ -129,7 +129,7 @@ async function detectParagraphs(){
  }finally{$('loadParagraphsBtn').disabled=false;$('loadParagraphsBtn').textContent='Найти параграфы в учебнике';}
 }
 $('loadParagraphsBtn').addEventListener('click',async()=>{try{await detectParagraphs();}catch(e){showStatus(escapeHtml(e.message||String(e)),true);}});
-$('paragraphSelect').addEventListener('change',()=>{const value=$('paragraphSelect').value;const i=value===''?-1:Number(value);selectedParagraph=paragraphs[i]||null;$('topic').value=selectedParagraph?.title||'';$('designStep').hidden=!selectedParagraph;$('generateBtn').disabled=!selectedParagraph;reportEmbedHeight();if(selectedParagraph&&!EMBED_MODE)$('designStep').scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('paragraphSelect').addEventListener('change',()=>{const value=$('paragraphSelect').value;const i=value===''?-1:Number(value);selectedParagraph=paragraphs[i]||null;$('topic').value=selectedParagraph?.title||'';$('designStep').hidden=!selectedParagraph;$('generateBtn').disabled=!selectedParagraph;reportEmbedHeight(!!selectedParagraph);if(selectedParagraph&&!EMBED_MODE)$('designStep').scrollIntoView({behavior:'smooth',block:'nearest'});});
 
 
 $('year').textContent=new Date().getFullYear();
