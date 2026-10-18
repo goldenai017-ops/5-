@@ -593,6 +593,30 @@ function renderMaterials(raw){
  let booksCache=[],parseToken=0,topicManuallyEdited=false;
  function readBooks(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB,1);req.onsuccess=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE)){db.close();resolve([]);return;}const tx=db.transaction(STORE,'readonly'),get=tx.objectStore(STORE).getAll();get.onsuccess=()=>{db.close();resolve(get.result||[])};get.onerror=()=>{db.close();reject(get.error)};};req.onerror=()=>reject(req.error);});}
  function selectedGrade(){return parseInt(grade.value,10)||parseInt(String(grade.value).match(/\d+/)?.[0]||'0',10);}
+ async function ensurePdfJs(){
+   if(window.pdfjsLib)return window.pdfjsLib;
+   await new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';sc.onload=resolve;sc.onerror=()=>reject(new Error('Не удалось загрузить средство чтения PDF. Проверь подключение к интернету.'));document.head.appendChild(sc);});
+   if(!window.pdfjsLib)throw new Error('Средство чтения PDF не запустилось.');
+   window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+   return window.pdfjsLib;
+ }
+ async function extractPdf(blob){
+   const pdfjs=await ensurePdfJs(),pdf=await pdfjs.getDocument({data:await blob.arrayBuffer()}).promise,allLines=[];
+   for(let p=1;p<=pdf.numPages;p++){
+     const page=await pdf.getPage(p),content=await page.getTextContent(),rows=[];
+     for(const item of content.items){if(!item.str||!item.str.trim()||!item.transform)continue;const y=Math.round(item.transform[5]/3)*3;let row=rows.find(r=>Math.abs(r.y-y)<=3);if(!row){row={y,items:[]};rows.push(row);}row.items.push({x:item.transform[4],str:item.str});}
+     rows.sort((a,b)=>b.y-a.y);
+     for(const row of rows){row.items.sort((a,b)=>a.x-b.x);const line=row.items.map(x=>x.str).join(' ').replace(/\s+/g,' ').trim();if(line)allLines.push(line);}
+   }
+   return allLines.join('\n');
+ }
+ async function extractText(book){
+   if(!book||!book.blob)throw new Error('Не удалось открыть файл учебника.');
+   const name=String(book.name||'').toLowerCase();
+   if(name.endsWith('.txt')||book.blob.type==='text/plain')return await book.blob.text();
+   if(name.endsWith('.pdf')||book.blob.type==='application/pdf')return await extractPdf(book.blob);
+   throw new Error('Поддерживаются только файлы PDF и TXT.');
+ }
  function setParagraphOptions(items,message){paragraph.innerHTML='';if(!items.length){const o=document.createElement('option');o.value='';o.textContent=message||'Параграфы не найдены';paragraph.appendChild(o);paragraph.disabled=true;return;}const first=document.createElement('option');first.value='';first.textContent='Выбери параграф…';paragraph.appendChild(first);items.forEach(item=>{const o=document.createElement('option');o.value=item.title;o.textContent=item.label;paragraph.appendChild(o);});paragraph.disabled=false;}
  async function loadParagraphs(){
    const token=++parseToken,book=booksCache.find(b=>b.id===select.value);
