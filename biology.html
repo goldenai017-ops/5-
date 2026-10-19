@@ -267,8 +267,51 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
   </style>
 </section>
 <section class="page-panel" id="page-presentations">
-  <div class="welcome"><div><div class="eyebrow">Материалы урока</div><h1>Создать презентацию</h1><p>Выбери класс, учебник из «Мои книги», параграф, стиль и количество слайдов. Всё работает прямо внутри BioLab.</p></div></div>
-  <div class="presentation-embed" style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)"><iframe id="bioLabSlidesFrame" title="Конструктор презентаций BioLab" src="slides.html?embed=1" scrolling="no" style="display:block;width:100%;height:900px;border:0;background:transparent;overflow:hidden" loading="lazy"></iframe></div>
+  <div class="welcome"><div><div class="eyebrow">Canva · презентациялар</div><h1>Презентация жасау</h1><p>Тақырыпты енгіз, сұранысты дайында және Canva-да презентацияны құрастыр. Дайын жұмысты PowerPoint (.pptx) форматында жүктей аласың.</p></div><div class="date-pill">🎨 Canva AI</div></div>
+  <style>
+    #page-presentations .canva-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.85fr);gap:18px;margin-top:22px;align-items:start}
+    #page-presentations .canva-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}
+    #page-presentations .canva-card h2{font-size:18px;margin:0 0 7px}
+    #page-presentations .canva-muted{color:var(--muted);font-size:13px}
+    #page-presentations .canva-field{display:grid;gap:7px;margin-top:16px}
+    #page-presentations .canva-field label{font-size:12px;font-weight:750}
+    #page-presentations .canva-field input,#page-presentations .canva-field select,#page-presentations .canva-field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--page);color:var(--ink);font:inherit}
+    #page-presentations .canva-field textarea{min-height:230px;resize:vertical;line-height:1.5}
+    #page-presentations .canva-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    #page-presentations .canva-main{background:#7655e8;color:#fff;border:0;border-radius:11px;padding:12px 16px;font-weight:750}
+    #page-presentations .canva-secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:11px;padding:11px 14px;font-weight:700}
+    #page-presentations .canva-main:hover{filter:brightness(1.06)}
+    #page-presentations .canva-note{padding:13px 14px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:12px;margin-top:16px}
+    #page-presentations .canva-steps{display:grid;gap:13px;margin-top:18px}
+    #page-presentations .canva-step{display:flex;gap:12px;align-items:flex-start}
+    #page-presentations .canva-num{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:9px;background:#7655e81a;color:#8b70f3;font-weight:800}
+    @media(max-width:760px){#page-presentations .canva-layout{grid-template-columns:1fr}#page-presentations .canva-card{padding:17px}}
+  </style>
+  <div class="canva-layout">
+    <div class="canva-card">
+      <h2>1. Презентация параметрлері</h2>
+      <p class="canva-muted">Параметрлерге қарай Canva AI-ға арналған дайын сұраныс құрастырылады.</p>
+      <div class="canva-field"><label for="canvaGrade">Сынып</label><select id="canvaGrade"><option>5-сынып</option><option>6-сынып</option><option>7-сынып</option><option selected>8-сынып</option><option>9-сынып</option><option>10-сынып</option><option>11-сынып</option></select></div>
+      <div class="canva-field"><label for="canvaTopic">Презентация тақырыбы</label><input id="canvaTopic" value="Иммунитет" placeholder="Мысалы: Фотосинтез"></div>
+      <div class="canva-field"><label for="canvaLang">Презентация тілі</label><select id="canvaLang"><option value="қазақ тілінде" selected>Қазақша</option><option value="орыс тілінде">Орысша</option></select></div>
+      <div class="canva-field"><label for="canvaSlides">Слайд саны</label><select id="canvaSlides"><option value="6">6 слайд</option><option value="8">8 слайд</option><option value="10" selected>10 слайд</option><option value="12">12 слайд</option><option value="15">15 слайд</option></select></div>
+      <div class="canva-field"><label for="canvaStyle">Дизайн стилі</label><select id="canvaStyle"><option value="заманауи ғылыми, жасыл-ақ түсті">Заманауи ғылыми 🌿</option><option value="минималистік, таза және жинақы">Минималистік</option><option value="жарқын, оқушыларға қызықты">Жарқын, оқушыларға арналған</option><option value="академиялық, ресми">Академиялық</option></select></div>
+      <div class="canva-actions"><button class="canva-main" type="button" id="canvaOpenBtn">Canva-да жасау ↗</button><button class="canva-secondary" type="button" id="canvaPromptBtn">Сұранысты жаңарту</button></div>
+      <div class="canva-note" id="canvaStatus" role="status">Алдымен параметрлерді таңда. «Canva-да жасау» батырмасы Canva сайтын жаңа бетте ашады.</div>
+    </div>
+    <div class="canva-card">
+      <h2>2. Дайын сұраныс</h2>
+      <p class="canva-muted">Сұранысты көшіріп, Canva AI ішіне қой. Қажет болса, мәтінді өзің өзгерте аласың.</p>
+      <div class="canva-field"><label for="canvaPrompt">Canva AI үшін сұраныс</label><textarea id="canvaPrompt" spellcheck="true"></textarea></div>
+      <div class="canva-actions"><button class="canva-main" type="button" id="canvaCopyBtn">Сұранысты көшіру</button></div>
+      <div class="canva-steps">
+        <div class="canva-step"><span class="canva-num">1</span><div><strong>Canva-ны аш</strong><div class="canva-muted">Canva аккаунтыңа кір.</div></div></div>
+        <div class="canva-step"><span class="canva-num">2</span><div><strong>AI презентациясын жаса</strong><div class="canva-muted">Дайын сұранысты Canva AI-ға қой.</div></div></div>
+        <div class="canva-step"><span class="canva-num">3</span><div><strong>PowerPoint ретінде жүкте</strong><div class="canva-muted">Share → Download → Microsoft PowerPoint (.pptx).</div></div></div>
+      </div>
+      <div class="canva-note">Ескерту: Canva-ның тегін AI мүмкіндіктері шектеулі болуы мүмкін. Бұл бөлім Canva-ны ашады және сұраныс дайындайды; ол Canva редакторын сайттың ішіне тікелей енгізбейді.</div>
+    </div>
+  </div>
 </section>
 
 <section class="page-panel" id="page-lessons"><div class="welcome"><div><div class="eyebrow">Ваши материалы</div><h1>Мои уроки</h1><p>Здесь будут храниться созданные вами планы, презентации и задания.</p></div><button class="primary" data-go="create">＋ Новый урок</button></div><div class="cards"><article class="lesson"><div class="lesson-top"><div class="subject-icon">🛡️</div><span class="tag">Черновик</span></div><h3>Иммунитет человека</h3><p>8 класс · Қазақша · 45 минут</p><div class="lesson-foot"><span>Демонстрационный материал</span><button data-go="create">Открыть</button></div></article></div></section>
@@ -704,5 +747,42 @@ function renderMaterials(raw){
  document.addEventListener('click',async e=>{const del=e.target.closest('[data-delete-grade-book]');if(del){if(!confirm('Удалить этот учебник?'))return;await remove(del.dataset.deleteGradeBook);await render();return;}const open=e.target.closest('[data-open-grade-book]');if(open){const books=await all(),b=books.find(x=>x.id===open.dataset.openGradeBook);if(!b)return;const url=URL.createObjectURL(b.blob);const w=window.open(url,'_blank');if(!w){const a=document.createElement('a');a.href=url;a.download=b.name;a.click();}setTimeout(()=>URL.revokeObjectURL(url),60000);}});
 })();
 </script>
+
+<script>
+(function(){
+  const byId = id => document.getElementById(id);
+  const fields = ['canvaGrade','canvaTopic','canvaLang','canvaSlides','canvaStyle'];
+  function makePrompt(){
+    const grade = byId('canvaGrade').value;
+    const topic = byId('canvaTopic').value.trim() || 'Биология пәнінің тақырыбы';
+    const lang = byId('canvaLang').value;
+    const count = byId('canvaSlides').value;
+    const style = byId('canvaStyle').value;
+    byId('canvaPrompt').value = grade + ' биология пәніне «' + topic + '» тақырыбында ' + lang + ' ' + count + ' слайдтық презентация жаса. Ғылыми ақпарат дәл және оқу бағдарламасына сай болсын. Әр слайдта қысқа, түсінікті мәтін, нақты тақырып, сапалы биологиялық фотосуреттер немесе иллюстрациялар, қажет жерде сызба мен белгіленген бөліктер болсын. Негізгі терминдерді түсіндір. Мәтінді оқуға ыңғайлы етіп орналастыр, бір слайдты ұзын абзацтармен толтырма. Дизайн стилі: ' + style + '. Қазақша/орысша емле мен терминологияны мұқият сақта. Соңғы слайдқа 3 бекіту сұрағын және қысқа қорытындыны қос.');
+    byId('canvaStatus').textContent = 'Сұраныс параметрлер бойынша жаңартылды.';
+  }
+  fields.forEach(id => byId(id).addEventListener('input', makePrompt));
+  byId('canvaPromptBtn').addEventListener('click', makePrompt);
+  byId('canvaOpenBtn').addEventListener('click', function(){
+    makePrompt();
+    window.open('https://www.canva.com/create/ai-presentations/','_blank','noopener,noreferrer');
+    byId('canvaStatus').textContent = 'Canva жаңа бетте ашылады. Дайын сұранысты көшіріп, Canva AI ішіне қой.';
+  });
+  byId('canvaCopyBtn').addEventListener('click', async function(){
+    const text = byId('canvaPrompt').value;
+    try {
+      await navigator.clipboard.writeText(text);
+      byId('canvaStatus').textContent = 'Сұраныс көшірілді! Енді оны Canva AI ішіне қой.';
+    } catch(e) {
+      byId('canvaPrompt').focus();
+      byId('canvaPrompt').select();
+      const ok = document.execCommand('copy');
+      byId('canvaStatus').textContent = ok ? 'Сұраныс көшірілді! Енді оны Canva AI ішіне қой.' : 'Сұраныс белгіленді — Ctrl+C басып көшір.';
+    }
+  });
+  makePrompt();
+})();
+</script>
+
 </body>
 </html>
