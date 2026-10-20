@@ -222,7 +222,7 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
             <label for="topicFallback">Тема урока</label>
             <input id="topicFallback" value="Иммунитет человека" placeholder="Например, фотосинтез">
           </div>
-          <div style="margin-top:22px"><div class="field"><label>Что подготовить?</label><div class="checks"><label class="check"><input type="checkbox" name="output" value="План урока" checked> КСП</label><label class="check"><input type="checkbox" name="output" value="Презентация" checked> Презентация · Presenton</label><label class="check"><input type="checkbox" name="output" value="Задания" checked> Задания</label><label class="check"><input type="checkbox" name="output" value="Игра"> Интерактивная игра</label><label class="check"><input type="checkbox" name="output" value="Тест с ответами" checked> Тест с ответами</label></div></div></div>
+          <div style="margin-top:22px"><div class="field"><label>Что подготовить?</label><div class="checks"><label class="check"><input type="checkbox" name="output" value="План урока" checked> КСП</label><label class="check"><input type="checkbox" name="output" value="Презентация" checked> Презентация · Canva</label><label class="check"><input type="checkbox" name="output" value="Задания" checked> Задания</label><label class="check"><input type="checkbox" name="output" value="Игра"> Интерактивная игра</label><label class="check"><input type="checkbox" name="output" value="Тест с ответами" checked> Тест с ответами</label></div></div></div>
           <div class="form-actions"><span class="subtle">Будут созданы только отмеченные материалы. Каждый — в отдельной карточке.</span><button class="primary" type="submit">Подготовить материалы →</button></div>
         </form>
         <div class="notice" id="formNotice" role="status"></div>
@@ -477,7 +477,7 @@ function renderMaterials(raw){
   const form=document.getElementById('lessonForm');
   if(!form)return;
   const apiUrl='https://altnex-biolab-api.goldenai017.workers.dev/';
-  const outputNames={'План урока':'КСП','Презентация':'Презентация · Presenton','Задания':'Задания','Игра':'Интерактивная игра','Интерактивная игра':'Интерактивная игра','Тест с ответами':'Тест с ответами'};
+  const outputNames={'План урока':'КСП','Презентация':'Презентация · Canva','Задания':'Задания','Игра':'Интерактивная игра','Интерактивная игра':'Интерактивная игра','Тест с ответами':'Тест с ответами'};
   form.addEventListener('submit',async(event)=>{
     event.preventDefault();
     const topicInput=document.getElementById('source').value==='Мой учебник / загруженный файл'?document.getElementById('topic'):document.getElementById('topicFallback');
@@ -499,12 +499,12 @@ function renderMaterials(raw){
     preview.style.display='block';
     content.innerHTML=outputs.map((name,index)=>'<article class="output-card material-output" id="material-card-'+index+'"><h3>'+escapeHtml(outputNames[name]||name)+'</h3><p class="material-status">⏳ '+(name==='Презентация'?'Презентация':'Материал')+' дайындалып жатыр…</p></article>').join('');
     preview.scrollIntoView({behavior:'smooth',block:'start'});
-    notice.style.display='block';notice.textContent='Дайындалып жатыр: '+outputs.length+' материал. Әрқайсысының нәтижесі өз карточкасында көрсетіледі.';
+    notice.style.display='block';notice.textContent='Материалдар дайындалып жатыр. Canva презентациясына арналған сұраныс сайт ішінде құрастырылады.';
     if(submitButton)submitButton.disabled=true;
     let completed=0,successful=0;
     const updateProgress=()=>{notice.textContent='Дайын: '+completed+'/'+outputs.length+' · Сәтті: '+successful+'. Әр материал жеке карточкада.';};
     let textbookMaterial={text:'',images:[],book:selectedTextbook,paragraph:selectedParagraph};
-    if(source==='Мой учебник / загруженный файл'&&outputs.includes('Презентация')){
+    if(false&&source==='Мой учебник / загруженный файл'&&outputs.includes('Презентация')){
       try{
         if(typeof window.altnexGetSelectedBookMaterial!=='function')throw new Error('Модуль чтения учебника не загружен. Обнови страницу и попробуй ещё раз.');
         textbookMaterial=await window.altnexGetSelectedBookMaterial();
@@ -512,7 +512,7 @@ function renderMaterials(raw){
         notice.style.display='block';notice.textContent=error.message||'Не удалось прочитать выбранный учебник.';
         if(submitButton)submitButton.disabled=false;
         const presentationCard=document.getElementById('material-card-'+outputs.indexOf('Презентация'));
-        if(presentationCard)presentationCard.innerHTML='<h3>Презентация · Presenton</h3><p class="material-error">⚠ '+escapeHtml(error.message||'Не удалось прочитать учебник.')+'</p>';
+        if(presentationCard)presentationCard.innerHTML='<h3>Презентация · Canva</h3><p class="material-error">⚠ '+escapeHtml(error.message||'Не удалось прочитать учебник.')+'</p>';
         return;
       }
     }
@@ -520,13 +520,22 @@ function renderMaterials(raw){
       const card=document.getElementById('material-card-'+index);
       try{
         const isPresentation=name==='Презентация';
-        const body=isPresentation
-          ?{mode:'presenton',topic,grade,language,duration,lessonType,outputs:['Презентация'],slideCount:8,textbook:textbookMaterial.book||selectedTextbook,paragraph:textbookMaterial.paragraph||selectedParagraph,source,sourceMaterial:textbookMaterial.text,sourceImages:textbookMaterial.images}
-          :{mode:'gemini',topic,grade,language,duration,lessonType,outputs:[name],source,textbook:selectedTextbook,paragraph:selectedParagraph};
+        if(isPresentation){
+          const prompt=''+grade+' биология пәніне «'+topic+'» тақырыбында '+language+' тілінде 10 слайдтық презентация жаса. Сабақ ұзақтығы: '+duration+'. Сабақ түрі: '+lessonType+'. '+(selectedTextbook?'Негізгі дереккөз ретінде «'+selectedTextbook+'» оқулығын пайдалан. ':'')+(selectedParagraph?'Параграф: «'+selectedParagraph+'». ':'')+'Ғылыми ақпарат дәл және оқу бағдарламасына сай болсын. Әр слайдта қысқа әрі түсінікті мәтін, негізгі терминдер, сапалы биологиялық фотосуреттер немесе иллюстрациялар және қажет жерде сызбалар болсын. Мәтінді қазақ/орыс тілінің емле ережелеріне сай жаз. Заманауи, ғылыми, жасыл-ақ түсті дизайн қолдан. Соңғы слайдқа қысқа қорытынды мен 3 бекіту сұрағын қос.';
+          card.innerHTML='<h3>Презентация · Canva</h3><p class="material-status">Canva-ға арналған сұраныс дайын.</p><div class="material-editor" style="display:block"><textarea aria-label="Canva презентация сұранысы" rows="9"></textarea></div><div class="material-card-actions" style="margin-top:10px"><button class="primary material-canva-open" type="button">Canva-да жасау ↗</button><button class="secondary material-canva-copy" type="button">Сұранысты көшіру</button></div><p class="material-status" style="margin-top:10px">Canva ашылған соң сұранысты Canva AI ішіне қой. Дайын презентацияны PPTX форматында жүктей аласың.</p>';
+          const promptArea=card.querySelector('textarea');promptArea.value=prompt;
+          card.querySelector('.material-canva-open').addEventListener('click',()=>{window.open('https://www.canva.com/create/ai-presentations/','_blank','noopener,noreferrer');});
+          card.querySelector('.material-canva-copy').addEventListener('click',async()=>{
+            try{await navigator.clipboard.writeText(promptArea.value);notice.textContent='Canva сұранысы көшірілді. Canva-ға қойып, презентацияны жаса.';}
+            catch(e){promptArea.focus();promptArea.select();const ok=document.execCommand('copy');notice.textContent=ok?'Canva сұранысы көшірілді. Canva-ға қойып, презентацияны жаса.':'Сұраныс белгіленді — Ctrl+C басып көшір.';}
+          });
+          successful++;
+          return;
+        }
+        const body={mode:'gemini',topic,grade,language,duration,lessonType,outputs:[name],source,textbook:selectedTextbook,paragraph:selectedParagraph};
         const response=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
         const data=await response.json().catch(()=>({}));
-        if(!response.ok||!data.ok)throw new Error(data.error||(isPresentation?'Presenton презентация жасай алмады.':'Материал жасай алмады.'));
-        if(isPresentation&&(data.provider!=='Presenton'||(!data.path&&!data.edit_path)))throw new Error('Presenton әлі қосылмаған сияқты. Cloudflare Worker-ді жаңа worker.js кодымен жариялап, PRESENTON_API_KEY Secret қосу керек.');
+        if(!response.ok||!data.ok)throw new Error(data.error||'Материал жасай алмады.');
         if(isPresentation){
           card.innerHTML='<h3>'+escapeHtml(outputNames[name])+'</h3><div class="material-card-actions"><button class="primary material-download" type="button">↓ Скачать</button><button class="secondary material-edit" type="button">✎ Редактировать</button></div><p class="material-status" style="margin-top:10px">Презентация готова.</p>';
           card.querySelector('.material-download').addEventListener('click',()=>{
