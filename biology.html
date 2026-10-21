@@ -607,7 +607,7 @@ function renderMaterials(raw){
      if(seen.has(key))return;
      seen.add(key);found.push({number:String(number||found.length+1),title,label:(number?'§ '+number+' — ':'')+title+(page?' · бет '+page:''),page});
    };
-   const tocLine=/^(.*?)\s*(?:\.{2,}|…{1,}|·{2,}|_{2,}|\s)\s*(\d{1,3})\s*$/;
+   const tocLine=/^(.*?)\s*(?:\.{1,}|…{1,}|·{1,}|_{1,}|[-–—]{1,}|\s{2,})\s*(\d{1,3})\s*$/;
    const headingPatterns=[
      /^(?:§|параграф\s*№?)\s*(\d{1,3})\s*[.:—–-]?\s*(.*)$/i,
      /^(\d{1,3})\s*[-–—.]?\s*параграф\s*[:.]?\s*(.*)$/i,
@@ -615,7 +615,7 @@ function renderMaterials(raw){
    ];
    // Prefer the table of contents, usually near the end of a textbook.
    let tocStart=-1;
-   for(let i=lines.length-1;i>=Math.max(0,lines.length-100);i--){
+   for(let i=lines.length-1;i>=0;i--){
      if(/^(?:мазмұны|содержание|оглавление|contents)\s*:?$/i.test(lines[i])){tocStart=i;break;}
    }
    if(tocStart>=0){
@@ -630,7 +630,7 @@ function renderMaterials(raw){
          else if(title.length>3)add('',title,Number(m[2]));
          continue;
        }
-       const split=line.match(/^(?:§\s*)?(\d{1,3})[.)]?\s+(.{3,180}?)\s+(\d{1,3})$/);
+       const split=line.match(/^(?:§\s*)?(\d{1,3})[.)]?\s+(.{3,180}?)\s+(?:\.{1,}|…{1,}|·{1,}|_{1,})?\s*(\d{1,3})$/);
        if(split){add(split[1],split[2],Number(split[3]));continue;}
        // Some PDFs extract the title and page number as separate lines.
        if(/^\d{1,3}$/.test(line)&&i>tocStart+1){
