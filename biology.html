@@ -605,7 +605,7 @@ function renderMaterials(raw){
      if(/^(?:содержание|оглавление|мазмұны|пайдаланылған әдебиеттер|әдебиеттер тізімі|предметный указатель)$/i.test(title))return;
      const key=String(number||'')+'|'+title.toLocaleLowerCase();
      if(seen.has(key))return;
-     seen.add(key);found.push({number:String(number||found.length+1),title,label:(number?'§ '+number+' — ':'')+title,page});
+     seen.add(key);found.push({number:String(number||found.length+1),title,label:(number?'§ '+number+' — ':'')+title+(page?' · бет '+page:''),page});
    };
    const tocLine=/^(.*?)\s*(?:\.{2,}|…{1,}|·{2,}|_{2,}|\s)\s*(\d{1,3})\s*$/;
    const headingPatterns=[
