@@ -593,7 +593,7 @@ function renderMaterials(raw){
  if(!grade||!source||!panel||!select||!paragraph||!topic)return;
  const DB='altnex-class-textbooks-v1',STORE='books';
  let booksCache=[],parseToken=0,topicManuallyEdited=false;
- function readBooks(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB,1);req.onsuccess=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE)){db.close();resolve([]);return;}const tx=db.transaction(STORE,'readonly'),get=tx.objectStore(STORE).getAll();get.onsuccess=()=>{db.close();resolve(get.result||[])};get.onerror=()=>{db.close();reject(get.error)};};req.onerror=()=>reject(req.error);});}
+ function readBooks(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB,2);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(STORE))req.result.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE)){db.close();resolve([]);return;}const tx=db.transaction(STORE,'readonly'),get=tx.objectStore(STORE).getAll();get.onsuccess=()=>{db.close();resolve(get.result||[])};get.onerror=()=>{db.close();reject(get.error)};};req.onerror=()=>reject(req.error);});}
  function selectedGrade(){return parseInt(grade.value,10)||parseInt(String(grade.value).match(/\d+/)?.[0]||'0',10);}
  function cleanTitle(line){return String(line||'').replace(/\s+/g,' ').trim().replace(/^(?:§|параграф\s*№?)\s*\d+[\s.:—–-]*/i,'').replace(/^\d{1,2}\s*[.)]\s*/,'').trim().replace(/[\s.·•—–-]+$/,'').trim();}
  function findParagraphs(text){
@@ -742,7 +742,7 @@ function renderMaterials(raw){
 (()=> {
  const DB='altnex-class-textbooks-v1',STORE='books';let currentGrade=null;
  const $=id=>document.getElementById(id), grades=[5,6,7,8,9,10,11];
- function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
+ function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB,2);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
  async function all(){const db=await openDB();return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readonly').objectStore(STORE).getAll();r.onsuccess=()=>{db.close();resolve(r.result||[])};r.onerror=()=>{db.close();reject(r.error)}});}
  async function write(book){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(book);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}});}
  async function remove(id){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}});}
