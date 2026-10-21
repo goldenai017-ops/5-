@@ -705,15 +705,22 @@ function renderMaterials(raw){
    }
    const normalize=s=>String(s||'').toLocaleLowerCase().replace(/[«»"'’]/g,'').replace(/\s+/g,' ').trim();
    const target=normalize(title);
+   const selectedOption=paragraph.options[paragraph.selectedIndex];
+   const tocPage=Number(selectedOption?.dataset?.page||0);
    let start=pageTexts.findIndex(t=>normalize(t).includes(target));
    if(start<0){
      const words=target.split(/\s+/).filter(w=>w.length>3);
      start=pageTexts.findIndex(t=>{const n=normalize(t);return words.length>=2&&words.filter(w=>n.includes(w)).length>=Math.min(3,words.length);});
    }
-   if(start<0)throw new Error('Оқулықтан таңдалған параграф табылмады. Қате тақырыппен презентация жасамау үшін тоқтаттым. Параграф атауын тексер немесе мәтіндік PDF/TXT қолдан.');
+   if(start<0&&tocPage>0&&tocPage<=pdf.numPages)start=tocPage-1;
+   if(start<0)throw new Error('Оқулықтан таңдалған параграфтың бетін таба алмадым. Мазмұндағы бет нөмірін тексер немесе мәтіндік PDF/TXT қолдан.');
+   let endPage=Math.min(pdf.numPages,start+8);
+   const options=[...paragraph.options].filter(o=>o.value&&Number(o.dataset.page)>0);
+   const nextTocPage=options.map(o=>Number(o.dataset.page)).filter(p=>p>tocPage).sort((a,b)=>a-b)[0];
+   if(nextTocPage&&tocPage>0){const delta=start-(tocPage-1);endPage=Math.min(endPage,Math.max(start+1,nextTocPage-1+delta));}
    let textParts=[];
    const images=[];
-   for(let i=start;i<Math.min(pdf.numPages,start+8);i++){
+   for(let i=start;i<endPage;i++){
      const page=await pdf.getPage(i+1),text=pageTexts[i]||'';
      if(i>start&&/^\s*(?:§\s*\d{1,3}|\d{1,3}\s*[-–—]?\s*параграф)\b/i.test(text))break;
      textParts.push('[Оқулық беті '+(i+1)+']\n'+text);
@@ -732,7 +739,7 @@ function renderMaterials(raw){
    if(!sourceText.trim())throw new Error('Оқулықтың таңдалған беттерінен мәтін оқылмады.');
    return {text:sourceText,images,book:book.name,paragraph:selected};
  };
- function setParagraphOptions(items,message){paragraph.innerHTML='';if(!items.length){const o=document.createElement('option');o.value='';o.textContent=message||'Параграфы не найдены';paragraph.appendChild(o);paragraph.disabled=true;return;}const first=document.createElement('option');first.value='';first.textContent='Выбери параграф…';paragraph.appendChild(first);items.forEach(item=>{const o=document.createElement('option');o.value=item.title;o.textContent=item.label;paragraph.appendChild(o);});paragraph.disabled=false;}
+ function setParagraphOptions(items,message){paragraph.innerHTML='';if(!items.length){const o=document.createElement('option');o.value='';o.textContent=message||'Параграфы не найдены';paragraph.appendChild(o);paragraph.disabled=true;return;}const first=document.createElement('option');first.value='';first.textContent='Выбери параграф…';paragraph.appendChild(first);items.forEach(item=>{const o=document.createElement('option');o.value=item.title;o.textContent=item.label;if(item.page)o.dataset.page=String(item.page);paragraph.appendChild(o);});paragraph.disabled=false;}
  async function loadParagraphs(){
    const token=++parseToken,book=booksCache.find(b=>b.id===select.value);
    topicManuallyEdited=false;
