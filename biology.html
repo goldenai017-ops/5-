@@ -599,33 +599,64 @@ function renderMaterials(raw){
  function findParagraphs(text){
    const lines=String(text||'').replace(/\u00a0/g,' ').replace(/[\t ]+/g,' ').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
    const found=[],seen=new Set();
-   const patterns=[
+   const add=(number,title,page=null)=>{
+     title=cleanTitle(title);
+     if(!title||title.length<3||title.length>200)return;
+     if(/^(?:содержание|оглавление|мазмұны|пайдаланылған әдебиеттер|әдебиеттер тізімі|предметный указатель)$/i.test(title))return;
+     const key=String(number||'')+'|'+title.toLocaleLowerCase();
+     if(seen.has(key))return;
+     seen.add(key);found.push({number:String(number||found.length+1),title,label:(number?'§ '+number+' — ':'')+title,page});
+   };
+   const tocLine=/^(.*?)\s*(?:\.{2,}|…{1,}|·{2,}|_{2,}|\s)\s*(\d{1,3})\s*$/;
+   const headingPatterns=[
      /^(?:§|параграф\s*№?)\s*(\d{1,3})\s*[.:—–-]?\s*(.*)$/i,
      /^(\d{1,3})\s*[-–—.]?\s*параграф\s*[:.]?\s*(.*)$/i,
      /^(?:тақырып|тема)\s*№?\s*(\d{1,3})\s*[.:—–-]?\s*(.*)$/i
    ];
-   for(let i=0;i<lines.length;i++){
-     const line=lines[i];let match=null,number='',title='';
-     for(const pattern of patterns){match=line.match(pattern);if(match){number=match[1];title=match[2]||'';break;}}
-     if(!match)continue;
-     if(!title&&lines[i+1]&&!patterns.some(pattern=>pattern.test(lines[i+1]))&&lines[i+1].length<=180)title=lines[i+1];
-     title=cleanTitle(title);
-     if(title.length<3||title.length>180)continue;
-     const key=number+'|'+title.toLocaleLowerCase();
-     if(seen.has(key))continue;
-     seen.add(key);found.push({number,title,label:'§ '+number+' — '+title});
+   // Prefer the table of contents, usually near the end of a textbook.
+   let tocStart=-1;
+   for(let i=lines.length-1;i>=Math.max(0,lines.length-100);i--){
+     if(/^(?:мазмұны|содержание|оглавление|contents)\s*:?$/i.test(lines[i])){tocStart=i;break;}
    }
+   if(tocStart>=0){
+     for(let i=tocStart+1;i<lines.length;i++){
+       const line=lines[i];
+       if(/^(?:пайдаланылған әдебиеттер|әдебиеттер тізімі|сөздік|глоссарий|предметный указатель)\b/i.test(line))break;
+       let m=line.match(tocLine);
+       if(m){
+         let title=m[1].replace(/[.·…_\s]+$/,'').trim();
+         let numMatch=title.match(/^(?:§\s*)?(\d{1,3})[.)]?\s*(.*)$/);
+         if(numMatch&&numMatch[2].trim().length>2)add(numMatch[1],numMatch[2],Number(m[2]));
+         else if(title.length>3)add('',title,Number(m[2]));
+         continue;
+       }
+       const split=line.match(/^(?:§\s*)?(\d{1,3})[.)]?\s+(.{3,180}?)\s+(\d{1,3})$/);
+       if(split){add(split[1],split[2],Number(split[3]));continue;}
+       // Some PDFs extract the title and page number as separate lines.
+       if(/^\d{1,3}$/.test(line)&&i>tocStart+1){
+         const prev=lines[i-1],num=prev.match(/^(?:§\s*)?(\d{1,3})[.)]?\s+(.{3,180})$/);
+         if(num)add(num[1],num[2],Number(line));
+       }
+     }
+   }
+   // Fallback to headings in the body when a table of contents was not extractable.
    if(!found.length){
      for(let i=0;i<lines.length;i++){
-       const match=lines[i].match(/^(\d{1,2})\s*[.)]\s+(.{3,160})$/);
+       const line=lines[i];let match=null,number='',title='';
+       for(const pattern of headingPatterns){match=line.match(pattern);if(match){number=match[1];title=match[2]||'';break;}}
        if(!match)continue;
-       const number=match[1],title=cleanTitle(match[2]);
-       if(title.length<3||/^(?:содержание|оглавление|введение|заключение|глава|рисунок|таблица|задание|упражнение)\b/i.test(title))continue;
-       const key=number+'|'+title.toLocaleLowerCase();if(seen.has(key))continue;
-       seen.add(key);found.push({number,title,label:'§ '+number+' — '+title});
+       if(!title&&lines[i+1]&&!headingPatterns.some(pattern=>pattern.test(lines[i+1]))&&lines[i+1].length<=180)title=lines[i+1];
+       add(number,title,null);
+     }
+     if(!found.length){
+       for(const line of lines){
+         const m=line.match(/^(\d{1,2})\s*[.)]\s+(.{3,160})$/);
+         if(m&&!/^(?:содержание|оглавление|введение|заключение|глава|рисунок|таблица|задание|упражнение)\b/i.test(m[2]))add(m[1],m[2],null);
+       }
      }
    }
    return found;
+ }
  }
 
  async function ensurePdfJs(){
