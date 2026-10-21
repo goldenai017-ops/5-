@@ -599,19 +599,31 @@ function renderMaterials(raw){
  function findParagraphs(text){
    const lines=String(text||'').replace(/\u00a0/g,' ').replace(/[\t ]+/g,' ').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
    const found=[],seen=new Set();
-   const marker=/^(?:§\s*(\d{1,3})|параграф\s*№?\s*(\d{1,3})|(\d{1,3})\s*[-–—]?\s*параграф)(?:\s*[.:—–-]?\s*|$)/i;
+   const patterns=[
+     /^(?:§|параграф\s*№?)\s*(\d{1,3})\s*[.:—–-]?\s*(.*)$/i,
+     /^(\d{1,3})\s*[-–—.]?\s*параграф\s*[:.]?\s*(.*)$/i,
+     /^(?:тақырып|тема)\s*№?\s*(\d{1,3})\s*[.:—–-]?\s*(.*)$/i
+   ];
    for(let i=0;i<lines.length;i++){
-     const line=lines[i],match=line.match(marker);
+     const line=lines[i];let match=null,number='',title='';
+     for(const pattern of patterns){match=line.match(pattern);if(match){number=match[1];title=match[2]||'';break;}}
      if(!match)continue;
-     const number=match[1]||match[2]||match[3];
-     let title=line.replace(marker,'').trim();
-     if(!title&&lines[i+1]&&!marker.test(lines[i+1]))title=lines[i+1];
+     if(!title&&lines[i+1]&&!patterns.some(pattern=>pattern.test(lines[i+1]))&&lines[i+1].length<=180)title=lines[i+1];
      title=cleanTitle(title);
      if(title.length<3||title.length>180)continue;
      const key=number+'|'+title.toLocaleLowerCase();
      if(seen.has(key))continue;
-     seen.add(key);
-     found.push({number,title,label:'§ '+number+' — '+title});
+     seen.add(key);found.push({number,title,label:'§ '+number+' — '+title});
+   }
+   if(!found.length){
+     for(let i=0;i<lines.length;i++){
+       const match=lines[i].match(/^(\d{1,2})\s*[.)]\s+(.{3,160})$/);
+       if(!match)continue;
+       const number=match[1],title=cleanTitle(match[2]);
+       if(title.length<3||/^(?:содержание|оглавление|введение|заключение|глава|рисунок|таблица|задание|упражнение)\b/i.test(title))continue;
+       const key=number+'|'+title.toLocaleLowerCase();if(seen.has(key))continue;
+       seen.add(key);found.push({number,title,label:'§ '+number+' — '+title});
+     }
    }
    return found;
  }
