@@ -267,49 +267,66 @@ html,body,.app,.main,.content{background-color:#edf5ef!important;color:#20352a}
   </style>
 </section>
 <section class="page-panel" id="page-presentations">
-  <div class="welcome"><div><div class="eyebrow">Canva · презентациялар</div><h1>Презентация жасау</h1><p>Тақырыпты енгіз, сұранысты дайында және Canva-да презентацияны құрастыр. Дайын жұмысты PowerPoint (.pptx) форматында жүктей аласың.</p></div><div class="date-pill">🎨 Canva AI</div></div>
+  <div class="welcome"><div><div class="eyebrow">Оқулық негізінде презентация</div><h1>Презентация жасау</h1><p>Сыныпты, оқулықты және параграфты таңда. Содан кейін презентация стилін белгілеп, Canva AI-ға арналған дайын сұранысты жаса.</p></div><div class="date-pill">🎨 AI презентация</div></div>
   <style>
-    #page-presentations .canva-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.85fr);gap:18px;margin-top:22px;align-items:start}
-    #page-presentations .canva-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}
-    #page-presentations .canva-card h2{font-size:18px;margin:0 0 7px}
-    #page-presentations .canva-muted{color:var(--muted);font-size:13px}
-    #page-presentations .canva-field{display:grid;gap:7px;margin-top:16px}
-    #page-presentations .canva-field label{font-size:12px;font-weight:750}
-    #page-presentations .canva-field input,#page-presentations .canva-field select,#page-presentations .canva-field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--page);color:var(--ink);font:inherit}
-    #page-presentations .canva-field textarea{min-height:230px;resize:vertical;line-height:1.5}
-    #page-presentations .canva-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    #page-presentations .canva-main{background:#7655e8;color:#fff;border:0;border-radius:11px;padding:12px 16px;font-weight:750}
-    #page-presentations .canva-secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:11px;padding:11px 14px;font-weight:700}
-    #page-presentations .canva-main:hover{filter:brightness(1.06)}
-    #page-presentations .canva-note{padding:13px 14px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:12px;margin-top:16px}
-    #page-presentations .canva-steps{display:grid;gap:13px;margin-top:18px}
-    #page-presentations .canva-step{display:flex;gap:12px;align-items:flex-start}
-    #page-presentations .canva-num{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:9px;background:#7655e81a;color:#8b70f3;font-weight:800}
-    @media(max-width:760px){#page-presentations .canva-layout{grid-template-columns:1fr}#page-presentations .canva-card{padding:17px}}
+    #page-presentations .pres-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,.9fr);gap:18px;margin-top:22px;align-items:start}
+    #page-presentations .pres-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}
+    #page-presentations .pres-card h2{font-size:18px;margin:0 0 7px}
+    #page-presentations .pres-muted{color:var(--muted);font-size:13px;line-height:1.55}
+    #page-presentations .pres-field{display:grid;gap:7px;margin-top:16px}
+    #page-presentations .pres-field label{font-size:12px;font-weight:750}
+    #page-presentations .pres-field input,#page-presentations .pres-field select,#page-presentations .pres-field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--page);color:var(--ink);font:inherit}
+    #page-presentations .pres-field textarea{min-height:250px;resize:vertical;line-height:1.55}
+    #page-presentations .pres-hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+    #page-presentations .pres-styles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+    #page-presentations .pres-style{display:block;text-align:left;padding:9px;border:1px solid var(--line);border-radius:13px;background:var(--surface);color:var(--ink);cursor:pointer;min-width:0}
+    #page-presentations .pres-style[aria-pressed="true"]{border:2px solid var(--green-2);padding:8px;box-shadow:0 0 0 3px #1b594515}
+    #page-presentations .pres-thumb{height:76px;border-radius:8px;overflow:hidden;padding:9px;display:flex;flex-direction:column;gap:5px;justify-content:center;margin-bottom:8px}
+    #page-presentations .pres-thumb span{display:block;height:5px;border-radius:8px;width:72%}
+    #page-presentations .pres-thumb span:nth-child(2){width:48%}
+    #page-presentations .pres-thumb span:nth-child(3){width:88%;height:18px;border-radius:4px}
+    #page-presentations .pres-thumb.minimal{background:#f7f8f5}.pres-thumb.minimal span{background:#263d34}
+    #page-presentations .pres-thumb.bright{background:linear-gradient(135deg,#ffdf78,#ff9f9b 55%,#a7d9ff)}.pres-thumb.bright span{background:#fff}
+    #page-presentations .pres-thumb.science{background:linear-gradient(135deg,#e7f3ec,#b9ddcf)}.pres-thumb.science span{background:#176348}
+    #page-presentations .pres-thumb.dark{background:linear-gradient(135deg,#111c2d,#183e42)}.pres-thumb.dark span{background:#72e4c4}
+    #page-presentations .pres-thumb.nature{background:linear-gradient(135deg,#e9e4c8,#a9c69a)}.pres-thumb.nature span{background:#355b39}
+    #page-presentations .pres-thumb.academic{background:linear-gradient(135deg,#f1f3f7,#d9e0ed)}.pres-thumb.academic span{background:#273c64}
+    #page-presentations .pres-style strong{display:block;font-size:12px}
+    #page-presentations .pres-style small{display:block;color:var(--muted);font-size:10px;line-height:1.4;margin-top:3px}
+    #page-presentations .pres-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    #page-presentations .pres-main{background:var(--green-2);color:#fff;border:0;border-radius:11px;padding:12px 16px;font-weight:750}
+    #page-presentations .pres-secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:11px;padding:11px 14px;font-weight:700}
+    #page-presentations .pres-main:disabled{opacity:.55;cursor:not-allowed}
+    #page-presentations .pres-note{padding:13px 14px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:12px;margin-top:16px;line-height:1.55}
+    @media(max-width:760px){#page-presentations .pres-layout{grid-template-columns:1fr}#page-presentations .pres-card{padding:17px}}
   </style>
-  <div class="canva-layout">
-    <div class="canva-card">
-      <h2>1. Презентация параметрлері</h2>
-      <p class="canva-muted">Параметрлерге қарай Canva AI-ға арналған дайын сұраныс құрастырылады.</p>
-      <div class="canva-field"><label for="canvaGrade">Сынып</label><select id="canvaGrade"><option>5-сынып</option><option>6-сынып</option><option>7-сынып</option><option selected>8-сынып</option><option>9-сынып</option><option>10-сынып</option><option>11-сынып</option></select></div>
-      <div class="canva-field"><label for="canvaTopic">Презентация тақырыбы</label><input id="canvaTopic" value="Иммунитет" placeholder="Мысалы: Фотосинтез"></div>
-      <div class="canva-field"><label for="canvaLang">Презентация тілі</label><select id="canvaLang"><option value="қазақ тілінде" selected>Қазақша</option><option value="орыс тілінде">Орысша</option></select></div>
-      <div class="canva-field"><label for="canvaSlides">Слайд саны</label><select id="canvaSlides"><option value="6">6 слайд</option><option value="8">8 слайд</option><option value="10" selected>10 слайд</option><option value="12">12 слайд</option><option value="15">15 слайд</option></select></div>
-      <div class="canva-field"><label for="canvaStyle">Дизайн стилі</label><select id="canvaStyle"><option value="заманауи ғылыми, жасыл-ақ түсті">Заманауи ғылыми 🌿</option><option value="минималистік, таза және жинақы">Минималистік</option><option value="жарқын, оқушыларға қызықты">Жарқын, оқушыларға арналған</option><option value="академиялық, ресми">Академиялық</option></select></div>
-      <div class="canva-actions"><button class="canva-main" type="button" id="canvaOpenBtn">Canva-да жасау ↗</button><button class="canva-secondary" type="button" id="canvaPromptBtn">Сұранысты жаңарту</button></div>
-      <div class="canva-note" id="canvaStatus" role="status">Алдымен параметрлерді таңда. «Canva-да жасау» батырмасы Canva сайтын жаңа бетте ашады.</div>
-    </div>
-    <div class="canva-card">
-      <h2>2. Дайын сұраныс</h2>
-      <p class="canva-muted">Сұранысты көшіріп, Canva AI ішіне қой. Қажет болса, мәтінді өзің өзгерте аласың.</p>
-      <div class="canva-field"><label for="canvaPrompt">Canva AI үшін сұраныс</label><textarea id="canvaPrompt" spellcheck="true"></textarea></div>
-      <div class="canva-actions"><button class="canva-main" type="button" id="canvaCopyBtn">Сұранысты көшіру</button></div>
-      <div class="canva-steps">
-        <div class="canva-step"><span class="canva-num">1</span><div><strong>Canva-ны аш</strong><div class="canva-muted">Canva аккаунтыңа кір.</div></div></div>
-        <div class="canva-step"><span class="canva-num">2</span><div><strong>AI презентациясын жаса</strong><div class="canva-muted">Дайын сұранысты Canva AI-ға қой.</div></div></div>
-        <div class="canva-step"><span class="canva-num">3</span><div><strong>PowerPoint ретінде жүкте</strong><div class="canva-muted">Share → Download → Microsoft PowerPoint (.pptx).</div></div></div>
+  <div class="pres-layout">
+    <div class="pres-card">
+      <h2>1. Оқулық пен тақырыпты таңдау</h2>
+      <p class="pres-muted">ҚМЖ бөліміндегідей, алдымен сынып пен сол сыныпқа жүктелген оқулық таңдалады. Параграфтар кітаптың ішінен анықталады.</p>
+      <div class="pres-field"><label for="presGrade">Сынып</label><select id="presGrade"><option value="5">5-сынып</option><option value="6">6-сынып</option><option value="7">7-сынып</option><option value="8">8-сынып</option><option value="9">9-сынып</option><option value="10">10-сынып</option><option value="11">11-сынып</option></select></div>
+      <div class="pres-field"><label for="presBook">Оқулық</label><select id="presBook" disabled><option value="">Алдымен сыныпты таңда</option></select><div class="pres-hint" id="presBookHint">Таңдалған сыныпқа тіркелген оқулықтар көрсетіледі.</div></div>
+      <div class="pres-field"><label for="presParagraph">Бөлім / параграф</label><select id="presParagraph" disabled><option value="">Алдымен оқулықты таңда</option></select><div class="pres-hint" id="presParagraphHint">Оқулық таңдалған соң параграфтар тізімі шығады.</div></div>
+      <div class="pres-field"><label for="presLanguage">Презентация тілі</label><select id="presLanguage"><option value="Қазақша" selected>Қазақша</option><option value="Орысша">Орысша</option></select></div>
+      <h2 style="margin-top:24px">2. Презентация стилін таңда</h2>
+      <p class="pres-muted">Стильді презентацияны жасамас бұрын таңда. Таңдалған дизайн сұранысқа енгізіледі.</p>
+      <div class="pres-styles" id="presStyles">
+        <button class="pres-style" type="button" data-style="minimal" aria-pressed="false"><div class="pres-thumb minimal"><span></span><span></span><span></span></div><strong>Минимализм</strong><small>Ақ фон, таза композиция, аз мәтін</small></button>
+        <button class="pres-style" type="button" data-style="bright" aria-pressed="false"><div class="pres-thumb bright"><span></span><span></span><span></span></div><strong>Жарқын</strong><small>Түрлі түстер, оқушыға тартымды</small></button>
+        <button class="pres-style" type="button" data-style="science" aria-pressed="false"><div class="pres-thumb science"><span></span><span></span><span></span></div><strong>Ғылыми</strong><small>Сызбалар, инфографика, нақты дерек</small></button>
+        <button class="pres-style" type="button" data-style="dark" aria-pressed="false"><div class="pres-thumb dark"><span></span><span></span><span></span></div><strong>Заманауи</strong><small>Қою фон, заманауи графика</small></button>
+        <button class="pres-style" type="button" data-style="nature" aria-pressed="false"><div class="pres-thumb nature"><span></span><span></span><span></span></div><strong>Табиғи</strong><small>Табиғат реңктері, жұмсақ визуал</small></button>
+        <button class="pres-style" type="button" data-style="academic" aria-pressed="false"><div class="pres-thumb academic"><span></span><span></span><span></span></div><strong>Академиялық</strong><small>Ұқыпты, ресми, құрылымды дизайн</small></button>
       </div>
-      <div class="canva-note">Ескерту: Canva-ның тегін AI мүмкіндіктері шектеулі болуы мүмкін. Бұл бөлім Canva-ны ашады және сұраныс дайындайды; ол Canva редакторын сайттың ішіне тікелей енгізбейді.</div>
+      <div class="pres-actions"><button class="pres-main" type="button" id="presGenerateBtn" disabled>Презентация сұранысын жасау</button></div>
+      <div class="pres-note" id="presStatus" role="status">Алдымен сыныпты, оқулықты, параграфты және презентация стилін таңда.</div>
+    </div>
+    <div class="pres-card">
+      <h2>3. Дайын презентация сұранысы</h2>
+      <p class="pres-muted">AI таңдаған оқулық пен параграф мазмұнына сүйеніп, слайд санын өзі анықтайды. Сұранысты тексеріп, Canva AI-ға жібер.</p>
+      <div class="pres-field"><label for="presPrompt">Canva AI үшін сұраныс</label><textarea id="presPrompt" spellcheck="true" placeholder="Параграф пен стильді таңдағаннан кейін сұраныс осында жасалады."></textarea></div>
+      <div class="pres-actions"><button class="pres-secondary" type="button" id="presCopyBtn" disabled>Сұранысты көшіру</button><button class="pres-main" type="button" id="presOpenBtn" disabled>Canva AI-ды ашу ↗</button></div>
+      <div class="pres-note">Слайд саны қолмен бекітілмейді: AI тақырыптың көлемі мен күрделілігіне қарай анықтайды. Бұл бөлім Canva AI-ға арналған сұранысты дайындайды; презентацияны Canva ішінде жасап, PPTX ретінде жүктейсің.</div>
     </div>
   </div>
 </section>
@@ -682,6 +699,7 @@ function renderMaterials(raw){
    if(name.endsWith('.pdf')||book.blob.type==='application/pdf')return await extractPdf(book.blob);
    throw new Error('Поддерживаются только файлы PDF и TXT.');
  }
+ window.altnexBookLibraryTools={readBooks,extractText,findParagraphs};
  // Return the selected paragraph's actual textbook text and its page images.
  window.altnexGetSelectedBookMaterial=async function(){
    const book=booksCache.find(b=>b.id===select.value);
@@ -806,39 +824,133 @@ function renderMaterials(raw){
 })();
 </script>
 
-<script>
+<script id="altnex-presentation-builder">
 (function(){
-  const byId = id => document.getElementById(id);
-  const fields = ['canvaGrade','canvaTopic','canvaLang','canvaSlides','canvaStyle'];
-  function makePrompt(){
-    const grade = byId('canvaGrade').value;
-    const topic = byId('canvaTopic').value.trim() || 'Биология пәнінің тақырыбы';
-    const lang = byId('canvaLang').value;
-    const count = byId('canvaSlides').value;
-    const style = byId('canvaStyle').value;
-    byId('canvaPrompt').value = grade + ' биология пәніне «' + topic + '» тақырыбында ' + lang + ' ' + count + ' слайдтық презентация жаса. Ғылыми ақпарат дәл және оқу бағдарламасына сай болсын. Әр слайдта қысқа, түсінікті мәтін, нақты тақырып, сапалы биологиялық фотосуреттер немесе иллюстрациялар, қажет жерде сызба мен белгіленген бөліктер болсын. Негізгі терминдерді түсіндір. Мәтінді оқуға ыңғайлы етіп орналастыр, бір слайдты ұзын абзацтармен толтырма. Дизайн стилі: ' + style + '. Қазақша/орысша емле мен терминологияны мұқият сақта. Соңғы слайдқа 3 бекіту сұрағын және қысқа қорытындыны қос.');
-    byId('canvaStatus').textContent = 'Сұраныс параметрлер бойынша жаңартылды.';
+  const $=id=>document.getElementById(id);
+  const grade=$('presGrade'),bookSelect=$('presBook'),paragraphSelect=$('presParagraph');
+  const language=$('presLanguage'),generateBtn=$('presGenerateBtn'),promptArea=$('presPrompt');
+  const status=$('presStatus'),copyBtn=$('presCopyBtn'),openBtn=$('presOpenBtn');
+  if(!grade||!bookSelect||!paragraphSelect)return;
+  const styles={
+    minimal:{name:'Минимализм',description:'ақ фон, таза композиция, кең бос кеңістік, қысқа мәтін, айқын типография'},
+    bright:{name:'Жарқын',description:'оқушыға тартымды жарқын түстер, заманауи пішіндер, визуалды акценттер, бірақ мәтін оқуға жеңіл'},
+    science:{name:'Ғылыми',description:'ғылыми инфографика, нақты схемалар, белгіленген суреттер, деректер мен ұғымдардың көрнекі байланысы'},
+    dark:{name:'Заманауи',description:'қою фон, заманауи технологиялық графика, контраст, жинақы композиция'},
+    nature:{name:'Табиғи',description:'табиғи жасыл және жер реңктері, табиғат фотосуреттері, экологиялық визуал'},
+    academic:{name:'Академиялық',description:'ресми әрі ұқыпты стиль, құрылымды беттеу, тыныш түстер, анық тақырыптар'}
+  };
+  let selectedStyle='',books=[],paragraphs=[],token=0,selectedBook=null,selectedParagraph=null,selectedExcerpt='';
+  const setStatus=(message,isError=false)=>{status.textContent=message;status.style.color=isError?'#a33b32':'';};
+  const resetSelect=(el,label)=>{el.innerHTML='';const o=document.createElement('option');o.value='';o.textContent=label;el.appendChild(o);el.disabled=true;};
+  function setPromptReady(ready){copyBtn.disabled=!ready;openBtn.disabled=!ready;}
+  function updateGenerateState(){generateBtn.disabled=!(selectedBook&&selectedParagraph&&selectedStyle);}
+  document.querySelectorAll('#presStyles [data-style]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      selectedStyle=button.dataset.style;
+      document.querySelectorAll('#presStyles [data-style]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+      updateGenerateState();
+      setStatus('Таңдалған стиль: '+styles[selectedStyle].name+'. Енді презентация сұранысын жасауға болады.');
+    });
+  });
+  async function loadBooks(){
+    const currentToken=++token;selectedBook=null;selectedParagraph=null;paragraphs=[];
+    resetSelect(bookSelect,'Оқулықты таңда…');resetSelect(paragraphSelect,'Алдымен оқулықты таңда');
+    $('presBookHint').textContent='Оқулықтар «Мои учебники» бөлімінен алынады.';
+    $('presParagraphHint').textContent='Оқулық таңдалған соң параграфтар тізімі шығады.';
+    promptArea.value='';setPromptReady(false);updateGenerateState();
+    try{
+      const tools=window.altnexBookLibraryTools;
+      if(!tools)throw new Error('Оқулықтарды оқу модулі әлі жүктелмеді. Бетті жаңартып көр.');
+      books=(await tools.readBooks()).filter(b=>Number(b.grade)===Number(grade.value)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'kk'));
+      if(currentToken!==token)return;
+      if(!books.length){resetSelect(bookSelect,'Бұл сыныпқа оқулық жүктелмеген');$('presBookHint').textContent='«Мои учебники» бөліміне кіріп, '+grade.value+'-сыныпқа PDF немесе TXT оқулық жүкте.';setStatus('Таңдалған сыныпқа оқулық табылмады. Алдымен «Мои учебники» бөліміне кітап қос.');return;}
+      bookSelect.innerHTML='<option value="">Оқулықты таңда…</option>';
+      books.forEach((book,index)=>{const o=document.createElement('option');o.value=book.id;o.textContent=book.name;bookSelect.appendChild(o);});
+      bookSelect.disabled=false;$('presBookHint').textContent='Оқулық саны: '+books.length+'. Бір кітапты таңда.';
+      setStatus('Оқулықты таңда, содан кейін оның параграфтары жүктеледі.');
+    }catch(error){resetSelect(bookSelect,'Оқулықтарды жүктеу мүмкін болмады');setStatus(error.message||String(error),true);}
   }
-  fields.forEach(id => byId(id).addEventListener('input', makePrompt));
-  byId('canvaPromptBtn').addEventListener('click', makePrompt);
-  byId('canvaOpenBtn').addEventListener('click', function(){
-    makePrompt();
-    window.open('https://www.canva.com/create/ai-presentations/','_blank','noopener,noreferrer');
-    byId('canvaStatus').textContent = 'Canva жаңа бетте ашылады. Дайын сұранысты көшіріп, Canva AI ішіне қой.';
+  function fillParagraphs(items){
+    paragraphSelect.innerHTML='<option value="">Параграфты таңда…</option>';
+    items.forEach((item,index)=>{const o=document.createElement('option');o.value=String(index);o.textContent=item.label||item.title;paragraphSelect.appendChild(o);});
+    paragraphSelect.disabled=!items.length;
+  }
+  bookSelect.addEventListener('change',async()=>{
+    const currentToken=++token;selectedBook=books.find(b=>String(b.id)===bookSelect.value)||null;
+    selectedParagraph=null;paragraphs=[];selectedExcerpt='';resetSelect(paragraphSelect,'Оқулық оқылып жатыр…');
+    promptArea.value='';setPromptReady(false);updateGenerateState();
+    if(!selectedBook)return;
+    setStatus('Оқулық оқылып жатыр. Параграф тақырыптарын іздеп жатырмын…');
+    try{
+      const tools=window.altnexBookLibraryTools;
+      const text=await tools.extractText(selectedBook);
+      const items=tools.findParagraphs(text);
+      if(currentToken!==token)return;
+      paragraphs=items;
+      if(!items.length){resetSelect(paragraphSelect,'Параграфтар табылмады');$('presParagraphHint').textContent='Бұл PDF/TXT ішінен параграф тақырыптарын автоматты түрде анықтай алмадым.';setStatus('Параграфтар табылмады. Оқулықтың мәтіндік қабатын тексеру қажет.',true);return;}
+      fillParagraphs(items);
+      $('presParagraphHint').textContent='Табылған параграф саны: '+items.length+'. Тізім оқулық мазмұны бойынша жасалды.';
+      setStatus('Параграфтар табылды. Қажетті тақырыпты таңда.');
+    }catch(error){resetSelect(paragraphSelect,'Оқулықты оқу қатесі');setStatus(error.message||String(error),true);}
   });
-  byId('canvaCopyBtn').addEventListener('click', async function(){
-    const text = byId('canvaPrompt').value;
-    try {
-      await navigator.clipboard.writeText(text);
-      byId('canvaStatus').textContent = 'Сұраныс көшірілді! Енді оны Canva AI ішіне қой.';
-    } catch(e) {
-      byId('canvaPrompt').focus();
-      byId('canvaPrompt').select();
-      const ok = document.execCommand('copy');
-      byId('canvaStatus').textContent = ok ? 'Сұраныс көшірілді! Енді оны Canva AI ішіне қой.' : 'Сұраныс белгіленді — Ctrl+C басып көшір.';
+  paragraphSelect.addEventListener('change',()=>{
+    selectedParagraph=paragraphSelect.value!==''?paragraphs[Number(paragraphSelect.value)]:null;
+    selectedExcerpt='';
+    updateGenerateState();
+    if(selectedParagraph)setStatus('Таңдалған параграф: '+selectedParagraph.title+'. Енді стильді таңда немесе «Презентация сұранысын жасау» батырмасын бас.');
+  });
+  grade.addEventListener('change',loadBooks);
+  function extractParagraphExcerpt(fullText,item){
+    const text=String(fullText||'');
+    const title=String(item.title||'').trim();
+    let start=text.toLocaleLowerCase().indexOf(title.toLocaleLowerCase());
+    if(start<0&&item.number){
+      const re=new RegExp('(?:§|параграф\\s*№?)\\s*'+String(item.number).replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\b','i');
+      const match=re.exec(text);if(match)start=match.index;
     }
+    if(start<0)throw new Error('Таңдалған параграфтың мәтінін оқулықтан таба алмадым. Басқа параграфты таңда немесе PDF мәтінін тексер.');
+    const tail=text.slice(start);
+    const next=tail.slice(Math.min(title.length,1)).search(/(?:^|\\n)\\s*(?:§\\s*\\d{1,3}|\\d{1,3}\\s*[-–—]?\\s*параграф|(?:тақырып|тема)\\s*№?\\s*\\d{1,3})\\b/i);
+    const excerpt=tail.slice(0,next>0?next+1:Math.min(tail.length,10000)).trim();
+    return excerpt.slice(0,10000);
+  }
+  generateBtn.addEventListener('click',async()=>{
+    if(!(selectedBook&&selectedParagraph&&selectedStyle))return;
+    generateBtn.disabled=true;setPromptReady(false);setStatus('Параграфтың мәтіні оқылып, презентация сұранысы жасалып жатыр…');
+    try{
+      const tools=window.altnexBookLibraryTools;
+      const fullText=await tools.extractText(selectedBook);
+      selectedExcerpt=extractParagraphExcerpt(fullText,selectedParagraph);
+      const lang=language.value;
+      const prompt=[
+        'Сен тәжірибелі '+(grade.value==='5'?'5-сынып':'мектеп')+' білім беру презентацияларын әзірлейтін әдіскер-дизайнерсің.',
+        'Төмендегі оқулық деректеріне сүйеніп, '+grade.value+'-сыныпқа арналған «'+selectedParagraph.title+'» тақырыбында '+lang.toLocaleLowerCase()+' презентация жаса.',
+        'ОҚУЛЫҚ: '+selectedBook.name+'.',
+        'ПАРАГРАФ: '+(selectedParagraph.label||selectedParagraph.title)+'.',
+        'НЕГІЗГІ ДЕРЕККӨЗ: төменде берілген параграф мәтіні. Негізгі түсініктерді, терминдерді және автордың түсіндіру ретін сақта. Оқулықта жоқ нақты деректерді ойдан қоспа. Қосымша түсіндірме қажет болса, оны оқулық мазмұнынан бөлек, қысқа әрі жас ерекшелігіне сай бер.',
+        'ДИЗАЙН СТИЛІ: '+styles[selectedStyle].name+' — '+styles[selectedStyle].description+'. Осы стильді барлық слайдта бірізді сақта.',
+        'СЛАЙД САНЫ: өзің анықта. Параграфтың көлемі, жаңа ұғымдар саны және тақырып күрделілігіне қарай толық түсіндіруге жеткілікті слайд жаса. Қысқа тақырыпты созба, күрделі тақырыпты үстірт қалдырма. Бір ойды қайталама.',
+        'ҚҰРЫЛЫМ: тақырыптық мұқаба; оқу мақсаты/сабақ мақсатына сай күтілетін нәтиже; негізгі ұғымдар мен түсіндіру; оқулыққа сай мысалдар; қажет жерінде схема, салыстыру, кесте немесе кезеңдік диаграмма; соңында қорытынды және 3–4 бекіту сұрағы.',
+        'ВИЗУАЛ: әр слайдқа тақырыпқа сәйкес сапалы фото, ғылыми иллюстрация немесе инфографика ұсын. Сурет мәтінді қайталамай, түсінуді жеңілдетсін. Бір слайдты ұзын абзацпен толтырма; мәтін қысқа, оқуға жеңіл болсын.',
+        'ТІЛ: терминдер мен емлені '+lang.toLocaleLowerCase()+' сақта. 5-сынып оқушысына түсінікті сөздер қолдан. Әр слайдта бір негізгі ой болсын.',
+        'ОҚУЛЫҚ ПАРАГРАФЫНЫҢ МӘТІНІ:\\n'+selectedExcerpt
+      ].join('\\n\\n');
+      promptArea.value=prompt;setPromptReady(true);
+      setStatus('Сұраныс дайын. Енді оны көшіріп, Canva AI-ға жіберуге болады.');
+    }catch(error){setStatus(error.message||String(error),true);}
+    finally{updateGenerateState();}
   });
-  makePrompt();
+  copyBtn.addEventListener('click',async()=>{
+    if(!promptArea.value)return;
+    try{await navigator.clipboard.writeText(promptArea.value);setStatus('Сұраныс көшірілді. Canva AI ішіне қой.');}
+    catch(error){promptArea.focus();promptArea.select();const ok=document.execCommand('copy');setStatus(ok?'Сұраныс көшірілді.':'Сұраныс белгіленді — Ctrl+C басып көшір.');}
+  });
+  openBtn.addEventListener('click',()=>{
+    if(!promptArea.value)return;
+    window.open('https://www.canva.com/create/ai-presentations/','_blank','noopener,noreferrer');
+    setStatus('Canva AI жаңа бетте ашылды. Дайын сұранысты көшіріп, Canva ішіне қой.');
+  });
+  loadBooks();
 })();
 </script>
 
