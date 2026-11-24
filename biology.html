@@ -905,7 +905,7 @@ function renderMaterials(raw){
     const title=String(item.title||'').trim();
     let start=text.toLocaleLowerCase().indexOf(title.toLocaleLowerCase());
     if(start<0&&item.number){
-      const re=new RegExp('(?:§|параграф\\s*№?)\\s*'+String(item.number).replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\b','i');
+      const re=new RegExp('(?:§|параграф\\s*№?)\\s*'+String(item.number)+'\\b','i');
       const match=re.exec(text);if(match)start=match.index;
     }
     if(start<0)throw new Error('Таңдалған параграфтың мәтінін оқулықтан таба алмадым. Басқа параграфты таңда немесе PDF мәтінін тексер.');
